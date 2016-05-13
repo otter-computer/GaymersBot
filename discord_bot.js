@@ -55,6 +55,28 @@ var randomFromArray = function(array) {
 	return array[Math.floor(Math.random() * array.length)];
 }
 
+var removeRegions = function(msg,cb){
+
+        var regions = [msg.channel.server.roles.get("name","Europe"),
+        msg.channel.server.roles.get("name","North America"),
+        msg.channel.server.roles.get("name","South America"),
+        msg.channel.server.roles.get("name","Middle East"),
+        msg.channel.server.roles.get("name","Oceania"),
+        msg.channel.server.roles.get("name","Africa"),
+        msg.channel.server.roles.get("name","Asia")];
+
+        var user = msg.sender;
+		for (i = 0; i < regions.length; ++i) {
+			//console.log(regions[i]);
+		    //console.log(regions[i].name);
+		    if (user.hasRole(regions[i])) {
+    			user.removeFrom(regions[i]);
+			}
+		}
+
+		cb(true);
+}
+
 var hugReplies = [
   '*hugs $USER*',
   '*hugs $USER*',
@@ -236,18 +258,33 @@ var commands = {
         usage: "setregion <region>",
         description: "set region",
         process: function(bot, msg, suffix) {
-            var args = suffix.split(' ');
-            var region = args.shift();
+            var region = suffix;
             var role = msg.channel.server.roles.get("name",region);
 
             if(suffix) {
-                bot.addMemberToRole(msg.sender,role, function(err) {
-                	if(!err) {
-                		var message = msg.sender + " set to region: " + region;
-						bot.sendMessage(msg.channel, message);
-					}
-                });
+            	removeRegions(msg, function() {
+            		// BUG - doesnt add after 'removal' of existing
+            		msg.sender.addTo(role, function(err) {
+                		if(!err) {
+                			var message = msg.sender + " set to region: " + region;
+							bot.sendMessage(msg.channel, message);
+						}
+                	});
+            	});
+                
             }
+        }
+    },
+	"unsetregion": {
+        usage: "unsetregion",
+        description: "unset region",
+        process: function(bot, msg) {
+            
+            removeRegions(msg, function() {
+            	var message = msg.sender + " region removed.";
+				bot.sendMessage(msg.channel, message);
+            });
+			
         }
     },
 	"spray": {

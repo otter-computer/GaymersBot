@@ -51,6 +51,56 @@ var d20 = require("d20");
 
 var startTime = Date.now();
 
+var randomFromArray = function(array) {
+	return array[Math.floor(Math.random() * array.length)];
+}
+
+var hugReplies = [
+  '*hugs $USER*',
+  '*hugs $USER*',
+  '*hugs $USER*',
+  '*hugs $USER*',
+  '*licks $USER*',
+  '*pounces $USER*',
+  '*jumps on $USER*',
+  '*glomps $USER*',
+  '*falls on $USER*',
+  '*bear hugs $USER*',
+  '*tightly squeezes $USER*',
+  '*embraces $USER*',
+  '*holds $USER close*',
+  '*cuddles $USER*',
+  '*takes $USER into his arms*'
+];
+
+var pokeReplies = [
+  'STOP TOUCHING ME!',
+  'LEAVE ME ALONE',
+  'can I go home now?',
+  'It\'s dark in here..',
+  'AAAAAAAAAAAAH',
+  'NO',
+  '*giggles*',
+  '*moans*',
+  ';)',
+  ':(',
+  'h-hello?',
+  '*pokes back*',
+  'D: not there!',
+  'A bit lower...',
+  'WHAT DO YOU WANT?!',
+  'bleep',
+  'Well hello there ;)',
+  '*blush* not now! everybody is watching..',
+  '*falls over*',
+  '*winks*',
+  'N-nani',
+  'Don\'t stop there.',
+  'More please ;)',
+  'Only one finger?',
+  'Come here ;)'
+];
+
 var commands = {
     "ping": {
         description: "responds pong, useful for checking if bot is alive",
@@ -175,7 +225,39 @@ var commands = {
 		}
 		bot.sendMessage(msg.channel,"Uptime: " + timestr);
 	}
-    }
+    },
+	"spray": {
+		description: "Spray someone thirsty...",
+		process: function(bot, msg) {
+			bot.sendMessage(msg.channel, "*sprays " + msg.sender + " with the fire hose*");
+		}
+	},
+	
+	"hug": {
+        usage: "<user> <message to leave user>",
+        description: "hug",
+        process: function(bot, msg, suffix) {
+			console.log(suffix);
+            var args = suffix.split(' ');
+            var user = args.shift();
+			console.log(user);
+            if(suffix) {
+                // user = user.substr(2, user.length - 3);
+				var message = randomFromArray(hugReplies).replace('$USER', user)
+				bot.sendMessage(msg.channel, message);
+            } else {
+				var message = randomFromArray(hugReplies).replace('$USER', msg.sender);
+				bot.sendMessage(msg.channel, message);
+			}
+        }
+    },
+
+	"poke": {
+		description: "Poke",
+		process: function(bot, msg) {
+			bot.sendMessage(msg.channel, randomFromArray(pokeReplies));
+		}
+	}
 };
 
 
@@ -184,7 +266,7 @@ var bot = new Discord.Client();
 
 bot.on("ready", function () {
 	console.log("Ready to begin! Serving in " + bot.channels.length + " channels");
-	require("./plugins.js").init();
+	// require("./plugins.js").init();
 });
 
 bot.on("disconnected", function () {
@@ -200,16 +282,16 @@ bot.on("message", function (msg) {
         console.log("treating " + msg.content + " from " + msg.author + " as command");
 		var cmdTxt = msg.content.split(" ")[0].substring(1);
         var suffix = msg.content.substring(cmdTxt.length+2);//add one for the ! and one for the space
-        if(msg.content.indexOf(bot.user.mention()) == 0){
+        if(msg.content.indexOf(bot.user.mention()) == 0) {
 			try {
-				cmdTxt = msg.content.split(" ")[1];
+				cmdTxt = msg.content.split(" ")[1].toLowerCase();
 				suffix = msg.content.substring(bot.user.mention().length+cmdTxt.length+2);
 			} catch(e){ //no command
 				bot.sendMessage(msg.channel,"Yes?");
 				return;
 			}
         }
-		var cmd = commands[cmdTxt];
+		var cmd = commands[cmdTxt.toLowerCase()];
         if(cmdTxt === "help"){
             //help is special since it iterates over the other commands
 			bot.sendMessage(msg.author,"Available Commands:", function(){
@@ -228,7 +310,7 @@ bot.on("message", function (msg) {
 			});
         }
 		else if(cmd) {
-			try{
+			try {
 				cmd.process(bot,msg,suffix);
 			} catch(e){
 				if(Config.debug){

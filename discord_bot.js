@@ -101,6 +101,13 @@ var pokeReplies = [
   'Come here ;)'
 ];
 
+var slapReplies = [
+	'*slaps $USER around a bit with a large, girthy trout*',
+	'*slaps $USER with a meaty sausage*',
+	'*slaps $USER with a massive bag of spaghetti*'
+];   
+
+
 var commands = {
     "ping": {
         description: "responds pong, useful for checking if bot is alive",
@@ -247,6 +254,25 @@ var commands = {
 				bot.sendMessage(msg.channel, message);
             } else {
 				var message = randomFromArray(hugReplies).replace('$USER', msg.sender);
+				bot.sendMessage(msg.channel, message);
+			}
+        }
+    },
+	
+	"slap": {
+        usage: "<user> <message to leave user>",
+        description: "slap",
+        process: function(bot, msg, suffix) {
+			console.log(suffix);
+            var args = suffix.split(' ');
+            var user = args.shift();
+			console.log(user);
+            if(suffix) {
+                // user = user.substr(2, user.length - 3);
+				var message = randomFromArray(slapReplies).replace('$USER', user)
+				bot.sendMessage(msg.channel, message);
+            } else {
+				var message = randomFromArray(slapReplies).replace('$USER', msg.sender);
 				bot.sendMessage(msg.channel, message);
 			}
         }

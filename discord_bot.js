@@ -107,7 +107,6 @@ var slapReplies = [
 	'*slaps $USER with a massive bag of spaghetti*'
 ];   
 
-
 var commands = {
     "ping": {
         description: "responds pong, useful for checking if bot is alive",

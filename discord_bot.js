@@ -232,6 +232,24 @@ var commands = {
 		bot.sendMessage(msg.channel,"Uptime: " + timestr);
 	}
     },
+	"setregion": {
+        usage: "setregion <region>",
+        description: "set region",
+        process: function(bot, msg, suffix) {
+            var args = suffix.split(' ');
+            var region = args.shift();
+            var role = msg.channel.server.roles.get("name",region);
+
+            if(suffix) {
+                bot.addMemberToRole(msg.sender,role, function(err) {
+                	if(!err) {
+                		var message = msg.sender + " set to region: " + region;
+						bot.sendMessage(msg.channel, message);
+					}
+                });
+            }
+        }
+    },
 	"spray": {
 		description: "Spray someone thirsty...",
 		process: function(bot, msg) {

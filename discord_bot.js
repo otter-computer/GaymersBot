@@ -11,31 +11,8 @@ try {
 try {
   var AuthDetails = require("./auth.json");
 } catch (e) {
-  console.log("Please create an auth.json like auth.json.example with at least an email and password.\n" + e.stack);
+  console.log("Please create an auth.json like auth.json.example with a token.\n" + e.stack);
   process.exit();
-}
-
-// Load custom permissions
-var Permissions = {};
-try {
-  Permissions = require("./permissions.json");
-} catch (e) {}
-Permissions.checkPermission = function(user, permission) {
-  try {
-    var allowed = false;
-    try {
-      if (Permissions.global.hasOwnProperty(permission)) {
-        allowed = Permissions.global[permission] == true;
-      }
-    } catch (e) {}
-    try {
-      if (Permissions.users[user.id].hasOwnProperty(permission)) {
-        allowed = Permissions.users[user.id][permission] == true;
-      }
-    } catch (e) {}
-    return allowed;
-  } catch (e) {}
-  return false;
 }
 
 //load config data
@@ -105,7 +82,7 @@ var setRole = function(msg, rolename) {
   var message = "";
   if (!user.hasRole(role)) {
     user.addTo(role, function(err) {
-        //
+        // TODO message setting should probably happen here if(!err)
     });
     message = user.username + " has been added to " + role.name;
   } else {
@@ -120,7 +97,7 @@ var unsetRole = function(msg, rolename) {
   var message = "";
   if (user.hasRole(role)) {
     user.removeFrom(role, function(err) {
-        //
+        // TODO message setting should probably happen here if(!err)s
     });
     message = user.username + " has been removed from " + role.name;
   } else {
@@ -279,7 +256,6 @@ var commands = {
     description: "sets 18+",
     process: function(bot, msg) {
       var message = setRole(msg, "18+");
-      console.log(message);
       bot.sendMessage(msg.channel, message);
     }
   },

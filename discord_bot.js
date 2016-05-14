@@ -77,6 +77,14 @@ var removeRegions = function(msg,cb){
     cb(true);
 }
 
+var logMessage = function(bot,message,channelname){
+  if(!channelname){
+    channelname = 'log';
+  }
+  var channel = bot.channels.get("name",channelname);
+  bot.sendMessage(channel,message);
+}
+
 var hugReplies = [
   '*hugs $USER*',
   '*hugs $USER*',
@@ -299,7 +307,7 @@ var commands = {
           });
         }
         else{
-          var message = msg.sender + " is already 18+";
+          var message = msg.sender + " is already in 18+";
           bot.sendMessage(msg.channel, message);
         }               
       }
@@ -311,7 +319,7 @@ var commands = {
           var role = msg.channel.server.roles.get("name","18+");
 
           if(msg.sender.hasRole(role)) {
-            var message = msg.sender + " has been removed to 18+";
+            var message = msg.sender + " has been removed from 18+";
             msg.sender.removeFrom(role, function(err) {
               if(!err) {
                 bot.sendMessage(msg.channel, message);
@@ -319,7 +327,87 @@ var commands = {
             });
           }
           else{
-            var message = msg.sender + " was not 18+";
+            var message = msg.sender + " was not in 18+";
+            bot.sendMessage(msg.channel, message);
+          }               
+        }
+    },
+  "setlol": {
+      usage: "setlol",
+      description: "sets League of Legends",
+      process: function(bot, msg) {
+        var role = msg.channel.server.roles.get("name","lol");
+
+        if(!msg.sender.hasRole(role)) {
+          var message = msg.sender + " has been added to League of Legends";
+          msg.sender.addTo(role, function(err) {
+            if(!err) {
+              bot.sendMessage(msg.channel, message);
+            }
+          });
+        }
+        else{
+          var message = msg.sender + " is already in League of Legends";
+          bot.sendMessage(msg.channel, message);
+        }               
+      }
+    },
+  "unsetlol": {
+        usage: "unsetlol",
+        description: "unsets League of Legends",
+        process: function(bot, msg) {
+          var role = msg.channel.server.roles.get("name","lol");
+
+          if(msg.sender.hasRole(role)) {
+            var message = msg.sender + " has been removed from League of Legends";
+            msg.sender.removeFrom(role, function(err) {
+              if(!err) {
+                bot.sendMessage(msg.channel, message);
+              }
+            });
+          }
+          else{
+            var message = msg.sender + " was not in League of Legends";
+            bot.sendMessage(msg.channel, message);
+          }               
+        }
+    },
+  "settts": {
+      usage: "settts",
+      description: "sets TableTopSimulator",
+      process: function(bot, msg) {
+        var role = msg.channel.server.roles.get("name","tts");
+
+        if(!msg.sender.hasRole(role)) {
+          var message = msg.sender + " has been added to Tabletop Simulator";
+          msg.sender.addTo(role, function(err) {
+            if(!err) {
+              bot.sendMessage(msg.channel, message);
+            }
+          });
+        }
+        else{
+          var message = msg.sender + " is already in Tabletop Simulator";
+          bot.sendMessage(msg.channel, message);
+        }               
+      }
+    },
+  "unsettts": {
+        usage: "unsettts",
+        description: "unsets TableTopSimulator",
+        process: function(bot, msg) {
+          var role = msg.channel.server.roles.get("name","tts");
+
+          if(msg.sender.hasRole(role)) {
+            var message = msg.sender + " has been removed from Tabletop Simulator";
+            msg.sender.removeFrom(role, function(err) {
+              if(!err) {
+                bot.sendMessage(msg.channel, message);
+              }
+            });
+          }
+          else{
+            var message = msg.sender + " was not in Tabletop Simulator";
             bot.sendMessage(msg.channel, message);
           }               
         }
@@ -462,26 +550,24 @@ bot.on("message", function (msg) {
         }
     }
 });
- 
 
-//Log user status changes
-bot.on("presence", function(user,status,gameId) {
-  //if(status === "online"){
-  //console.log("presence update");
-  console.log(user+" went "+status);
-  //}
-/*  try{
-  if(status != 'offline'){
-    if(messagebox.hasOwnProperty(user.id)){
-      console.log("found message for " + user.id);
-      var message = messagebox[user.id];
-      var channel = bot.channels.get("id",message.channel);
-      delete messagebox[user.id];
-      updateMessagebox();
-      bot.sendMessage(channel,message.content);
-    }
+// Fires on new member http://discordjs.readthedocs.io/en/latest/docs_client.html#servernewmember
+bot.on("serverNewMember", function(server,user){
+  logMessage(bot,"New Member, username:"+user.userame+", id:"+user.id);
+  logMessage(bot,user.username + ", Welcome!","general");
+});
+
+
+// Fires on user changes http://discordjs.readthedocs.io/en/latest/docs_client.html#presence
+bot.on("presence", function(userOld,userNew) {
+  if(userOld.status != userNew.status) {
+    // Implied status change
+    logMessage(bot,"user: "+userNew.username+", status: "+userNew.status);
   }
-  }catch(e){}*/
+  if(userNew.game) {
+    // user is playing a game, null if not http://discordjs.readthedocs.io/en/latest/docs_user.html#game
+    logMessage(bot,"user: "+userNew.username+", is now playing: "+userNew.game.name);
+  }
 });
 
 exports.addCommand = function(commandName, commandObject){

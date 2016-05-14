@@ -105,16 +105,13 @@ var setRole = function(msg, rolename) {
   var message = "";
   if (!user.hasRole(role)) {
     user.addTo(role, function(err) {
-      if (!err) {
-        message = msg.sender + " has been added to " + role.name;
-      } else {
-        message = "Unable to comply.";
-      }
+        //
     });
+    message = user.username + " has been added to " + role.name;
   } else {
-    message = msg.sender + " is already in " + role.name;
+    message = user.username + " is already in " + role.name; 
   }
-  bot.sendMessage(msg.channel, message);
+  return message;
 }
 
 var unsetRole = function(msg, rolename) {
@@ -123,16 +120,13 @@ var unsetRole = function(msg, rolename) {
   var message = "";
   if (user.hasRole(role)) {
     user.removeFrom(role, function(err) {
-      if (!err) {
-        message = msg.sender + " has been removed from " + role.name;
-      } else {
-        message = "Unable to comply.";
-      }
+        //
     });
+    message = user.username + " has been removed from " + role.name;
   } else {
-    message = msg.sender + " does not have role " + role.name;
+    message = user.username + " does not have role " + role.name;
   }
-  bot.sendMessage(msg.channel, message);
+  return message;
 }
 
 var hugReplies = [
@@ -284,42 +278,49 @@ var commands = {
     usage: "set18",
     description: "sets 18+",
     process: function(bot, msg) {
-      setRole(msg, "18+");
+      var message = setRole(msg, "18+");
+      console.log(message);
+      bot.sendMessage(msg.channel, message);
     }
   },
   "unset18": {
     usage: "unset18",
     description: "unsets 18+",
     process: function(bot, msg) {
-      unsetRole(msg, "18+");
+      var message = unsetRole(msg, "18+");
+      bot.sendMessage(msg.channel, message);
     }
   },
   "setlol": {
     usage: "setlol",
     description: "sets League of Legends",
     process: function(bot, msg) {
-      setRole(msg, "lol");
+      var message = setRole(msg, "lol");
+      bot.sendMessage(msg.channel, message);
     }
   },
   "unsetlol": {
     usage: "unsetlol",
     description: "unsets League of Legends",
     process: function(bot, msg) {
-      unsetRole(msg, "lol");
+      var message = unsetRole(msg, "lol");
+      bot.sendMessage(msg.channel, message);
     }
   },
   "settts": {
     usage: "settts",
     description: "sets TableTopSimulator",
     process: function(bot, msg) {
-      setRole(msg, "tts");
+      var message = setRole(msg, "tts");
+      bot.sendMessage(msg.channel, message);
     }
   },
   "unsettts": {
     usage: "unsettts",
     description: "unsets TableTopSimulator",
     process: function(bot, msg) {
-      unsetRole(msg, "tts");
+      var message = unsetRole(msg, "tts");
+      bot.sendMessage(msg.channel, message);
     }
   },
   "spray": {

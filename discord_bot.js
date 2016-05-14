@@ -374,6 +374,18 @@ var commands = {
     process: function(bot, msg) {
       bot.sendMessage(msg.channel, randomFromArray(pokeReplies));
     }
+  },
+  
+  "lapdance": {
+    description: "Lapdance",
+    process: function(bot, msg) {
+      if(msg.sender.hasRole(msg.channel.server.roles.get("name", "Admin"))) {
+        var message = '*gives $USER a sexy lapdance*';
+        bot.sendMessage(msg.channel, message.replace('$USER', msg.sender));
+      } else {
+        bot.sendMessage(msg.channel, 'NO!');
+      }
+    }
   }
 };
 

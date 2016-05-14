@@ -20,21 +20,21 @@ var Permissions = {};
 try{
   Permissions = require("./permissions.json");
 } catch(e){}
-Permissions.checkPermission = function (user,permission){
+Permissions.checkPermission = function (user,permission) {
   try {
     var allowed = false;
-    try{
-      if(Permissions.global.hasOwnProperty(permission)){
+    try {
+      if (Permissions.global.hasOwnProperty(permission)) {
         allowed = Permissions.global[permission] == true;
       }
-    } catch(e){}
-    try{
-      if(Permissions.users[user.id].hasOwnProperty(permission)){
+    } catch(e) {}
+    try {
+      if(Permissions.users[user.id].hasOwnProperty(permission)) {
         allowed = Permissions.users[user.id][permission] == true;
       }
     } catch(e){}
     return allowed;
-  } catch(e){}
+  } catch(e) {}
   return false;
 }
 

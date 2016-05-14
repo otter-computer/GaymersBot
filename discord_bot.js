@@ -553,20 +553,42 @@ bot.on("message", function (msg) {
 
 // Fires on new member http://discordjs.readthedocs.io/en/latest/docs_client.html#servernewmember
 bot.on("serverNewMember", function(server,user){
-  logMessage(bot,"New Member, username:"+user.userame+", id:"+user.id);
+  logMessage(bot,"New Member, username:"+user.username+", id:"+user.id);
   logMessage(bot,user.username + ", Welcome!","general");
 });
+
+// Fires on new member http://discordjs.readthedocs.io/en/latest/docs_client.html#servermemberremoved
+bot.on("serverMemberRemoved", function(server,user){
+  console.log(user);
+  console.log(server);
+  logMessage(bot,"Member left, username:"+user.userame+", id:"+user.id);
+});
+
+// Fires on ban http://discordjs.readthedocs.io/en/latest/docs_client.html#userbanned
+bot.on("userBanned", function(user,server){
+  console.log(user);
+  console.log(server);
+  logMessage(bot,"Member banned, username:"+user.userame+", id:"+user.id);
+});
+
+// Fires on unban http://discordjs.readthedocs.io/en/latest/docs_client.html#userunbanned
+bot.on("userUnBanned", function(user,server){
+  console.log(user);
+  console.log(server);
+  logMessage(bot,"Member unbanned, username:"+user.userame+", id:"+user.id);
+});
+
 
 
 // Fires on user changes http://discordjs.readthedocs.io/en/latest/docs_client.html#presence
 bot.on("presence", function(userOld,userNew) {
   if(userOld.status != userNew.status) {
     // Implied status change
-    logMessage(bot,"user: "+userNew.username+", status: "+userNew.status);
+    //logMessage(bot,"user: "+userNew.username+", status: "+userNew.status);
   }
   if(userNew.game) {
     // user is playing a game, null if not http://discordjs.readthedocs.io/en/latest/docs_user.html#game
-    logMessage(bot,"user: "+userNew.username+", is now playing: "+userNew.game.name);
+    //logMessage(bot,"user: "+userNew.username+", is now playing: "+userNew.game.name);
   }
 });
 

@@ -511,18 +511,21 @@ bot.on("message", function (msg) {
         if(cmdTxt === "help"){
             //help is special since it iterates over the other commands
       bot.sendMessage(msg.author,"Available Commands:", function(){
+        var cmdString = '```\n';
         for(var cmd in commands) {
           var info = "!" + cmd;
           var usage = commands[cmd].usage;
           if(usage){
-            info += " " + usage;
+            info += "\t" + usage;
           }
           var description = commands[cmd].description;
           if(description){
-            info += "\n\t" + description;
+            info += "\t" + description;
           }
-          bot.sendMessage(msg.author,info);
+          cmdString+= info+"\n";
         }
+        cmdString+= "```";
+        bot.sendMessage(msg.author,cmdString);
       });
         }
     else if(cmd) {

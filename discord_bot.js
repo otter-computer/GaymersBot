@@ -51,30 +51,46 @@ var d20 = require("d20");
 
 var startTime = Date.now();
 
+var Q = require("Q");
+
 var randomFromArray = function(array) {
   return array[Math.floor(Math.random() * array.length)];
 }
 
-var removeRegions = function(msg,cb){
+var removeRegions = function(msg){
 
-        var regions = [msg.channel.server.roles.get("name","Europe"),
-        msg.channel.server.roles.get("name","North America"),
-        msg.channel.server.roles.get("name","South America"),
-        msg.channel.server.roles.get("name","Middle East"),
-        msg.channel.server.roles.get("name","Oceania"),
-        msg.channel.server.roles.get("name","Africa"),
-        msg.channel.server.roles.get("name","Asia")];
+  var user = msg.sender;
 
-        var user = msg.sender;
-    for (i = 0; i < regions.length; ++i) {
-      //console.log(regions[i]);
-        //console.log(regions[i].name);
-        if (user.hasRole(regions[i])) {
-          user.removeFrom(regions[i]);
-      }
+  var deferred = Q.defer();
+
+  var regions = [
+    msg.channel.server.roles.get("name","Europe"),
+    msg.channel.server.roles.get("name","North America"),
+    msg.channel.server.roles.get("name","South America"),
+    msg.channel.server.roles.get("name","Middle East"),
+    msg.channel.server.roles.get("name","Oceania"),
+    msg.channel.server.roles.get("name","Africa"),
+    msg.channel.server.roles.get("name","Asia")
+  ];
+
+  for (i = 0; i < regions.length; ++i) {
+    if (user.hasRole(regions[i])) {
+      //console.log('user: '+user.username+', has role: '+regions[i].name);
+      user.removeFrom(regions[i], function(err){
+        if(!err){
+          deferred.resolve(regions[i].name);
+          console.log('role removed - user: '+user.username+', has role: '+regions[i].name);
+        }
+        else{
+          console.log('error removing user: '+user.username+', role: '+regions[i].name);
+          deferred.reject(new Error("Could not remove region"));
+        }
+        
+      });
     }
+  }
 
-    cb(true);
+    return deferred.promise;
 }
 
 var logMessage = function(bot,message,channelname){
@@ -84,6 +100,27 @@ var logMessage = function(bot,message,channelname){
   var channel = bot.channels.get("name",channelname);
   bot.sendMessage(channel,message);
 }
+
+var setRole = function(msg,rolename){
+  var user = msg.sender;
+  var role = msg.channel.server.roles.get("name",rolename);
+  var message = "";
+  if(!user.hasRole(role)) {
+    user.addTo(role, function(err) {
+      if(!err) {
+        message = msg.sender + " has been added to "+role.name;
+      }
+      else{
+        message = "Unable to comply.";
+      }
+    });
+  }
+  else{
+    message = msg.sender + " is already in "+role.name;
+    
+  }
+  bot.sendMessage(msg.channel, message);
+}   
 
 var hugReplies = [
   '*hugs $USER*',
@@ -270,14 +307,15 @@ var commands = {
       var role = msg.channel.server.roles.get("name",region);
 
       if(suffix) {
-        removeRegions(msg, function() {
-          // BUG - doesnt add after 'removal' of existing
+        removeRegions(msg).then(function(){
           msg.sender.addTo(role, function(err) {
             if(!err) {
               var message = msg.sender + " set to region: " + region;
               bot.sendMessage(msg.channel, message);
-            }
+            }  
           });
+        // BUG - doesnt add after 'removal' of existing
+
         });
       }
     }
@@ -286,10 +324,9 @@ var commands = {
     usage: "unsetregion",
     description: "unset region",
     process: function(bot, msg) {
-      removeRegions(msg, function() {
-        var message = msg.sender + " region removed.";
-        bot.sendMessage(msg.channel, message);
-      });
+      removeRegions(msg);
+      var message = msg.sender + " region removed.";
+      bot.sendMessage(msg.channel, message);
     }
   },
   "set18": {
@@ -336,20 +373,7 @@ var commands = {
       usage: "setlol",
       description: "sets League of Legends",
       process: function(bot, msg) {
-        var role = msg.channel.server.roles.get("name","lol");
-
-        if(!msg.sender.hasRole(role)) {
-          var message = msg.sender + " has been added to League of Legends";
-          msg.sender.addTo(role, function(err) {
-            if(!err) {
-              bot.sendMessage(msg.channel, message);
-            }
-          });
-        }
-        else{
-          var message = msg.sender + " is already in League of Legends";
-          bot.sendMessage(msg.channel, message);
-        }               
+        setRole(msg,"lol");
       }
     },
   "unsetlol": {

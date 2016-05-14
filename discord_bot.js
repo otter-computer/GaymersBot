@@ -553,29 +553,29 @@ bot.on("message", function (msg) {
 
 // Fires on new member http://discordjs.readthedocs.io/en/latest/docs_client.html#servernewmember
 bot.on("serverNewMember", function(server,user){
-  logMessage(bot,"New Member, username:"+user.username+", id:"+user.id);
-  logMessage(bot,user.username + ", Welcome!","general");
+  console.log(user);
+  if(user.username){
+    logMessage(bot,"New Member, username:"+user.username+", id:"+user.id);
+    logMessage(bot,user.username + ", Welcome!","general");
+  }
+  else{
+    // TODO the user is a returning user, not sure how to handle
+  }
 });
 
 // Fires on new member http://discordjs.readthedocs.io/en/latest/docs_client.html#servermemberremoved
 bot.on("serverMemberRemoved", function(server,user){
-  console.log(user);
-  console.log(server);
-  logMessage(bot,"Member left, username:"+user.userame+", id:"+user.id);
+  logMessage(bot,"Member left (or kicked), username:"+user.username+", id:"+user.id);
 });
 
 // Fires on ban http://discordjs.readthedocs.io/en/latest/docs_client.html#userbanned
 bot.on("userBanned", function(user,server){
-  console.log(user);
-  console.log(server);
-  logMessage(bot,"Member banned, username:"+user.userame+", id:"+user.id);
+  logMessage(bot,"Member banned, username:"+user.username+", id:"+user.id);
 });
 
 // Fires on unban http://discordjs.readthedocs.io/en/latest/docs_client.html#userunbanned
-bot.on("userUnBanned", function(user,server){
-  console.log(user);
-  console.log(server);
-  logMessage(bot,"Member unbanned, username:"+user.userame+", id:"+user.id);
+bot.on("userUnbanned", function(user,server){
+  logMessage(bot,"Member unbanned, username:"+user.username+", id:"+user.id);
 });
 
 
@@ -589,6 +589,10 @@ bot.on("presence", function(userOld,userNew) {
   if(userNew.game) {
     // user is playing a game, null if not http://discordjs.readthedocs.io/en/latest/docs_user.html#game
     //logMessage(bot,"user: "+userNew.username+", is now playing: "+userNew.game.name);
+  }
+  if(userOld.username != userNew.username) {
+    // username change, likely due to rejoin.
+    logMessage(bot,"Member rejoined, username: "+userNew.username+", id: "+userNew.id);
   }
 });
 

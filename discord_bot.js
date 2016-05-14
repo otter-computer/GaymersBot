@@ -1,50 +1,50 @@
 try {
-	var Discord = require("discord.js");
+  var Discord = require("discord.js");
 } catch (e){
-	console.log(e.stack);
-	console.log(process.version);
-	console.log("Please run npm install and ensure it passes with no errors!");
-	process.exit();
+  console.log(e.stack);
+  console.log(process.version);
+  console.log("Please run npm install and ensure it passes with no errors!");
+  process.exit();
 }
 
 // Get authentication data
 try {
-	var AuthDetails = require("./auth.json");
+  var AuthDetails = require("./auth.json");
 } catch (e){
-	console.log("Please create an auth.json like auth.json.example with at least an email and password.\n"+e.stack);
-	process.exit();
+  console.log("Please create an auth.json like auth.json.example with at least an email and password.\n"+e.stack);
+  process.exit();
 }
 
 // Load custom permissions
 var Permissions = {};
 try{
-	Permissions = require("./permissions.json");
+  Permissions = require("./permissions.json");
 } catch(e){}
 Permissions.checkPermission = function (user,permission){
-	try {
-		var allowed = false;
-		try{
-			if(Permissions.global.hasOwnProperty(permission)){
-				allowed = Permissions.global[permission] == true;
-			}
-		} catch(e){}
-		try{
-			if(Permissions.users[user.id].hasOwnProperty(permission)){
-				allowed = Permissions.users[user.id][permission] == true;
-			}
-		} catch(e){}
-		return allowed;
-	} catch(e){}
-	return false;
+  try {
+    var allowed = false;
+    try{
+      if(Permissions.global.hasOwnProperty(permission)){
+        allowed = Permissions.global[permission] == true;
+      }
+    } catch(e){}
+    try{
+      if(Permissions.users[user.id].hasOwnProperty(permission)){
+        allowed = Permissions.users[user.id][permission] == true;
+      }
+    } catch(e){}
+    return allowed;
+  } catch(e){}
+  return false;
 }
 
 //load config data
 var Config = {};
 try{
-	Config = require("./config.json");
+  Config = require("./config.json");
 } catch(e){ //no config file, use defaults
-	Config.debug = false;
-	Config.respondToInvalid = false;
+  Config.debug = false;
+  Config.respondToInvalid = false;
 }
 
 var d20 = require("d20");
@@ -52,7 +52,7 @@ var d20 = require("d20");
 var startTime = Date.now();
 
 var randomFromArray = function(array) {
-	return array[Math.floor(Math.random() * array.length)];
+  return array[Math.floor(Math.random() * array.length)];
 }
 
 var removeRegions = function(msg,cb){
@@ -66,15 +66,15 @@ var removeRegions = function(msg,cb){
         msg.channel.server.roles.get("name","Asia")];
 
         var user = msg.sender;
-		for (i = 0; i < regions.length; ++i) {
-			//console.log(regions[i]);
-		    //console.log(regions[i].name);
-		    if (user.hasRole(regions[i])) {
-    			user.removeFrom(regions[i]);
-			}
-		}
+    for (i = 0; i < regions.length; ++i) {
+      //console.log(regions[i]);
+        //console.log(regions[i].name);
+        if (user.hasRole(regions[i])) {
+          user.removeFrom(regions[i]);
+      }
+    }
 
-		cb(true);
+    cb(true);
 }
 
 var hugReplies = [
@@ -124,9 +124,9 @@ var pokeReplies = [
 ];
 
 var slapReplies = [
-	'*slaps $USER around a bit with a large, girthy trout*',
-	'*slaps $USER with a meaty sausage*',
-	'*slaps $USER with a massive bag of spaghetti*'
+  '*slaps $USER around a bit with a large, girthy trout*',
+  '*slaps $USER with a meaty sausage*',
+  '*slaps $USER with a massive bag of spaghetti*'
 ];   
 
 var commands = {
@@ -178,30 +178,30 @@ var commands = {
         description: "logs message to bot console",
         process: function(bot,msg,suffix){console.log(msg.content);}
     },
-	"userid": {
-		usage: "[user to get id of]",
-		description: "Returns the unique id of a user. This is useful for permissions.",
-		process: function(bot,msg,suffix) {
-			if(suffix){
-				var users = msg.channel.server.members.getAll("username",suffix);
-				if(users.length == 1){
-					bot.sendMessage(msg.channel, "The id of " + users[0] + " is " + users[0].id)
-				} else if(users.length > 1){
-					var response = "multiple users found:";
-					for(var i=0;i<users.length;i++){
-						var user = users[i];
-						response += "\nThe id of " + user + " is " + user.id;
-					}
-					bot.sendMessage(msg.channel,response);
-				} else {
-					bot.sendMessage(msg.channel,"No user " + suffix + " found!");
-				}
-			} else {
-				bot.sendMessage(msg.channel, "The id of " + msg.author + " is " + msg.author.id);
-			}
-		}
-	},
-	"roll": {
+  "userid": {
+    usage: "[user to get id of]",
+    description: "Returns the unique id of a user. This is useful for permissions.",
+    process: function(bot,msg,suffix) {
+      if(suffix){
+        var users = msg.channel.server.members.getAll("username",suffix);
+        if(users.length == 1){
+          bot.sendMessage(msg.channel, "The id of " + users[0] + " is " + users[0].id)
+        } else if(users.length > 1){
+          var response = "multiple users found:";
+          for(var i=0;i<users.length;i++){
+            var user = users[i];
+            response += "\nThe id of " + user + " is " + user.id;
+          }
+          bot.sendMessage(msg.channel,response);
+        } else {
+          bot.sendMessage(msg.channel,"No user " + suffix + " found!");
+        }
+      } else {
+        bot.sendMessage(msg.channel, "The id of " + msg.author + " is " + msg.author.id);
+      }
+    }
+  },
+  "roll": {
         usage: "[# of sides] or [# of dice]d[# of sides]( + [# of dice]d[# of sides] + ...)",
         description: "roll one die with x sides, or multiple dice using d20 syntax. Default value is 10",
         process: function(bot,msg,suffix) {
@@ -225,119 +225,156 @@ var commands = {
         }
     },
     "uptime": {
-    	usage: "",
-	description: "returns the amount of time since the bot started",
-	process: function(bot,msg,suffix){
-		var now = Date.now();
-		var msec = now - startTime;
-		console.log("Uptime is " + msec + " milliseconds");
-		var days = Math.floor(msec / 1000 / 60 / 60 / 24);
-		msec -= days * 1000 * 60 * 60 * 24;
-		var hours = Math.floor(msec / 1000 / 60 / 60);
-		msec -= hours * 1000 * 60 * 60;
-		var mins = Math.floor(msec / 1000 / 60);
-		msec -= mins * 1000 * 60;
-		var secs = Math.floor(msec / 1000);
-		var timestr = "";
-		if(days > 0) {
-			timestr += days + " days ";
-		}
-		if(hours > 0) {
-			timestr += hours + " hours ";
-		}
-		if(mins > 0) {
-			timestr += mins + " minutes ";
-		}
-		if(secs > 0) {
-			timestr += secs + " seconds ";
-		}
-		bot.sendMessage(msg.channel,"Uptime: " + timestr);
-	}
+      usage: "",
+  description: "returns the amount of time since the bot started",
+  process: function(bot,msg,suffix){
+    var now = Date.now();
+    var msec = now - startTime;
+    console.log("Uptime is " + msec + " milliseconds");
+    var days = Math.floor(msec / 1000 / 60 / 60 / 24);
+    msec -= days * 1000 * 60 * 60 * 24;
+    var hours = Math.floor(msec / 1000 / 60 / 60);
+    msec -= hours * 1000 * 60 * 60;
+    var mins = Math.floor(msec / 1000 / 60);
+    msec -= mins * 1000 * 60;
+    var secs = Math.floor(msec / 1000);
+    var timestr = "";
+    if(days > 0) {
+      timestr += days + " days ";
+    }
+    if(hours > 0) {
+      timestr += hours + " hours ";
+    }
+    if(mins > 0) {
+      timestr += mins + " minutes ";
+    }
+    if(secs > 0) {
+      timestr += secs + " seconds ";
+    }
+    bot.sendMessage(msg.channel,"Uptime: " + timestr);
+  }
     },
-	"setregion": {
-        usage: "setregion <region>",
-        description: "set region",
-        process: function(bot, msg, suffix) {
-            var region = suffix;
-            var role = msg.channel.server.roles.get("name",region);
+  "setregion": {
+    usage: "setregion <region>",
+    description: "set region",
+    process: function(bot, msg, suffix) {
+      var region = suffix;
+      var role = msg.channel.server.roles.get("name",region);
 
-            if(suffix) {
-            	removeRegions(msg, function() {
-            		// BUG - doesnt add after 'removal' of existing
-            		msg.sender.addTo(role, function(err) {
-                		if(!err) {
-                			var message = msg.sender + " set to region: " + region;
-							bot.sendMessage(msg.channel, message);
-						}
-                	});
-            	});
-                
+      if(suffix) {
+        removeRegions(msg, function() {
+          // BUG - doesnt add after 'removal' of existing
+          msg.sender.addTo(role, function(err) {
+            if(!err) {
+              var message = msg.sender + " set to region: " + region;
+              bot.sendMessage(msg.channel, message);
             }
+          });
+        });
+      }
+    }
+  },
+  "unsetregion": {
+    usage: "unsetregion",
+    description: "unset region",
+    process: function(bot, msg) {
+      removeRegions(msg, function() {
+        var message = msg.sender + " region removed.";
+        bot.sendMessage(msg.channel, message);
+      });
+    }
+  },
+  "set18": {
+      usage: "set18",
+      description: "sets 18+",
+      process: function(bot, msg) {
+        var role = msg.channel.server.roles.get("name","18+");
+
+        if(!msg.sender.hasRole(role)) {
+          var message = msg.sender + " has been added to 18+";
+          msg.sender.addTo(role, function(err) {
+            if(!err) {
+              bot.sendMessage(msg.channel, message);
+            }
+          });
         }
+        else{
+          var message = msg.sender + " is already 18+";
+          bot.sendMessage(msg.channel, message);
+        }               
+      }
     },
-	"unsetregion": {
-        usage: "unsetregion",
-        description: "unset region",
+  "unset18": {
+        usage: "unset18",
+        description: "unsets 18+",
         process: function(bot, msg) {
-            
-            removeRegions(msg, function() {
-            	var message = msg.sender + " region removed.";
-				bot.sendMessage(msg.channel, message);
+          var role = msg.channel.server.roles.get("name","18+");
+
+          if(msg.sender.hasRole(role)) {
+            var message = msg.sender + " has been removed to 18+";
+            msg.sender.removeFrom(role, function(err) {
+              if(!err) {
+                bot.sendMessage(msg.channel, message);
+              }
             });
-			
+          }
+          else{
+            var message = msg.sender + " was not 18+";
+            bot.sendMessage(msg.channel, message);
+          }               
         }
     },
-	"spray": {
-		description: "Spray someone thirsty...",
-		process: function(bot, msg) {
-			bot.sendMessage(msg.channel, "*sprays " + msg.sender + " with the fire hose*");
-		}
-	},
-	
-	"hug": {
+  "spray": {
+    description: "Spray someone thirsty...",
+    process: function(bot, msg) {
+      bot.sendMessage(msg.channel, "*sprays " + msg.sender + " with the fire hose*");
+    }
+  },
+  
+  "hug": {
         usage: "<user> <message to leave user>",
         description: "hug",
         process: function(bot, msg, suffix) {
-			console.log(suffix);
+      console.log(suffix);
             var args = suffix.split(' ');
             var user = args.shift();
-			console.log(user);
+      console.log(user);
             if(suffix) {
                 // user = user.substr(2, user.length - 3);
-				var message = randomFromArray(hugReplies).replace('$USER', user)
-				bot.sendMessage(msg.channel, message);
+        var message = randomFromArray(hugReplies).replace('$USER', user)
+        bot.sendMessage(msg.channel, message);
             } else {
-				var message = randomFromArray(hugReplies).replace('$USER', msg.sender);
-				bot.sendMessage(msg.channel, message);
-			}
+        var message = randomFromArray(hugReplies).replace('$USER', msg.sender);
+        bot.sendMessage(msg.channel, message);
+      }
         }
     },
-	
-	"slap": {
+  
+  "slap": {
         usage: "<user> <message to leave user>",
         description: "slap",
         process: function(bot, msg, suffix) {
-			console.log(suffix);
+      console.log(suffix);
             var args = suffix.split(' ');
             var user = args.shift();
-			console.log(user);
+      console.log(user);
             if(suffix) {
                 // user = user.substr(2, user.length - 3);
-				var message = randomFromArray(slapReplies).replace('$USER', user)
-				bot.sendMessage(msg.channel, message);
+        var message = randomFromArray(slapReplies).replace('$USER', user)
+        bot.sendMessage(msg.channel, message);
             } else {
-				var message = randomFromArray(slapReplies).replace('$USER', msg.sender);
-				bot.sendMessage(msg.channel, message);
-			}
+        var message = randomFromArray(slapReplies).replace('$USER', msg.sender);
+        bot.sendMessage(msg.channel, message);
+      }
         }
     },
 
-	"poke": {
-		description: "Poke",
-		process: function(bot, msg) {
-			bot.sendMessage(msg.channel, randomFromArray(pokeReplies));
-		}
-	}
+  "poke": {
+    description: "Poke",
+    process: function(bot, msg) {
+      bot.sendMessage(msg.channel, randomFromArray(pokeReplies));
+    }
+  }
 };
 
 
@@ -345,64 +382,64 @@ var commands = {
 var bot = new Discord.Client();
 
 bot.on("ready", function () {
-	console.log("Ready to begin! Serving in " + bot.channels.length + " channels");
-	// require("./plugins.js").init();
+  console.log("Ready to begin! Serving in " + bot.channels.length + " channels");
+  // require("./plugins.js").init();
 });
 
 bot.on("disconnected", function () {
-	console.log("Disconnected!");
-	process.exit(1); //exit node.js with an error
-	
+  console.log("Disconnected!");
+  process.exit(1); //exit node.js with an error
+  
 });
 
 bot.on("message", function (msg) {
-	//check if message is a command
-	if(msg.author.id != bot.user.id && (msg.content[0] === '!' || msg.content.indexOf(bot.user.mention()) == 0)){
+  //check if message is a command
+  if(msg.author.id != bot.user.id && (msg.content[0] === '!' || msg.content.indexOf(bot.user.mention()) == 0)){
         console.log("treating " + msg.content + " from " + msg.author + " as command");
-		var cmdTxt = msg.content.split(" ")[0].substring(1);
+    var cmdTxt = msg.content.split(" ")[0].substring(1);
         var suffix = msg.content.substring(cmdTxt.length+2);//add one for the ! and one for the space
         if(msg.content.indexOf(bot.user.mention()) == 0) {
-			try {
-				cmdTxt = msg.content.split(" ")[1].toLowerCase();
-				suffix = msg.content.substring(bot.user.mention().length+cmdTxt.length+2);
-			} catch(e){ //no command
-				bot.sendMessage(msg.channel,"Yes?");
-				return;
-			}
+      try {
+        cmdTxt = msg.content.split(" ")[1].toLowerCase();
+        suffix = msg.content.substring(bot.user.mention().length+cmdTxt.length+2);
+      } catch(e){ //no command
+        bot.sendMessage(msg.channel,"Yes?");
+        return;
+      }
         }
-		var cmd = commands[cmdTxt.toLowerCase()];
+    var cmd = commands[cmdTxt.toLowerCase()];
         if(cmdTxt === "help"){
             //help is special since it iterates over the other commands
-			bot.sendMessage(msg.author,"Available Commands:", function(){
-				for(var cmd in commands) {
-					var info = "!" + cmd;
-					var usage = commands[cmd].usage;
-					if(usage){
-						info += " " + usage;
-					}
-					var description = commands[cmd].description;
-					if(description){
-						info += "\n\t" + description;
-					}
-					bot.sendMessage(msg.author,info);
-				}
-			});
+      bot.sendMessage(msg.author,"Available Commands:", function(){
+        for(var cmd in commands) {
+          var info = "!" + cmd;
+          var usage = commands[cmd].usage;
+          if(usage){
+            info += " " + usage;
+          }
+          var description = commands[cmd].description;
+          if(description){
+            info += "\n\t" + description;
+          }
+          bot.sendMessage(msg.author,info);
         }
-		else if(cmd) {
-			try {
-				cmd.process(bot,msg,suffix);
-			} catch(e){
-				if(Config.debug){
-					bot.sendMessage(msg.channel, "command " + cmdTxt + " failed :(\n" + e.stack);
-				}
-			}
-		} else {
-			if(Config.respondToInvalid){
-				bot.sendMessage(msg.channel, "Invalid command " + cmdTxt);
-			}
-		}
-	} else {
-		//message isn't a command or is from us
+      });
+        }
+    else if(cmd) {
+      try {
+        cmd.process(bot,msg,suffix);
+      } catch(e){
+        if(Config.debug){
+          bot.sendMessage(msg.channel, "command " + cmdTxt + " failed :(\n" + e.stack);
+        }
+      }
+    } else {
+      if(Config.respondToInvalid){
+        bot.sendMessage(msg.channel, "Invalid command " + cmdTxt);
+      }
+    }
+  } else {
+    //message isn't a command or is from us
         //drop our own messages to prevent feedback loops
         if(msg.author == bot.user){
             return;
@@ -417,22 +454,22 @@ bot.on("message", function (msg) {
 
 //Log user status changes
 bot.on("presence", function(user,status,gameId) {
-	//if(status === "online"){
-	//console.log("presence update");
-	console.log(user+" went "+status);
-	//}
-/*	try{
-	if(status != 'offline'){
-		if(messagebox.hasOwnProperty(user.id)){
-			console.log("found message for " + user.id);
-			var message = messagebox[user.id];
-			var channel = bot.channels.get("id",message.channel);
-			delete messagebox[user.id];
-			updateMessagebox();
-			bot.sendMessage(channel,message.content);
-		}
-	}
-	}catch(e){}*/
+  //if(status === "online"){
+  //console.log("presence update");
+  console.log(user+" went "+status);
+  //}
+/*  try{
+  if(status != 'offline'){
+    if(messagebox.hasOwnProperty(user.id)){
+      console.log("found message for " + user.id);
+      var message = messagebox[user.id];
+      var channel = bot.channels.get("id",message.channel);
+      delete messagebox[user.id];
+      updateMessagebox();
+      bot.sendMessage(channel,message.content);
+    }
+  }
+  }catch(e){}*/
 });
 
 exports.addCommand = function(commandName, commandObject){

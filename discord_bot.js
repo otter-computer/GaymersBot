@@ -117,6 +117,24 @@ var setRole = function(msg, rolename) {
   bot.sendMessage(msg.channel, message);
 }
 
+var unsetRole = function(msg, rolename) {
+  var user = msg.sender;
+  var role = msg.channel.server.roles.get("name", rolename);
+  var message = "";
+  if (user.hasRole(role)) {
+    user.removeFrom(role, function(err) {
+      if (!err) {
+        message = msg.sender + " has been removed from " + role.name;
+      } else {
+        message = "Unable to comply.";
+      }
+    });
+  } else {
+    message = msg.sender + " does not have role " + role.name;
+  }
+  bot.sendMessage(msg.channel, message);
+}
+
 var hugReplies = [
   '*hugs $USER*',
   '*hugs $USER*',
@@ -179,80 +197,7 @@ var commands = {
       }
     }
   },
-  "servers": {
-    description: "lists servers bot is connected to",
-    process: function(bot, msg) {
-      bot.sendMessage(msg.channel, bot.servers);
-    }
-  },
-  "channels": {
-    description: "lists channels bot is connected to",
-    process: function(bot, msg) {
-      bot.sendMessage(msg.channel, bot.channels);
-    }
-  },
-  "myid": {
-    description: "returns the user id of the sender",
-    process: function(bot, msg) {
-      bot.sendMessage(msg.channel, msg.author.id);
-    }
-  },
-  "idle": {
-    description: "sets bot status to idle",
-    process: function(bot, msg) {
-      bot.setStatusIdle();
-    }
-  },
-  "online": {
-    description: "sets bot status to online",
-    process: function(bot, msg) {
-      bot.setStatusOnline();
-    }
-  },
-  "version": {
-    description: "returns the git commit this bot is running",
-    process: function(bot, msg, suffix) {
-      var commit = require('child_process').spawn('git', ['log', '-n', '1']);
-      commit.stdout.on('data', function(data) {
-        bot.sendMessage(msg.channel, data);
-      });
-      commit.on('close', function(code) {
-        if (code != 0) {
-          bot.sendMessage(msg.channel, "failed checking git version!");
-        }
-      });
-    }
-  },
-  "log": {
-    usage: "<log message>",
-    description: "logs message to bot console",
-    process: function(bot, msg, suffix) {
-      console.log(msg.content);
-    }
-  },
-  "userid": {
-    usage: "[user to get id of]",
-    description: "Returns the unique id of a user. This is useful for permissions.",
-    process: function(bot, msg, suffix) {
-      if (suffix) {
-        var users = msg.channel.server.members.getAll("username", suffix);
-        if (users.length == 1) {
-          bot.sendMessage(msg.channel, "The id of " + users[0] + " is " + users[0].id)
-        } else if (users.length > 1) {
-          var response = "multiple users found:";
-          for (var i = 0; i < users.length; i++) {
-            var user = users[i];
-            response += "\nThe id of " + user + " is " + user.id;
-          }
-          bot.sendMessage(msg.channel, response);
-        } else {
-          bot.sendMessage(msg.channel, "No user " + suffix + " found!");
-        }
-      } else {
-        bot.sendMessage(msg.channel, "The id of " + msg.author + " is " + msg.author.id);
-      }
-    }
-  },
+
   "roll": {
     usage: "[# of sides] or [# of dice]d[# of sides]( + [# of dice]d[# of sides] + ...)",
     description: "roll one die with x sides, or multiple dice using d20 syntax. Default value is 10",
@@ -339,38 +284,14 @@ var commands = {
     usage: "set18",
     description: "sets 18+",
     process: function(bot, msg) {
-      var role = msg.channel.server.roles.get("name", "18+");
-
-      if (!msg.sender.hasRole(role)) {
-        var message = msg.sender + " has been added to 18+";
-        msg.sender.addTo(role, function(err) {
-          if (!err) {
-            bot.sendMessage(msg.channel, message);
-          }
-        });
-      } else {
-        var message = msg.sender + " is already in 18+";
-        bot.sendMessage(msg.channel, message);
-      }
+      setRole(msg, "18+");
     }
   },
   "unset18": {
     usage: "unset18",
     description: "unsets 18+",
     process: function(bot, msg) {
-      var role = msg.channel.server.roles.get("name", "18+");
-
-      if (msg.sender.hasRole(role)) {
-        var message = msg.sender + " has been removed from 18+";
-        msg.sender.removeFrom(role, function(err) {
-          if (!err) {
-            bot.sendMessage(msg.channel, message);
-          }
-        });
-      } else {
-        var message = msg.sender + " was not in 18+";
-        bot.sendMessage(msg.channel, message);
-      }
+      unsetRole(msg, "18+");
     }
   },
   "setlol": {
@@ -384,57 +305,21 @@ var commands = {
     usage: "unsetlol",
     description: "unsets League of Legends",
     process: function(bot, msg) {
-      var role = msg.channel.server.roles.get("name", "lol");
-
-      if (msg.sender.hasRole(role)) {
-        var message = msg.sender + " has been removed from League of Legends";
-        msg.sender.removeFrom(role, function(err) {
-          if (!err) {
-            bot.sendMessage(msg.channel, message);
-          }
-        });
-      } else {
-        var message = msg.sender + " was not in League of Legends";
-        bot.sendMessage(msg.channel, message);
-      }
+      unsetRole(msg, "lol");
     }
   },
   "settts": {
     usage: "settts",
     description: "sets TableTopSimulator",
     process: function(bot, msg) {
-      var role = msg.channel.server.roles.get("name", "tts");
-
-      if (!msg.sender.hasRole(role)) {
-        var message = msg.sender + " has been added to Tabletop Simulator";
-        msg.sender.addTo(role, function(err) {
-          if (!err) {
-            bot.sendMessage(msg.channel, message);
-          }
-        });
-      } else {
-        var message = msg.sender + " is already in Tabletop Simulator";
-        bot.sendMessage(msg.channel, message);
-      }
+      setRole(msg, "tts");
     }
   },
   "unsettts": {
     usage: "unsettts",
     description: "unsets TableTopSimulator",
     process: function(bot, msg) {
-      var role = msg.channel.server.roles.get("name", "tts");
-
-      if (msg.sender.hasRole(role)) {
-        var message = msg.sender + " has been removed from Tabletop Simulator";
-        msg.sender.removeFrom(role, function(err) {
-          if (!err) {
-            bot.sendMessage(msg.channel, message);
-          }
-        });
-      } else {
-        var message = msg.sender + " was not in Tabletop Simulator";
-        bot.sendMessage(msg.channel, message);
-      }
+      unsetRole(msg, "tts");
     }
   },
   "spray": {
@@ -448,12 +333,9 @@ var commands = {
     usage: "<user> <message to leave user>",
     description: "hug",
     process: function(bot, msg, suffix) {
-      console.log(suffix);
       var args = suffix.split(' ');
       var user = args.shift();
-      console.log(user);
       if (suffix) {
-        // user = user.substr(2, user.length - 3);
         var message = randomFromArray(hugReplies).replace('$USER', user)
         bot.sendMessage(msg.channel, message);
       } else {
@@ -467,12 +349,9 @@ var commands = {
     usage: "<user> <message to leave user>",
     description: "slap",
     process: function(bot, msg, suffix) {
-      console.log(suffix);
       var args = suffix.split(' ');
       var user = args.shift();
-      console.log(user);
       if (suffix) {
-        // user = user.substr(2, user.length - 3);
         var message = randomFromArray(slapReplies).replace('$USER', user)
         bot.sendMessage(msg.channel, message);
       } else {
@@ -580,12 +459,11 @@ bot.on("message", function(msg) {
 
 // Fires on new member http://discordjs.readthedocs.io/en/latest/docs_client.html#servernewmember
 bot.on("serverNewMember", function(server, user) {
-  console.log(user);
   if (user.username) {
     logMessage(bot, "New Member, username:" + user.username + ", id:" + user.id);
     logMessage(bot, user.username + ", Welcome!", "general");
   } else {
-    // TODO the user is a returning user, not sure how to handle
+    logMessage(bot, "Returning Member, id:" + user.id);
   }
 });
 
@@ -603,8 +481,6 @@ bot.on("userBanned", function(user, server) {
 bot.on("userUnbanned", function(user, server) {
   logMessage(bot, "Member unbanned, username:" + user.username + ", id:" + user.id);
 });
-
-
 
 // Fires on user changes http://discordjs.readthedocs.io/en/latest/docs_client.html#presence
 bot.on("presence", function(userOld, userNew) {

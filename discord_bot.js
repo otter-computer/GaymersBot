@@ -90,6 +90,25 @@ var unsetRole = function(msg, rolename) {
   return message;
 }
 
+var welcomeMessage = "Welcome to Gaymers! \n" +
+  "type `!help` to see how I work. \n" +
+  "To set your region type `!setregion YOUR-REGION-HERE` in any channel. \n" +
+  "For help on what regions are available type `!regions` in any channel. \n" +
+  "To gain access to the #over-18 channel, type `!set18` in any channel. \n" +
+  "If you have any questions, use the `@admin` command or PM one of the admins. \n" +
+  "Please review our rules here: https://goo.gl/670LtP";
+  
+var welcomeBackMessage = "Welcome back to Gaymers! \n" +
+  "type `!help` to see how I work. \n" +
+  "To set your region type `!setregion YOUR-REGION-HERE` in any channel. \n" +
+  "For help on what regions are available type `!regions` in any channel. \n" +
+  "To gain access to the #over-18 channel, type `!set18` in any channel. \n" +
+  "If you have any questions, use the `@admin` command or PM one of the admins. \n" +
+  "Please remember our rules that are available here: https://goo.gl/670LtP";
+  
+var regionMessage = "To set your region type `!setregion YOUR-REGION-HERE` in any channel. \n" +
+  "Here is the list of available regions: \n";
+
 var hugReplies = [
   '*hugs $USER*',
   '*hugs $USER*',
@@ -200,6 +219,33 @@ var commands = {
         timestr += secs + " seconds ";
       }
       bot.sendMessage(msg.channel, "Uptime: " + timestr);
+    }
+  },
+  "regions": {
+    usage: "setregion <region>",
+    description: "set region",
+    process: function(bot, msg, suffix) {
+      var message = regionMessage;
+      
+      var regions = [
+        msg.channel.server.roles.get("name", "Europe"),
+        msg.channel.server.roles.get("name", "North America"),
+        msg.channel.server.roles.get("name", "South America"),
+        msg.channel.server.roles.get("name", "Middle East"),
+        msg.channel.server.roles.get("name", "Oceania"),
+        msg.channel.server.roles.get("name", "Africa"),
+        msg.channel.server.roles.get("name", "Asia")
+      ];
+          
+      for (var i = 0; i < regions.length; i++) {
+        if (i === 0) {
+          message = message + regions[i].name;
+        } else {
+          message = message + ", " + regions[i].name;
+        }
+      }
+      
+      bot.sendMessage(msg.channel, message);
     }
   },
   "setregion": {
@@ -416,6 +462,7 @@ bot.on("serverNewMember", function(server, user) {
   if (user.username) {
     logMessage(bot, tagUser(user) + " joined the server.");
     logMessage(bot, "Welcome, " + tagUser(user) + "!", "general");
+    bot.sendMessage(user, welcomeMessage);
   }
 });
 
@@ -446,8 +493,9 @@ bot.on("presence", function(userOld, userNew) {
   }
   if (userOld.username != userNew.username) {
     // username change, likely due to rejoin.
-    logMessage(bot, tagUser(user) + " rejoined the server");
-    logMessage(bot, "Welcome back, " + tagUser(user) + "!", "general");
+    logMessage(bot, tagUser(userNew) + " rejoined the server");
+    logMessage(bot, "Welcome back, " + tagUser(userNew) + "!", "general");
+    bot.sendMessage(userNew, welcomeBackMessage);
   }
 });
 

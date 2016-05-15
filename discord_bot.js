@@ -34,15 +34,7 @@ var tagUser = function(user) {
 var removeRegions = function(msg, cb) {
   var user = msg.sender;
 
-  var regions = [
-    msg.channel.server.roles.get("name", "Europe"),
-    msg.channel.server.roles.get("name", "North America"),
-    msg.channel.server.roles.get("name", "South America"),
-    msg.channel.server.roles.get("name", "Middle East"),
-    msg.channel.server.roles.get("name", "Oceania"),
-    msg.channel.server.roles.get("name", "Africa"),
-    msg.channel.server.roles.get("name", "Asia")
-  ];
+  var regions = regionRoles(msg);
 
   user.removeFrom(regions, function(err) {
     if (!err) {
@@ -88,6 +80,20 @@ var unsetRole = function(msg, rolename) {
   }
   console.log("message", message)
   return message;
+}
+
+var regionRoles = function(msg) {
+  var regionArray = [
+    msg.channel.server.roles.get("name", "Europe"),
+    msg.channel.server.roles.get("name", "North America"),
+    msg.channel.server.roles.get("name", "South America"),
+    msg.channel.server.roles.get("name", "Middle East"),
+    msg.channel.server.roles.get("name", "Oceania"),
+    msg.channel.server.roles.get("name", "Africa"),
+    msg.channel.server.roles.get("name", "Asia")
+  ];
+  
+  return regionArray;
 }
 
 var welcomeMessage = "Welcome to Gaymers! \n" +
@@ -227,15 +233,7 @@ var commands = {
     process: function(bot, msg, suffix) {
       var message = regionMessage;
       
-      var regions = [
-        msg.channel.server.roles.get("name", "Europe"),
-        msg.channel.server.roles.get("name", "North America"),
-        msg.channel.server.roles.get("name", "South America"),
-        msg.channel.server.roles.get("name", "Middle East"),
-        msg.channel.server.roles.get("name", "Oceania"),
-        msg.channel.server.roles.get("name", "Africa"),
-        msg.channel.server.roles.get("name", "Asia")
-      ];
+      var regions = regionRoles(msg);
           
       for (var i = 0; i < regions.length; i++) {
         if (i === 0) {
@@ -377,7 +375,11 @@ var commands = {
   "lapdance": {
     description: "Lapdance",
     process: function(bot, msg) {
-      if (msg.sender.hasRole(msg.channel.server.roles.get("name", "Admin"))) {
+
+      // Hax to detect PMs
+      if (msg.channel.recipient) {
+        bot.sendMessage(msg.channel, "I don't give private shows, you ***freak!***");
+      } else if (msg.sender.hasRole(msg.channel.server.roles.get("name", "Admin"))) {
         var message = '*gives $USER a sexy lapdance*';
         bot.sendMessage(msg.channel, message.replace('$USER', msg.sender));
       } else {

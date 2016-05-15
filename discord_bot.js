@@ -8,12 +8,12 @@ try {
 }
 
 // Get authentication data
-try {
-  var AuthDetails = require("./auth.json");
-} catch (e) {
-  console.log("Please create an auth.json like auth.json.example with a token.\n" + e.stack);
-  process.exit();
-}
+
+  var token = process.env.AUTH_TOKEN;
+  if(!token){
+    console.log("Please set the AUTH_TOKEN environment variable with a token.\n");
+    process.exit();
+  }
 
 //load config data
 var Config = {};
@@ -473,4 +473,4 @@ exports.commandCount = function() {
   return Object.keys(commands).length;
 }
 
-bot.loginWithToken(AuthDetails.token);
+bot.loginWithToken(token);

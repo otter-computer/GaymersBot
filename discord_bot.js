@@ -91,7 +91,7 @@ var unsetRole = function(msg, rolename) {
 }
 
 var welcomeMessage = "Welcome to Gaymers! \n" +
-  "type '!help' to see how I work. \n" +
+  "type `!help` to see how I work. \n" +
   "To set your region type `!setregion YOUR-REGION-HERE` in any channel. \n" +
   "For help on what regions are available type `!regions` in any channel. \n" +
   "To gain access to the #over-18 channel, type `!set18` in any channel. \n" +
@@ -99,7 +99,7 @@ var welcomeMessage = "Welcome to Gaymers! \n" +
   "Please review our rules here: https://goo.gl/670LtP";
   
 var welcomeBackMessage = "Welcome back to Gaymers! \n" +
-  "type '!help' to see how I work. \n" +
+  "type `!help` to see how I work. \n" +
   "To set your region type `!setregion YOUR-REGION-HERE` in any channel. \n" +
   "For help on what regions are available type `!regions` in any channel. \n" +
   "To gain access to the #over-18 channel, type `!set18` in any channel. \n" +

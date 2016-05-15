@@ -1,13 +1,13 @@
 {
-  "name": "DiscordBot",
+  "name": "DiscoBot.js",
   "version": "0.1.1",
-  "description": "Bot for Discord app",
+  "description": "DiscoBot MK 2",
   "readme": "README.md",
   "maintainers": [],
   "author": "",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/chrislennon/DiscordBot"
+    "url": "git+https://github.com/gaymers-discord/DiscoBot.js"
   },
   "license": "GNU",
   "dependencies": {
@@ -15,5 +15,8 @@
     "discord.js": "^7.0.x",
     "npm": ""
   },
-  "main": "discord_bot.js"
+  "main": "discord_bot.js",
+  "scripts": {
+    "start": "node discord_bot.js"
+  }
 }

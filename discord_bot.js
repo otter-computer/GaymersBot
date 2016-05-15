@@ -95,7 +95,7 @@ var welcomeMessage = "Welcome to Gaymers! \n" +
   "To set your region type `!setregion YOUR-REGION-HERE` in any channel. \n" +
   "For help on what regions are available type `!regions` in any channel. \n" +
   "To gain access to the #over-18 channel, type `!set18` in any channel. \n" +
-  "If you have any questions, use the `admin`command or PM one of the admins. \n" +
+  "If you have any questions, use the `@admin` command or PM one of the admins. \n" +
   "Please review our rules here: https://goo.gl/670LtP";
   
 var welcomeBackMessage = "Welcome back to Gaymers! \n" +
@@ -103,7 +103,7 @@ var welcomeBackMessage = "Welcome back to Gaymers! \n" +
   "To set your region type `!setregion YOUR-REGION-HERE` in any channel. \n" +
   "For help on what regions are available type `!regions` in any channel. \n" +
   "To gain access to the #over-18 channel, type `!set18` in any channel. \n" +
-  "If you have any questions, use the `admin`command or PM one of the admins. \n" +
+  "If you have any questions, use the `@admin` command or PM one of the admins. \n" +
   "Please remember our rules that are available here: https://goo.gl/670LtP";
   
 var regionMessage = "To set your region type `!setregion YOUR-REGION-HERE` in any channel. \n" +
@@ -493,8 +493,9 @@ bot.on("presence", function(userOld, userNew) {
   }
   if (userOld.username != userNew.username) {
     // username change, likely due to rejoin.
-    logMessage(bot, tagUser(user) + " rejoined the server");
-    logMessage(bot, "Welcome back, " + tagUser(user) + "!", "general");
+    logMessage(bot, tagUser(userNew) + " rejoined the server");
+    logMessage(bot, "Welcome back, " + tagUser(userNew) + "!", "general");
+    bot.sendMessage(userNew, welcomeBackMessage);
   }
 });
 

@@ -90,6 +90,13 @@ var unsetRole = function(msg, rolename) {
   return message;
 }
 
+var welcomeMessage = "Welcome to Gaymers! \n" +
+  "type '!help' to see how I work. \n" +
+  "To set your region type !regions in any channel on the server. \n" +
+  "To gain access to the #over-18 channel, type !set18 in any channel on the server. \n" +
+  "If you have any questions, use the !ask command or PM one of the admins. \n" +
+  "Please review our rules here: https://goo.gl/670LtP";
+
 var hugReplies = [
   '*hugs $USER*',
   '*hugs $USER*',
@@ -416,6 +423,7 @@ bot.on("serverNewMember", function(server, user) {
   if (user.username) {
     logMessage(bot, tagUser(user) + " joined the server.");
     logMessage(bot, "Welcome, " + tagUser(user) + "!", "general");
+    bot.sendMessage(user, welcomeMessage);
   }
 });
 

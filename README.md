@@ -19,7 +19,7 @@ Please note that you must have a working C compiler and Python in your path for
 * [Python 2.7](https://www.python.org/downloads/)
 
 # Running
-Before first run you will need to create an `auth.json` file. The token for a discord bot user are required. The token can be generated from the [Discord Developer Site](https://discordapp.com/developers/applications/me). See `auth.json.example`.
+Before first run you will need to add the 'AUTH_TOKEN' environment variable. On windows you can use `set AUTH_TOKEN=xxxx` on mac/linux you can use `export AUTH_TOKEN=xxx`. The token for a discord bot user are required. The token can be generated from the [Discord Developer Site](https://discordapp.com/developers/applications/me). See `auth.json.example`.
 
 *Important*
 - Your application must be converted to a 'Bot User' to generate a token

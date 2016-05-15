@@ -28,17 +28,12 @@ var d20 = require("d20");
 
 var startTime = Date.now();
 
-var Q = require("Q");
-
 var randomFromArray = function(array) {
   return array[Math.floor(Math.random() * array.length)];
 }
 
-var removeRegions = function(msg) {
-
+var removeRegions = function(msg, cb) {
   var user = msg.sender;
-
-  var deferred = Q.defer();
 
   var regions = [
     msg.channel.server.roles.get("name", "Europe"),
@@ -50,22 +45,15 @@ var removeRegions = function(msg) {
     msg.channel.server.roles.get("name", "Asia")
   ];
 
-  for (i = 0; i < regions.length; ++i) {
-    if (user.hasRole(regions[i])) {
-      //console.log('user: '+user.username+', has role: '+regions[i].name);
-      user.removeFrom(regions[i], function(err) {
-        if (!err) {
-          deferred.resolve(regions[i].name);
-          console.log('role removed - user: ' + user.username + ', has role: ' + regions[i].name);
-        } else {
-          console.log('error removing user: ' + user.username + ', role: ' + regions[i].name);
-          deferred.reject(new Error("Could not remove region"));
-        }
-
-      });
+  user.removeFrom(regions, function(err) {
+    if (!err) {
+      console.log('role removed - user: ' + user.username);
+      cb();
+    } else {
+      console.log('error removing user: ' + user.username);
     }
-  }
-  return deferred.promise;
+
+  });
 }
 
 var logMessage = function(bot, message, channelname) {
@@ -229,15 +217,14 @@ var commands = {
       var role = msg.channel.server.roles.get("name", region);
 
       if (suffix) {
-        removeRegions(msg).then(function() {
+        removeRegions(msg, function() {
+          console.log('adding role');
           msg.sender.addTo(role, function(err) {
             if (!err) {
               var message = msg.sender + " set to region: " + region;
               bot.sendMessage(msg.channel, message);
             }
           });
-          // BUG - doesnt add after 'removal' of existing
-
         });
       }
     }

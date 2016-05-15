@@ -13,8 +13,7 @@
   "dependencies": {
     "d20": "^1.4.0",
     "discord.js": "^7.0.x",
-    "npm": "",
-    "q": "^1.4.1"
+    "npm": ""
   },
   "main": "discord_bot.js"
 }

@@ -1,35 +1,34 @@
-try {
-  var Discord = require("discord.js");
-} catch (e) {
-  console.log(e.stack);
-  console.log(process.version);
-  console.log("Please run npm install and ensure it passes with no errors!");
+var Discord = require("discord.js");
+var d20 = require("d20");
+
+// Authentication token
+var token = process.env.AUTH_TOKEN;
+if(!token) {
+  console.log("Please set the AUTH_TOKEN environment variable with a token.\n");
   process.exit();
 }
 
-// Get authentication data
-
-  var token = process.env.AUTH_TOKEN;
-  if(!token){
-    console.log("Please set the AUTH_TOKEN environment variable with a token.\n");
-    process.exit();
-  }
-
-//load config data
-var Config = {};
-try {
-  Config = require("./config.json");
-} catch (e) { //no config file, use defaults
-  Config.debug = false;
-  Config.respondToInvalid = false;
+// Debug mode
+var debug = process.env.APP_DEBUG;
+if(!debug) {
+  debug = false;
 }
-
-var d20 = require("d20");
 
 var startTime = Date.now();
 
+// Util function to choose a random from array
 var randomFromArray = function(array) {
   return array[Math.floor(Math.random() * array.length)];
+}
+
+// Util function to convert string to Title Case
+String.prototype.toProperCase = function () {
+    return this.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+};
+
+// Util function that returns a user tag
+var tagUser = function(user) {
+  return "<@" + user.id + ">";
 }
 
 var removeRegions = function(msg, cb) {
@@ -47,10 +46,10 @@ var removeRegions = function(msg, cb) {
 
   user.removeFrom(regions, function(err) {
     if (!err) {
-      console.log('role removed - user: ' + user.username);
+      console.log('Region roles removed for user: ' + user.username);
       cb();
     } else {
-      console.log('error removing user: ' + user.username);
+      console.log('Error removing region roles for user: ' + user.username, err);
     }
 
   });
@@ -69,12 +68,10 @@ var setRole = function(msg, rolename) {
   var role = msg.channel.server.roles.get("name", rolename);
   var message = "";
   if (!user.hasRole(role)) {
-    user.addTo(role, function(err) {
-        // TODO message setting should probably happen here if(!err)
-    });
-    message = user.username + " has been added to " + role.name;
+    user.addTo(role);
+    message = user + " has been added to " + role.name;
   } else {
-    message = user.username + " is already in " + role.name; 
+    message = user + " already has " + role.name; 
   }
   return message;
 }
@@ -84,13 +81,12 @@ var unsetRole = function(msg, rolename) {
   var role = msg.channel.server.roles.get("name", rolename);
   var message = "";
   if (user.hasRole(role)) {
-    user.removeFrom(role, function(err) {
-        // TODO message setting should probably happen here if(!err)s
-    });
-    message = user.username + " has been removed from " + role.name;
+    user.removeFrom(role);
+    message = user + " has been removed from " + role.name;
   } else {
-    message = user.username + " does not have role " + role.name;
+    message = user + " does not have " + role.name;
   }
+  console.log("message", message)
   return message;
 }
 
@@ -151,9 +147,6 @@ var commands = {
     description: "responds pong, useful for checking if bot is alive",
     process: function(bot, msg, suffix) {
       bot.sendMessage(msg.channel, msg.sender + " pong!");
-      if (suffix) {
-        bot.sendMessage(msg.channel, "note that !ping takes no arguments!");
-      }
     }
   },
 
@@ -213,7 +206,7 @@ var commands = {
     usage: "setregion <region>",
     description: "set region",
     process: function(bot, msg, suffix) {
-      var region = suffix;
+      var region = suffix.toProperCase();
       var role = msg.channel.server.roles.get("name", region);
 
       if (suffix) {
@@ -221,7 +214,7 @@ var commands = {
           console.log('adding role');
           msg.sender.addTo(role, function(err) {
             if (!err) {
-              var message = msg.sender + " set to region: " + region;
+              var message = msg.sender + " set region to " + region;
               bot.sendMessage(msg.channel, message);
             }
           });
@@ -259,6 +252,7 @@ var commands = {
     description: "sets League of Legends",
     process: function(bot, msg) {
       var message = setRole(msg, "lol");
+      console.log('setlol', message);
       bot.sendMessage(msg.channel, message);
     }
   },
@@ -267,6 +261,8 @@ var commands = {
     description: "unsets League of Legends",
     process: function(bot, msg) {
       var message = unsetRole(msg, "lol");
+      console.log(message);
+      console.log('unsetlol', message);
       bot.sendMessage(msg.channel, message);
     }
   },
@@ -345,8 +341,6 @@ var commands = {
   }
 };
 
-
-
 var bot = new Discord.Client();
 
 bot.on("ready", function() {
@@ -399,13 +393,9 @@ bot.on("message", function(msg) {
       try {
         cmd.process(bot, msg, suffix);
       } catch (e) {
-        if (Config.debug) {
+        if (debug) {
           bot.sendMessage(msg.channel, "command " + cmdTxt + " failed :(\n" + e.stack);
         }
-      }
-    } else {
-      if (Config.respondToInvalid) {
-        bot.sendMessage(msg.channel, "Invalid command " + cmdTxt);
       }
     }
   } else {
@@ -424,26 +414,24 @@ bot.on("message", function(msg) {
 // Fires on new member http://discordjs.readthedocs.io/en/latest/docs_client.html#servernewmember
 bot.on("serverNewMember", function(server, user) {
   if (user.username) {
-    logMessage(bot, "New Member, username:" + user.username + ", id:" + user.id);
-    logMessage(bot, user.username + ", Welcome!", "general");
-  } else {
-    logMessage(bot, "Returning Member, id:" + user.id);
+    logMessage(bot, tagUser(user) + " joined the server.");
+    logMessage(bot, "Welcome, " + tagUser(user) + "!", "general");
   }
 });
 
 // Fires on new member http://discordjs.readthedocs.io/en/latest/docs_client.html#servermemberremoved
 bot.on("serverMemberRemoved", function(server, user) {
-  logMessage(bot, "Member left (or kicked), username:" + user.username + ", id:" + user.id);
+  logMessage(bot, tagUser(user) + " left the server.");
 });
 
 // Fires on ban http://discordjs.readthedocs.io/en/latest/docs_client.html#userbanned
 bot.on("userBanned", function(user, server) {
-  logMessage(bot, "Member banned, username:" + user.username + ", id:" + user.id);
+  logMessage(bot, tagUser(user) + " was banned from the server.");
 });
 
 // Fires on unban http://discordjs.readthedocs.io/en/latest/docs_client.html#userunbanned
 bot.on("userUnbanned", function(user, server) {
-  logMessage(bot, "Member unbanned, username:" + user.username + ", id:" + user.id);
+  logMessage(bot, tagUser(user) + " was unbanned from the server.");
 });
 
 // Fires on user changes http://discordjs.readthedocs.io/en/latest/docs_client.html#presence
@@ -458,7 +446,8 @@ bot.on("presence", function(userOld, userNew) {
   }
   if (userOld.username != userNew.username) {
     // username change, likely due to rejoin.
-    logMessage(bot, "Member rejoined, username: " + userNew.username + ", id: " + userNew.id);
+    logMessage(bot, tagUser(user) + " rejoined the server");
+    logMessage(bot, "Welcome back, " + tagUser(user) + "!", "general");
   }
 });
 

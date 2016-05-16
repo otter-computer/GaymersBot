@@ -13,6 +13,7 @@
   "dependencies": {
     "d20": "^1.4.0",
     "discord.js": "^7.0.x",
+    "follow-redirects": "^0.1.0",
     "npm": ""
   },
   "main": "discord_bot.js",

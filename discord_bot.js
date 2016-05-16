@@ -477,6 +477,79 @@ var commands = {
       bot.sendMessage(msg.author, output);
 
     }
+  },
+  "choose": {
+    usage: "!choose <one> <two> <three> <etc>",
+    description: "choose",
+    process: function(bot,msg,suffix){
+
+  formats = [
+    "I think \"%\" is the best choice",
+    "I've decided on \"%\"",
+    "Definitely \"%\"",
+    "\"%\" would be best",
+    "After much deliberation, \"%\"",
+    "I reckon \"%\"",
+    "I choose \"%\""
+  ];
+
+    var options = suffix.split(/\s*[ ,;]\s*|\sor\s/i)
+    var choice = options[Math.floor(Math.random()*options.length)];
+    var format = formats[Math.floor(Math.random()*formats.length)];
+
+    if(msg.channel.recipient){
+      // from pm - TODO proper channel distinction
+      var to = msg.author;
+    }
+    else {
+      var to = msg.channel
+    }
+
+    bot.sendMessage(to, format.replace("%", choice));
+
+    }
+  },
+  "8ball": {
+    usage: "!8ball",
+    description: "Your question.",
+    process: function(bot,msg,suffix){
+
+      ball = [
+        "It is certain",
+        "It is decidedly so",
+        "Without a doubt",
+        "Yes – definitely",
+        "You may rely on it",
+        "As I see it, yes",
+        "Most likely",
+        "Outlook good",
+        "Signs point to yes",
+        "Yes",
+        "Reply hazy, try again",
+        "Ask again later",
+        "Better not tell you now",
+        "Cannot predict now",
+        "Concentrate and ask again",
+        "Don't count on it",
+        "My reply is no",
+        "My sources say no",
+        "Outlook not so good",
+        "Very doubtful",
+      ];
+
+      var choice = ball[Math.floor(Math.random()*ball.length)];
+
+      if(suffix){
+        if(msg.channel.recipient){
+          // from pm - TODO proper channel distinction
+          var to = msg.author;
+        }
+        else {
+          var to = msg.channel;
+        }
+        bot.sendMessage(to, choice);
+      }
+    }
   }
 };
 

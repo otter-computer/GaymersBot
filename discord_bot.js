@@ -582,6 +582,31 @@ var bot = new Discord.Client();
 bot.on("ready", function() {
   console.log("Ready to begin! Serving in " + bot.channels.length + " channels");
   // require("./plugins.js").init();
+  try {
+    var fs = require('fs')
+      , filename = 'version.txt';
+
+    fs.readFile(filename, 'utf8', function(err, data) {
+      if (err) { //no version
+        bot.setStatus("online",null,function() {
+          console.log("Could not read version, will not set status.")  
+          return;
+        });
+        return;
+      }
+      else{
+        var version = data.substring(0, 7);;
+        bot.setStatus("online","version: "+version,function() {
+          console.log("Status set to: "+version);
+          return;
+        });
+      }
+    });
+  } 
+  catch (e) { //no version
+    console.log("Could not read version, will not set status.")
+    return;
+  }
 });
 
 bot.on("disconnected", function() {

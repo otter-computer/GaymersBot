@@ -49,7 +49,7 @@ var removeRegions = function(msg, cb) {
 
 var logMessage = function(bot, message, channelname) {
   if (!channelname) {
-    channelname = 'log';
+    channelname = 'user-logs';
   }
   var channel = bot.channels.get("name", channelname);
   bot.sendMessage(channel, message);
@@ -177,7 +177,7 @@ var commands = {
 
   "roll": {
     usage: "[# of sides] or [# of dice]d[# of sides]( + [# of dice]d[# of sides] + ...)",
-    description: "roll one die with x sides, or multiple dice using d20 syntax. Default value is 10",
+    description: "Roll one die with x sides, or multiple dice using d20 syntax. Default value is 10",
     process: function(bot, msg, suffix) {
       if (suffix.split("d").length <= 1) {
         bot.sendMessage(msg.channel, msg.author + " rolled a " + d20.roll(suffix || "10"));
@@ -198,8 +198,8 @@ var commands = {
     }
   },
   "uptime": {
-    usage: "",
-    description: "returns the amount of time since the bot started",
+    usage: "uptime",
+    description: "Returns the amount of time since the bot started",
     process: function(bot, msg, suffix) {
       var now = Date.now();
       var msec = now - startTime;
@@ -228,8 +228,8 @@ var commands = {
     }
   },
   "regions": {
-    usage: "setregion <region>",
-    description: "set region",
+    usage: "regions",
+    description: "List the available regions.",
     process: function(bot, msg, suffix) {
       var message = regionMessage;
       
@@ -248,7 +248,7 @@ var commands = {
   },
   "setregion": {
     usage: "setregion <region>",
-    description: "set region",
+    description: "Set your region, get pretty color.",
     process: function(bot, msg, suffix) {
       var region = suffix.toProperCase();
       var role = msg.channel.server.roles.get("name", region);
@@ -268,7 +268,7 @@ var commands = {
   },
   "unsetregion": {
     usage: "unsetregion",
-    description: "unset region",
+    description: "Remove your region, remain mysterious.",
     process: function(bot, msg) {
       removeRegions(msg);
       var message = msg.sender + " region removed.";
@@ -277,7 +277,7 @@ var commands = {
   },
   "set18": {
     usage: "set18",
-    description: "sets 18+",
+    description: "sets 18+, gives access to #over-18",
     process: function(bot, msg) {
       var message = setRole(msg, "18+");
       bot.sendMessage(msg.channel, message);
@@ -295,7 +295,7 @@ var commands = {
     usage: "setlol",
     description: "sets League of Legends",
     process: function(bot, msg) {
-      var message = setRole(msg, "lol");
+      var message = setRole(msg, "League of Legends");
       console.log('setlol', message);
       bot.sendMessage(msg.channel, message);
     }
@@ -304,7 +304,7 @@ var commands = {
     usage: "unsetlol",
     description: "unsets League of Legends",
     process: function(bot, msg) {
-      var message = unsetRole(msg, "lol");
+      var message = unsetRole(msg, "League of Legends");
       console.log(message);
       console.log('unsetlol', message);
       bot.sendMessage(msg.channel, message);
@@ -312,21 +312,22 @@ var commands = {
   },
   "settts": {
     usage: "settts",
-    description: "sets TableTopSimulator",
+    description: "sets Table Top Simulator",
     process: function(bot, msg) {
-      var message = setRole(msg, "tts");
+      var message = setRole(msg, "Table Top Simulator");
       bot.sendMessage(msg.channel, message);
     }
   },
   "unsettts": {
     usage: "unsettts",
-    description: "unsets TableTopSimulator",
+    description: "unsets Table Top Simulator",
     process: function(bot, msg) {
-      var message = unsetRole(msg, "tts");
+      var message = unsetRole(msg, "Table Top Simulator");
       bot.sendMessage(msg.channel, message);
     }
   },
   "spray": {
+    usage: "spray <user>",
     description: "Spray someone thirsty...",
     process: function(bot, msg) {
       bot.sendMessage(msg.channel, "*sprays " + msg.sender + " with the fire hose*");
@@ -334,7 +335,7 @@ var commands = {
   },
 
   "hug": {
-    usage: "<user> <message to leave user>",
+    usage: "hug <user>",
     description: "hug",
     process: function(bot, msg, suffix) {
       var args = suffix.split(' ');
@@ -350,7 +351,7 @@ var commands = {
   },
 
   "slap": {
-    usage: "<user> <message to leave user>",
+    usage: "slap <user>",
     description: "slap",
     process: function(bot, msg, suffix) {
       var args = suffix.split(' ');
@@ -366,7 +367,7 @@ var commands = {
   },
 
   "poke": {
-    description: "Poke",
+    description: "Poke Discobot :3",
     process: function(bot, msg) {
       bot.sendMessage(msg.channel, randomFromArray(pokeReplies));
     }
@@ -374,14 +375,14 @@ var commands = {
 
   "suggest": {
     usage: "!suggest <suggestion to send devs>",
-    description: "hug",
+    description: "Suggest a new bot feature!",
     process: function(bot, msg, suffix) {
       if (suffix) {
-        var message = "Thanks for the suggestion, I have PM'd it to an developer."
+        var message = "Thanks for the suggestion, I've PM'd it to a developer."
 
         if(!msg.channel.recipient){
           var chan = msg.channel;  
-          var devRole = chan.server.roles.get("name", "Dev");
+          var devRole = chan.server.roles.get("name", "bot-dev");
           var devUsers = chan.server.usersWithRole(devRole);
 
           for (var devUser in devUsers){
@@ -403,7 +404,7 @@ var commands = {
     }
   },
   "lapdance": {
-    description: "Lapdance",
+    description: "have a *sexy* lapdance",
     process: function(bot, msg) {
 
       // Hax to detect PMs
@@ -419,7 +420,7 @@ var commands = {
   },
   "currentlyplaying": {
     usage: "!currentlyplaying",
-    description: "Currently Playing list",
+    description: "See a list of who's playing what",
     process: function(bot,msg) {
       var output = "Currently being played:\n";
       
@@ -447,7 +448,7 @@ var commands = {
   },
   "whoisplaying": {
     usage: "<game>",
-    description: "Who Playing",
+    description: "Find out who's playing a specific game",
     process: function(bot,msg,suffix) {
 
       var targetGame = suffix.toProperCase();
@@ -480,7 +481,7 @@ var commands = {
   },
   "choose": {
     usage: "!choose <one> <two> <three> <etc>",
-    description: "choose",
+    description: "Let DiscoBot choose for you",
     process: function(bot,msg,suffix){
 
   formats = [
@@ -511,7 +512,7 @@ var commands = {
   },
   "8ball": {
     usage: "!8ball",
-    description: "Your question.",
+    description: "See the future, have DiscoBot read your fortune.",
     process: function(bot,msg,suffix){
 
       ball = [

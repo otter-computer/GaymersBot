@@ -167,6 +167,10 @@ var slapReplies = [
   '*slaps $USER with a massive bag of spaghetti*'
 ];
 
+var sprayReplies = [
+  "*sprays $USER with the fire hose*"
+];
+
 var commands = {
   "ping": {
     description: "responds pong, useful for checking if bot is alive",
@@ -326,11 +330,20 @@ var commands = {
       bot.sendMessage(msg.channel, message);
     }
   },
+  
   "spray": {
     usage: "spray <user>",
     description: "Spray someone thirsty...",
-    process: function(bot, msg) {
-      bot.sendMessage(msg.channel, "*sprays " + msg.sender + " with the fire hose*");
+    process: function(bot, msg, suffix) {
+      var args = suffix.split(' ');
+      var user = args.shift();
+      if (suffix) {
+        var message = randomFromArray(sprayReplies).replace('$USER', user)
+        bot.sendMessage(msg.channel, message);
+      } else {
+        var message = randomFromArray(sprayReplies).replace('$USER', msg.sender);
+        bot.sendMessage(msg.channel, message);
+      }
     }
   },
 

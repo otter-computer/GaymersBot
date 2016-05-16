@@ -372,6 +372,36 @@ var commands = {
     }
   },
 
+  "suggest": {
+    usage: "!suggest <suggestion to send devs>",
+    description: "hug",
+    process: function(bot, msg, suffix) {
+      if (suffix) {
+        var message = "Thanks for the suggestion, I have PM'd it to an developer."
+
+        if(!msg.channel.recipient){
+          var chan = msg.channel;  
+          var devRole = chan.server.roles.get("name", "Dev");
+          var devUsers = chan.server.usersWithRole(devRole);
+
+          for (var devUser in devUsers){
+            var devMsg = tagUser(msg.sender)+" has suggested: \n```\n"+suffix+"\n```";
+            bot.sendMessage(devUsers[devUser], devMsg);
+          }
+          bot.sendMessage(msg.channel, message);
+
+        }
+        else{
+          var message = "I cant take suggestions in private, sorry!"
+          bot.sendMessage(msg.author, message);
+        }
+      }
+      else {
+        var message = "If you have something to say, then say it!"
+        bot.sendMessage(msg.channel, message);
+      }
+    }
+  },
   "lapdance": {
     description: "Lapdance",
     process: function(bot, msg) {

@@ -551,6 +551,29 @@ var commands = {
         bot.sendMessage(to, choice);
       }
     }
+  },
+  "avatar": {
+    usage: "@user",
+    description: "return users avatar",
+    process: function(bot,msg,suffix){
+
+
+
+      if(suffix){
+        var users = msg.mentions;
+
+        for (var i = 0; i < users.length; i++) {
+
+          var id = users[i].id;
+          var avatar = users[i].avatar;
+          var oURL = "https://discordapp.com/api/users/"+id+"/avatars/"+avatar+".jpg";
+
+          if(msg.channel){
+            bot.sendMessage(msg.channel, oURL);
+          }
+        }
+      }
+    }
   }
 };
 

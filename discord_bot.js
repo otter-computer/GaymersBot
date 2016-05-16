@@ -551,7 +551,46 @@ var commands = {
         bot.sendMessage(to, choice);
       }
     }
-  }
+  },
+  "getavideoroom": {
+    usage: "",
+    description: "Generates a sync-video room and shares it to chat.",
+    process: function(bot,msg,suffix){
+
+      function getPathFromUrl(url) {
+        return url.split(/[?#]/)[1];
+      }
+
+      if(!suffix){
+        // work around for not being able to inject video from nodejs side.
+        suffix = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
+      }
+
+      var proto = "http://";
+      var host = "sync-youtube.com";
+      var video = getPathFromUrl(suffix);
+      var path = '/watch?'+video;
+      var link = proto + host + path;
+
+      var http = require('follow-redirects').http;
+      //var https = require('follow-redirects').https;
+
+      var options = {
+        host: host,
+        path: path,
+        headers: {
+            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36',
+            'accept': '*/*'         
+        }
+      };
+
+      var req = http.request(options, function (res) {
+        bot.sendMessage(msg.channel,"Sync-video link:\n "+ res.fetchedUrls[0]);
+      });
+
+      req.end();
+    }
+  },
 };
 
 var bot = new Discord.Client();

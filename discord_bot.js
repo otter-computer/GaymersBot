@@ -574,6 +574,26 @@ var commands = {
         }
       }
     }
+  },
+  "joined": {
+    usage: "@user",
+    description: "return users avatar",
+    process: function(bot,msg,suffix){
+
+      if(suffix){
+        var users = msg.mentions;
+
+        for (var i = 0; i < users.length; i++) {
+          var user = msg.channel.server.detailsOfUser(users[i]);
+          var d = new Date(user.joinedAt);
+          var message =  tagUser(users[i]) + " joined at " + d;
+
+          if(msg.channel){
+            bot.sendMessage(msg.channel, message);
+          }
+        }
+      }
+    }
   }
 };
 

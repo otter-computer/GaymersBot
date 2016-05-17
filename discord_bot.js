@@ -167,6 +167,10 @@ var slapReplies = [
   '*slaps $USER with a massive bag of spaghetti*'
 ];
 
+var sprayReplies = [
+  "*sprays $USER with the fire hose*"
+];
+
 var commands = {
   "ping": {
     description: "responds pong, useful for checking if bot is alive",
@@ -326,11 +330,20 @@ var commands = {
       bot.sendMessage(msg.channel, message);
     }
   },
+  
   "spray": {
     usage: "spray <user>",
     description: "Spray someone thirsty...",
-    process: function(bot, msg) {
-      bot.sendMessage(msg.channel, "*sprays " + msg.sender + " with the fire hose*");
+    process: function(bot, msg, suffix) {
+      var args = suffix.split(' ');
+      var user = args.shift();
+      if (suffix) {
+        var message = randomFromArray(sprayReplies).replace('$USER', user)
+        bot.sendMessage(msg.channel, message);
+      } else {
+        var message = randomFromArray(sprayReplies).replace('$USER', msg.sender);
+        bot.sendMessage(msg.channel, message);
+      }
     }
   },
 
@@ -551,6 +564,49 @@ var commands = {
         bot.sendMessage(to, choice);
       }
     }
+  },
+  "avatar": {
+    usage: "@user",
+    description: "return users avatar",
+    process: function(bot,msg,suffix){
+
+
+
+      if(suffix){
+        var users = msg.mentions;
+
+        for (var i = 0; i < users.length; i++) {
+
+          var id = users[i].id;
+          var avatar = users[i].avatar;
+          var oURL = "https://discordapp.com/api/users/"+id+"/avatars/"+avatar+".jpg";
+
+          if(msg.channel){
+            bot.sendMessage(msg.channel, oURL);
+          }
+        }
+      }
+    }
+  },
+  "joined": {
+    usage: "@user",
+    description: "return users avatar",
+    process: function(bot,msg,suffix){
+
+      if(suffix){
+        var users = msg.mentions;
+
+        for (var i = 0; i < users.length; i++) {
+          var user = msg.channel.server.detailsOfUser(users[i]);
+          var d = new Date(user.joinedAt);
+          var message =  tagUser(users[i]) + " joined at " + d;
+
+          if(msg.channel){
+            bot.sendMessage(msg.channel, message);
+          }
+        }
+      }
+    }
   }
 };
 
@@ -559,6 +615,31 @@ var bot = new Discord.Client();
 bot.on("ready", function() {
   console.log("Ready to begin! Serving in " + bot.channels.length + " channels");
   // require("./plugins.js").init();
+  try {
+    var fs = require('fs')
+      , filename = 'version.txt';
+
+    fs.readFile(filename, 'utf8', function(err, data) {
+      if (err) { //no version
+        bot.setStatus("online",null,function() {
+          console.log("Could not read version, will not set status.")  
+          return;
+        });
+        return;
+      }
+      else{
+        var version = data.substring(0, 7);;
+        bot.setStatus("online","version: "+version,function() {
+          console.log("Status set to: "+version);
+          return;
+        });
+      }
+    });
+  } 
+  catch (e) { //no version
+    console.log("Could not read version, will not set status.")
+    return;
+  }
 });
 
 bot.on("disconnected", function() {

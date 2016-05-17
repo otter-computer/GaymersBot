@@ -1,6 +1,7 @@
 var Discord = require("discord.js");
 var d20 = require("d20");
 
+
 // Authentication token
 var token = process.env.AUTH_TOKEN;
 if(!token) {
@@ -137,33 +138,32 @@ var pokeReplies = [
   'STOP TOUCHING ME!',
   'LEAVE ME ALONE',
   'can I go home now?',
-  'It\'s dark in here..',
+  'It\'s dark in here.. :cold_sweat:',
   'AAAAAAAAAAAAH',
-  'NO.',
-  '\*giggles\*',
-  '\*moans\*',
-  ';)',
-  ':(',
-  'h-hello?',
-  '\*pokes back\*',
-  'D: not there!',
-  'A bit lower...',
+  'NO',
+  ':grimacing:',
+  ':wink:',
+  ':frowning:',
+  'h-hello? :cold_sweat:',
+  ':point_right::point_left:',
+  'Not there! :scream:',
+  'A bit lower... :smirk:',
   'WHAT DO YOU WANT?!',
-  'bleep',
-  'Well hello there. ;)',
-  '\*blush\* not now! everybody is watching...',
-  '*falls over*',
-  '\*winks\*',
-  'N-nani!',
+  'bleep :neutral_face: ',
+  'Well hello there :smirk:',
+  ':flushed: Everybody\'s watching..',
+  ':scream:',
+  ':wink:',
+  'N-nani',
   'Don\'t stop there.',
-  'More please... ;)',
+  'More please :wink:',
   'Only one finger?',
-  'Come here... ;)'
+  'Come here :kissing_heart:'
 ];
 
 var slapReplies = [
-  '\*slaps $USER around a bit with a large, girthy trout.\*',
-  '\*slaps $USER with a meaty sausage.\*'
+  '\*slaps $USER around a bit with a large, girthy trout\* :fish:',
+  '\*slaps $USER with a meaty sausage\*'
 ];
 
 var sprayReplies = [
@@ -553,9 +553,9 @@ var commands = {
         "Very doubtful",
       ];
 
-      var choice = ball[Math.floor(Math.random()*ball.length)];
+      var choice = ball[Math.floor(Math.random() * ball.length)];
 
-      if(suffix){
+      if(suffix) {
         if(msg.channel.recipient){
           // from pm - TODO proper channel distinction
           var to = msg.author;
@@ -571,9 +571,6 @@ var commands = {
     usage: "[@user]",
     description: "See someone's avatar.",
     process: function(bot,msg,suffix){
-
-
-
       if(suffix){
         var users = msg.mentions;
 
@@ -583,7 +580,7 @@ var commands = {
           var avatar = users[i].avatar;
           var oURL = "https://discordapp.com/api/users/"+id+"/avatars/"+avatar+".jpg";
 
-          if(msg.channel){
+          if(msg.channel) {
             bot.sendMessage(msg.channel, oURL);
           }
         }
@@ -609,14 +606,288 @@ var commands = {
         }
       }
     }
+  },
+  
+  "setsteam": {
+    usage: "[Steam ID]",
+    description: "Set your Steam ID so others can find you on Steam. (This returns your steam profile URL, so set a custom one!)",
+    process: function(bot,msg,suffix){
+
+      if(suffix){
+        var user = msg.author.id;
+        setUserMeta(user,'steam',suffix);
+        bot.sendMessage(msg.channel, 'set your Steam profile id to: ' + suffix);
+      }
+    }
+  },
+  
+  "getsteam": {
+    usage: "@user",
+    description: "Gets the Steam ID of a user.",
+    process: function(bot, msg, suffix) {
+
+      if(suffix) {
+        var users = msg.mentions;
+        for (var i = 0; i < users.length; i++) {
+          if (users[i]) {
+            queryUserMeta(users[i].id, function(data) {
+
+              var message = "";
+              if(data.steam == null) {
+                message = "Sorry, I dont have their Steam account. :frowning:";
+              }
+              else {
+                message = "Here's the Steam account for " + tagUser(data) + ":\n" +  "http://steamcommunity.com/id/" + data.steam;
+              }
+              if(msg.channel){
+                bot.sendMessage(msg.channel, message);
+              }
+            });
+          }
+        } 
+      }
+    }
+  },
+  
+  "setbattlenet": {
+    usage: "[BattleTag]",
+    description: "Save your Battletag so others can find you on Battle.net",
+    process: function(bot,msg,suffix){
+
+      if(suffix){
+        var user = msg.author.id;
+        setUserMeta(user,'battlenet',suffix);
+        bot.sendMessage(msg.channel, 'set your BattleTag to: ' + suffix);
+      }
+    }
+  },
+  
+  "getbattlenet": {
+    usage: "[@user]",
+    description: "Gets the Battletag of a user",
+    process: function(bot,msg,suffix) {
+
+      if(suffix){
+        var users = msg.mentions;
+        for (var i = 0; i < users.length; i++) {
+          if (users[i]) {
+            queryUserMeta(users[i].id, function(data) {
+
+              var message = "";
+              if(data.battlenet == null) {
+                message = "Sorry, I dont have their battletag. :frowning:";
+              }
+              else {
+                message = "Here's the BattleTag for " + tagUser(data) + ":\n" +  data.battlenet;
+              }
+              if(msg.channel) {
+                bot.sendMessage(msg.channel, message);
+              }
+            });
+          }
+        } 
+      }
+    }
+  },
+  
+  "settwitch": {
+    usage: "[Twitch channel ID]",
+    description: "Save your Twitch channel so others can watch you stream",
+    process: function(bot, msg, suffix) {
+
+      if(suffix){
+        var user = msg.author.id;
+        setUserMeta(user, 'twitch', suffix);
+        bot.sendMessage(msg.channel, 'set your Twitch username to: ' + suffix);
+      }
+    }
+  },
+  
+  "gettwitch": {
+    usage: "[@user]",
+    description: "Gets the Twitch username of a user",
+    process: function(bot,msg,suffix) {
+
+      if(suffix){
+        var users = msg.mentions;
+        for (var i = 0; i < users.length; i++) {
+          if (users[i]) {
+            queryUserMeta(users[i].id, function(data) {
+
+              var message = "";
+              if(data.twitch == null) {
+                message = "Sorry, I dont have their Twitch channel. :frowning:";
+              }
+              else {
+                message = "Here's the Twitch channel for " + tagUser(data) + ":\n" + "https://twitch.tv/" + data.twitch;
+              }
+              if(msg.channel) {
+                bot.sendMessage(msg.channel, message);
+              }
+            });
+          }
+        } 
+      }
+    }
+  },
+  
+  "setyoutube": {
+    usage: "[YouTube channel ID]",
+    description: "Save your YouTube channel so others can watch your videos",
+    process: function(bot, msg, suffix) {
+
+      if(suffix) {
+        var user = msg.author.id;
+        setUserMeta(user, 'youtube', suffix);
+        bot.sendMessage(msg.channel, 'set your YouTube channel to: ' + suffix);
+      }
+    }
+  },
+  
+  "getyoutube": {
+    usage: "@user",
+    description: "Gets the YouTube Channel of a user",
+    process: function(bot,msg,suffix) {
+
+      if(suffix){
+        var users = msg.mentions;
+        for (var i = 0; i < users.length; i++) {
+          if (users[i]) {
+            queryUserMeta(users[i].id, function(data) {
+
+              var message = "";
+              if(data.youtube == null) {
+                message = "Sorry, I dont have their YouTube channel. :frowning:";
+              }
+              else {
+                message = "Here's the YouTube channel for " + tagUser(data) + ":\n" + "https://youtube.com/" + data.youtube;
+              }
+              if(msg.channel) {
+                bot.sendMessage(msg.channel, message);
+              }
+            });
+          }
+        } 
+      }
+    }
+  },
+  
+  "getinfo": {
+    usage: "@user",
+    description: "Gets all saved account information for a user.",
+    process: function(bot, msg, suffix) {
+
+      if(suffix) {
+        var users = msg.mentions;
+        for (var i = 0; i < users.length; i++) {
+          if (users[i]) {
+            queryUserMeta(users[i].id, function(data) {
+
+              var message = "";
+              if (!data) {
+                message = "Sorry, I dont have any info. :frowning:";
+              }
+              else {
+                message = "User info for " + tagUser(data) + ":";
+                
+                if (data.steam != null) {
+                  message = message + "\n" + "Steam ID: http://steamcommunity.com/id/" + data.steam;
+                }
+                
+                if (data.battlenet != null) {
+                  message = message + "\n" + "BattleTag: " + data.battlenet;
+                }
+                
+                if (data.twitch != null) {
+                  message = message + "\n" + "Twitch: https://twitch.tv/" + data.twitch;
+                }
+                
+                if (data.youtube != null) {
+                  message = message + "\n" + "Youtube: https://youtube.com/" + data.youtube;
+                }
+              }
+              if (msg.channel) {
+                bot.sendMessage(msg.channel, message);
+              }
+            });
+          }
+        } 
+      }
+    }
   }
 };
+
+var queryUserMeta = function(userid, cb) {
+
+// RDS connect - this should be moved to a more modular mechanism
+try {
+  var mysql = require('mysql');
+  var con = mysql.createConnection({
+    host     : process.env.RDS_HOSTNAME,
+    user     : process.env.RDS_USERNAME,
+    password : process.env.RDS_PASSWORD,
+    port     : process.env.RDS_PORT,
+    database : process.env.RDS_DB_NAME
+  });
+  con.connect();
+}
+catch (e) { //no db
+  console.log(e);
+  console.log("Could connect to database meta data will not be loaded.")
+  return;
+}
+  con.query('SELECT * FROM meta WHERE id = \''+userid+'\'', function(err, rows, fields) {
+    if (err) {
+      console.log(err);
+    }
+    if (rows[0]) {
+      cb(rows[0]);
+    }
+    
+    con.end();
+  });
+}
+
+var setUserMeta = function(userid, key, value) {
+
+  // RDS connect - this should be moved to a more modular mechanism
+  try {
+    var mysql = require('mysql');
+    var con = mysql.createConnection({
+      host     : process.env.RDS_HOSTNAME,
+      user     : process.env.RDS_USERNAME,
+      password : process.env.RDS_PASSWORD,
+      port     : process.env.RDS_PORT,
+      database : process.env.RDS_DB_NAME
+    });
+    con.connect();
+  }
+  catch (e) { //no db
+    console.log(e);
+    console.log("Could connect to database meta data will not be loaded.");
+    return;
+  }
+
+  var lastSegment = value.split('/').pop();
+
+  con.query('INSERT INTO meta (id,'+key+') VALUES('+userid+',\''+lastSegment+'\') ON DUPLICATE KEY UPDATE `'+key+'`=\''+lastSegment+'\'', function(err, rows, fields) {
+    if (err) {
+      console.log(err);
+    }
+   
+    con.end();
+    return rows;
+  });
+  
+}
 
 var bot = new Discord.Client();
 
 bot.on("ready", function() {
   console.log("Ready to begin! Serving in " + bot.channels.length + " channels");
   // require("./plugins.js").init();
+
+  // Version lookup
   try {
     var fs = require('fs')
       , filename = 'version.txt';

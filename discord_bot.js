@@ -976,7 +976,9 @@ bot.on("message", function(msg) {
           else{
             cmdString += "```";
             bot.sendMessage(msg.author, cmdString, function(e){
-              console.log(e);
+              if(e) {
+                console.log(e);
+              }              
             });
             cmdString = "```";
             cmdString += info + "\n";
@@ -985,7 +987,9 @@ bot.on("message", function(msg) {
         }
         cmdString += "```";
         bot.sendMessage(msg.author, cmdString, function(e){
-          console.log(e);
+          if(e) {
+                console.log(e);
+              } 
         });
       });
     } else if (cmd) {

@@ -98,7 +98,7 @@ var regionRoles = function(msg) {
 
 var welcomeMessage = "Welcome to Gaymers! \n" +
   "type `!help` to see how I work. \n" +
-  "To set your region type `!setregion YOUR-REGION-HERE` in any channel. \n" +
+  "To set your region type `!setregion [Your region]` in any channel. \n" +
   "For help on what regions are available type `!regions` in any channel. \n" +
   "To gain access to the #over-18 channel, type `!set18` in any channel. \n" +
   "If you have any questions, use the `@admin` command or PM one of the admins. \n" +
@@ -106,31 +106,31 @@ var welcomeMessage = "Welcome to Gaymers! \n" +
   
 var welcomeBackMessage = "Welcome back to Gaymers! \n" +
   "type `!help` to see how I work. \n" +
-  "To set your region type `!setregion YOUR-REGION-HERE` in any channel. \n" +
+  "To set your region type `!setregion [Your region]` in any channel. \n" +
   "For help on what regions are available type `!regions` in any channel. \n" +
   "To gain access to the #over-18 channel, type `!set18` in any channel. \n" +
   "If you have any questions, use the `@admin` command or PM one of the admins. \n" +
   "Please remember our rules that are available here: https://goo.gl/670LtP";
   
-var regionMessage = "To set your region type `!setregion YOUR-REGION-HERE` in any channel. \n" +
+var regionMessage = "To set your region type `!setregion [Your region]` in any channel. \n" +
   "Here is the list of available regions: \n";
 
 var hugReplies = [
-  '*hugs $USER*',
-  '*hugs $USER*',
-  '*hugs $USER*',
-  '*hugs $USER*',
-  '*licks $USER*',
-  '*pounces $USER*',
-  '*jumps on $USER*',
-  '*glomps $USER*',
-  '*falls on $USER*',
-  '*bear hugs $USER*',
-  '*tightly squeezes $USER*',
-  '*embraces $USER*',
-  '*holds $USER close*',
-  '*cuddles $USER*',
-  '*takes $USER into his arms*'
+  '\*hugs $USER\*',
+  '\*hugs $USER\*',
+  '\*hugs $USER\*',
+  '\*hugs $USER\*',
+  '\*licks $USER\*',
+  '\*pounces $USER\*',
+  '\*jumps on $USER\*',
+  '\*glomps $USER\*',
+  '\*falls on $USER\*',
+  '\*bear hugs $USER\*',
+  '\*tightly squeezes $USER\*',
+  '\*embraces $USER\*',
+  '\*holds $USER close\*',
+  '\*cuddles $USER\*',
+  '\*takes $USER into his arms\*'
 ];
 
 var pokeReplies = [
@@ -139,49 +139,49 @@ var pokeReplies = [
   'can I go home now?',
   'It\'s dark in here..',
   'AAAAAAAAAAAAH',
-  'NO',
-  '*giggles*',
-  '*moans*',
+  'NO.',
+  '\*giggles\*',
+  '\*moans\*',
   ';)',
   ':(',
   'h-hello?',
-  '*pokes back*',
+  '\*pokes back\*',
   'D: not there!',
   'A bit lower...',
   'WHAT DO YOU WANT?!',
   'bleep',
-  'Well hello there ;)',
-  '*blush* not now! everybody is watching..',
+  'Well hello there. ;)',
+  '\*blush\* not now! everybody is watching...',
   '*falls over*',
-  '*winks*',
-  'N-nani',
+  '\*winks\*',
+  'N-nani!',
   'Don\'t stop there.',
-  'More please ;)',
+  'More please... ;)',
   'Only one finger?',
-  'Come here ;)'
+  'Come here... ;)'
 ];
 
 var slapReplies = [
-  '*slaps $USER around a bit with a large, girthy trout*',
-  '*slaps $USER with a meaty sausage*',
-  '*slaps $USER with a massive bag of spaghetti*'
+  '\*slaps $USER around a bit with a large, girthy trout.\*',
+  '\*slaps $USER with a meaty sausage.\*'
 ];
 
 var sprayReplies = [
-  "*sprays $USER with the fire hose*"
+  "\*sprays $USER with a fire hose.\*"
 ];
 
 var commands = {
   "ping": {
-    description: "responds pong, useful for checking if bot is alive",
+    usage: "",
+    description: "Responds pong, useful for checking if bot is alive.",
     process: function(bot, msg, suffix) {
       bot.sendMessage(msg.channel, msg.sender + " pong!");
     }
   },
 
   "roll": {
-    usage: "[# of sides] or [# of dice]d[# of sides]( + [# of dice]d[# of sides] + ...)",
-    description: "Roll one die with x sides, or multiple dice using d20 syntax. Default value is 10",
+    usage: "[# of sides] or !roll [# of dice]d[# of sides]",
+    description: "Roll one die with x sides, or multiple dice using d20 syntax.",
     process: function(bot, msg, suffix) {
       if (suffix.split("d").length <= 1) {
         bot.sendMessage(msg.channel, msg.author + " rolled a " + d20.roll(suffix || "10"));
@@ -202,8 +202,8 @@ var commands = {
     }
   },
   "uptime": {
-    usage: "uptime",
-    description: "Returns the amount of time since the bot started",
+    usage: "",
+    description: "Returns the amount of time since the bot started.",
     process: function(bot, msg, suffix) {
       var now = Date.now();
       var msec = now - startTime;
@@ -232,7 +232,7 @@ var commands = {
     }
   },
   "regions": {
-    usage: "regions",
+    usage: "",
     description: "List the available regions.",
     process: function(bot, msg, suffix) {
       var message = regionMessage;
@@ -251,7 +251,7 @@ var commands = {
     }
   },
   "setregion": {
-    usage: "setregion <region>",
+    usage: "[Your region]",
     description: "Set your region, get pretty color.",
     process: function(bot, msg, suffix) {
       var region = suffix.toProperCase();
@@ -271,7 +271,7 @@ var commands = {
     }
   },
   "unsetregion": {
-    usage: "unsetregion",
+    usage: "",
     description: "Remove your region, remain mysterious.",
     process: function(bot, msg) {
       removeRegions(msg);
@@ -280,24 +280,24 @@ var commands = {
     }
   },
   "set18": {
-    usage: "set18",
-    description: "sets 18+, gives access to #over-18",
+    usage: "",
+    description: "Gives you the 18+ role, allows access to #over-18.",
     process: function(bot, msg) {
       var message = setRole(msg, "18+");
       bot.sendMessage(msg.channel, message);
     }
   },
   "unset18": {
-    usage: "unset18",
-    description: "unsets 18+",
+    usage: "",
+    description: "Removes the 18+ role.",
     process: function(bot, msg) {
       var message = unsetRole(msg, "18+");
       bot.sendMessage(msg.channel, message);
     }
   },
   "setlol": {
-    usage: "setlol",
-    description: "sets League of Legends",
+    usage: "",
+    description: "Gives you the League of Legends role, find others to play with!",
     process: function(bot, msg) {
       var message = setRole(msg, "League of Legends");
       console.log('setlol', message);
@@ -305,8 +305,8 @@ var commands = {
     }
   },
   "unsetlol": {
-    usage: "unsetlol",
-    description: "unsets League of Legends",
+    usage: "",
+    description: "Removes the League of Legends role.",
     process: function(bot, msg) {
       var message = unsetRole(msg, "League of Legends");
       console.log(message);
@@ -315,16 +315,16 @@ var commands = {
     }
   },
   "settts": {
-    usage: "settts",
-    description: "sets Table Top Simulator",
+    usage: "",
+    description: "Gives you the Table Top Simulator role, find others to play with!",
     process: function(bot, msg) {
       var message = setRole(msg, "Table Top Simulator");
       bot.sendMessage(msg.channel, message);
     }
   },
   "unsettts": {
-    usage: "unsettts",
-    description: "unsets Table Top Simulator",
+    usage: "",
+    description: "Removes the Table Top Simulator role.",
     process: function(bot, msg) {
       var message = unsetRole(msg, "Table Top Simulator");
       bot.sendMessage(msg.channel, message);
@@ -332,7 +332,7 @@ var commands = {
   },
   
   "spray": {
-    usage: "spray <user>",
+    usage: "[@user]",
     description: "Spray someone thirsty...",
     process: function(bot, msg, suffix) {
       var args = suffix.split(' ');
@@ -348,8 +348,8 @@ var commands = {
   },
 
   "hug": {
-    usage: "hug <user>",
-    description: "hug",
+    usage: "[@user]",
+    description: "Give someone a hug.",
     process: function(bot, msg, suffix) {
       var args = suffix.split(' ');
       var user = args.shift();
@@ -364,8 +364,8 @@ var commands = {
   },
 
   "slap": {
-    usage: "slap <user>",
-    description: "slap",
+    usage: "[@user]",
+    description: "Slap someone.",
     process: function(bot, msg, suffix) {
       var args = suffix.split(' ');
       var user = args.shift();
@@ -380,22 +380,23 @@ var commands = {
   },
 
   "poke": {
-    description: "Poke Discobot :3",
+    usage: "",
+    description: "Poke Discobot. :3",
     process: function(bot, msg) {
       bot.sendMessage(msg.channel, randomFromArray(pokeReplies));
     }
   },
 
   "suggest": {
-    usage: "!suggest <suggestion to send devs>",
-    description: "Suggest a new bot feature!",
+    usage: "[DiscoBot suggestion]",
+    description: "Suggest a new bot feature.",
     process: function(bot, msg, suffix) {
       if (suffix) {
         var message = "Thanks for the suggestion, I've PM'd it to a developer."
 
         if(!msg.channel.recipient){
           var chan = msg.channel;  
-          var devRole = chan.server.roles.get("name", "bot-dev");
+          var devRole = chan.server.roles.get("name", "Bot Developer");
           var devUsers = chan.server.usersWithRole(devRole);
 
           for (var devUser in devUsers){
@@ -417,7 +418,8 @@ var commands = {
     }
   },
   "lapdance": {
-    description: "have a *sexy* lapdance",
+    usage: "",
+    description: "Have a *sexy* lapdance.",
     process: function(bot, msg) {
 
       // Hax to detect PMs
@@ -432,8 +434,8 @@ var commands = {
     }
   },
   "currentlyplaying": {
-    usage: "!currentlyplaying",
-    description: "See a list of who's playing what",
+    usage: "",
+    description: "See a list of who's playing what.",
     process: function(bot,msg) {
       var output = "Currently being played:\n";
       
@@ -460,8 +462,8 @@ var commands = {
     }
   },
   "whoisplaying": {
-    usage: "<game>",
-    description: "Find out who's playing a specific game",
+    usage: "[Game]",
+    description: "Find out who's playing a specific game.",
     process: function(bot,msg,suffix) {
 
       var targetGame = suffix.toProperCase();
@@ -493,8 +495,8 @@ var commands = {
     }
   },
   "choose": {
-    usage: "!choose <one> <two> <three> <etc>",
-    description: "Let DiscoBot choose for you",
+    usage: "[Option 1] [Option 2] [etc]",
+    description: "Let DiscoBot choose for you.",
     process: function(bot,msg,suffix){
 
   formats = [
@@ -524,7 +526,7 @@ var commands = {
     }
   },
   "8ball": {
-    usage: "!8ball",
+    usage: "[Question]",
     description: "See the future, have DiscoBot read your fortune.",
     process: function(bot,msg,suffix){
 
@@ -566,8 +568,8 @@ var commands = {
     }
   },
   "avatar": {
-    usage: "@user",
-    description: "return users avatar",
+    usage: "[@user]",
+    description: "See someone's avatar.",
     process: function(bot,msg,suffix){
 
 
@@ -589,8 +591,8 @@ var commands = {
     }
   },
   "joined": {
-    usage: "@user",
-    description: "return users avatar",
+    usage: "[@user]",
+    description: "See when someone joined the server.",
     process: function(bot,msg,suffix){
 
       if(suffix){
@@ -667,16 +669,16 @@ bot.on("message", function(msg) {
     if (cmdTxt === "help") {
       //help is special since it iterates over the other commands
       bot.sendMessage(msg.author, "Available Commands:", function() {
-        var cmdString = '```\n';
+        var cmdString = '```';
         for (var cmd in commands) {
           var info = "!" + cmd;
           var usage = commands[cmd].usage;
           if (usage) {
-            info += "\t" + usage;
+            info += " " + usage;
           }
           var description = commands[cmd].description;
           if (description) {
-            info += "\t" + description;
+            info += " - " + description;
           }
           cmdString += info + "\n";
         }

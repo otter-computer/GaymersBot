@@ -932,7 +932,7 @@ bot.on("ready", function() {
       }
 });
 
-bot.on("disconnected", function() {
+bot.on("disconnected", function(e) {
   console.log("Disconnected!");
   process.exit(1); //exit node.js with an error
 
@@ -959,6 +959,7 @@ bot.on("message", function(msg) {
       bot.sendMessage(msg.author, "Available Commands:", function() {
         var cmdString = '```';
         for (var cmd in commands) {
+          
           var info = "!" + cmd;
           var usage = commands[cmd].usage;
           if (usage) {
@@ -968,10 +969,28 @@ bot.on("message", function(msg) {
           if (description) {
             info += " - " + description;
           }
-          cmdString += info + "\n";
+          
+          if((cmdString.length + info.length)<1900){
+            cmdString += info + "\n";
+          }
+          else{
+            cmdString += "```";
+            bot.sendMessage(msg.author, cmdString, function(e){
+              if(e) {
+                console.log(e);
+              }              
+            });
+            cmdString = "```";
+            cmdString += info + "\n";
+          }
+
         }
         cmdString += "```";
-        bot.sendMessage(msg.author, cmdString);
+        bot.sendMessage(msg.author, cmdString, function(e){
+          if(e) {
+                console.log(e);
+              } 
+        });
       });
     } else if (cmd) {
       try {

@@ -15,6 +15,28 @@ if(!debug) {
   debug = false;
 }
 
+var version, versionFull;
+
+try {
+  var fs = require('fs')
+    , filename = 'version.txt';
+
+  fs.readFile(filename, 'utf8', function(err, data) {
+    if (err) { //no version
+      version = false;
+      versionFull = false;
+    }
+    else{
+      version = data.substring(0, 7);
+      versionFull = data;
+    }
+  });
+} 
+catch (e) { //no version
+  console.log("Could not read version, will not set status.")
+  return;
+}
+
 var startTime = Date.now();
 
 // Util function to choose a random from array
@@ -176,6 +198,17 @@ var commands = {
     description: "Responds pong, useful for checking if bot is alive.",
     process: function(bot, msg, suffix) {
       bot.sendMessage(msg.channel, msg.sender + " pong!");
+    }
+  },
+
+"status": {
+    usage: "",
+    description: "Responds with bot version & build status.",
+    process: function(bot, msg) {
+      var message = "I am currently running version: "+version+"\n";
+      message += "GitHub:\thttps://github.com/gaymers-discord/DiscoBot.js/commit/"+versionFull+"\n";
+      message += "Deploy:\thttps://codeship.com/projects/eccc20f0-fd33-0133-86bb-12bea37b94ef/status?branch=master";
+      bot.sendMessage(msg.channel, message);
     }
   },
 
@@ -887,32 +920,16 @@ bot.on("ready", function() {
   console.log("Ready to begin! Serving in " + bot.channels.length + " channels");
   // require("./plugins.js").init();
 
-  // Version lookup
-  try {
-    var fs = require('fs')
-      , filename = 'version.txt';
-
-    fs.readFile(filename, 'utf8', function(err, data) {
-      if (err) { //no version
+      if(!version) { //no version
         bot.setStatus("online",null,function() {
-          console.log("Could not read version, will not set status.")  
-          return;
+          console.log("Could not read version, will not set status.");
         });
-        return;
       }
-      else{
-        var version = data.substring(0, 7);;
+      else {
         bot.setStatus("online","version: "+version,function() {
           console.log("Status set to: "+version);
-          return;
         });
       }
-    });
-  } 
-  catch (e) { //no version
-    console.log("Could not read version, will not set status.")
-    return;
-  }
 });
 
 bot.on("disconnected", function() {

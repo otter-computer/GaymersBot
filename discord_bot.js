@@ -1,6 +1,7 @@
 var Discord = require("discord.js");
 var d20 = require("d20");
 
+
 // Authentication token
 var token = process.env.AUTH_TOKEN;
 if(!token) {
@@ -594,14 +595,152 @@ var commands = {
         }
       }
     }
+  },
+  "setsteam": {
+    usage: "steamid or custom id profile url",
+    description: "saves steamid",
+    process: function(bot,msg,suffix){
+
+      if(suffix){
+        var user = msg.author.id;
+        setUserMeta(user,'steam',suffix);
+        bot.sendMessage(msg.channel, 'set your Steam profile id to: ' + suffix);
+      }
+    }
+  },
+  "getsteam": {
+    usage: "@user",
+    description: "gets steamid of a user",
+    process: function(bot,msg,suffix){
+
+      if(suffix){
+        var users = msg.mentions;
+        for (var i = 0; i < users.length; i++) {
+          if (users[i]) {
+            queryUserMeta(users[i].id,'steam',function(id,data) {
+              var message = "http://steamcommunity.com/id/" + data;
+              if(msg.channel){
+                bot.sendMessage(msg.channel, message);
+              }
+            });
+          }
+        } 
+      }
+    }
+  },
+  "setbattlenet": {
+    usage: "BattleTag#0000",
+    description: "saves Battle.net id",
+    process: function(bot,msg,suffix){
+
+      if(suffix){
+        var user = msg.author.id;
+        setUserMeta(user,'battlenet',suffix);
+        bot.sendMessage(msg.channel, 'set your BattleTag to: ' + suffix);
+      }
+    }
+  },
+  "getbattlenet": {
+    usage: "@user",
+    description: "gets Battle.net id of a user",
+    process: function(bot,msg,suffix){
+
+      if(suffix){
+        var users = msg.mentions;
+        for (var i = 0; i < users.length; i++) {
+          if (users[i]) {
+            queryUserMeta(users[i].id,'battlenet',function(id,data) {
+
+              var message = "";
+              if(!data) {
+                message = "Sorry, I dont have any data.";
+              }
+              else {
+                message = data;
+              }
+              if(msg.channel){
+                bot.sendMessage(msg.channel, message);
+              }
+            });
+          }
+        } 
+      }
+    }
   }
 };
+
+var queryUserMeta = function(userid,key,cb) {
+
+// RDS connect - this should be moved to a more modular mechanism
+try {
+  var mysql = require('mysql');
+  var con = mysql.createConnection({
+    host     : process.env.RDS_HOSTNAME,
+    user     : process.env.RDS_USERNAME,
+    password : process.env.RDS_PASSWORD,
+    port     : process.env.RDS_PORT,
+    database : process.env.RDS_DB_NAME
+  });
+  con.connect();
+}
+catch (e) { //no db
+  console.log(e);
+  console.log("Could connect to database meta data will not be loaded.")
+  return;
+}
+
+  con.query('SELECT id,'+key+' AS data FROM meta WHERE id = \''+userid+'\'', function(err, rows, fields) {
+    if (err) {
+      console.log(err);
+    }
+
+    cb(rows[0].id,rows[0].data);
+    con.end();
+
+  });
+  
+}
+
+var setUserMeta = function(userid,key,value) {
+
+  // RDS connect - this should be moved to a more modular mechanism
+  try {
+    var mysql = require('mysql');
+    var con = mysql.createConnection({
+      host     : process.env.RDS_HOSTNAME,
+      user     : process.env.RDS_USERNAME,
+      password : process.env.RDS_PASSWORD,
+      port     : process.env.RDS_PORT,
+      database : process.env.RDS_DB_NAME
+    });
+    con.connect();
+  }
+  catch (e) { //no db
+    console.log(e);
+    console.log("Could connect to database meta data will not be loaded.");
+    return;
+  }
+
+  var lastSegment = value.split('/').pop();
+
+  con.query('INSERT INTO meta (id,'+key+') VALUES('+userid+',\''+lastSegment+'\') ON DUPLICATE KEY UPDATE `'+key+'`=\''+lastSegment+'\'', function(err, rows, fields) {
+    if (err) {
+      console.log(err);
+    }
+   
+    con.end();
+    return rows;
+  });
+  
+}
 
 var bot = new Discord.Client();
 
 bot.on("ready", function() {
   console.log("Ready to begin! Serving in " + bot.channels.length + " channels");
   // require("./plugins.js").init();
+
+  // Version lookup
   try {
     var fs = require('fs')
       , filename = 'version.txt';

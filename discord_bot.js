@@ -1142,7 +1142,7 @@ bot.on("presence", function(userOld, userNew) {
     // user is playing a game, null if not http://discordjs.readthedocs.io/en/latest/docs_user.html#game
     //logMessage(bot,"user: "+userNew.username+", is now playing: "+userNew.game.name);
   }
-  if (userOld.username != userNew.username) {
+  if (userOld.username != userNew.username && userOld.username === undefined) {
     // username change, likely due to rejoin.
     logMessage(bot, tagUser(userNew) + " rejoined the server");
     logMessage(bot, "Welcome back, " + tagUser(userNew) + "!", "general");

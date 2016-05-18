@@ -897,6 +897,10 @@ var commands = {
                 if (data.battlenet != null) {
                   message = message + "\n" + "BattleTag: " + data.battlenet;
                 }
+
+                if (data.summonername != null) {
+                  message = message + "\n" + "League of Legends Summoner Name: " + data.summonername;
+                }
                 
                 if (data.twitch != null) {
                   message = message + "\n" + "Twitch: https://twitch.tv/" + data.twitch;

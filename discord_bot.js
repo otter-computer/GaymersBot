@@ -497,8 +497,7 @@ var commands = {
     description: "See a list of who's playing what.",
     process: function(bot,msg) {
       var output = "Currently being played:\n";
-      
-      var userList = bot.internal.users.getAll("status","online");
+      var userList = msg.client.users.getAll("status","online");
       var gamers = "";
 
       for (var i = 0; i < userList.length; i++) {
@@ -527,7 +526,7 @@ var commands = {
 
       var targetGame = suffix.toProperCase();
       var output = "People that are currently playing " +targetGame+":\n";
-      var userList = bot.internal.users.getAll("status","online");
+      var userList = msg.client.users.getAll("status","online");
       var gamers = "";
 
       for (var i = 0; i < userList.length; i++) {
@@ -1035,8 +1034,15 @@ bot.on("disconnected", function(e) {
 bot.on("message", function(msg) {
 
   // Role to 'ban' users from bot commands.
-  var botMute = msg.channel.server.roles.get("name", 'Bot Restricted');
-  if (!msg.author.hasRole(botMute)){
+  var botMute = false;
+  if (!msg.channel.recipient && msg.author.id != bot.user.id){
+    //console.log(msg.channel);
+    //console.log(msg.channel.server);
+    muteRole = msg.channel.server.roles.get("name", "Bot Restricted");
+    botMute = msg.author.hasRole(muteRole);
+  }
+  
+  if (!botMute){
 
     //check if message is a command
     if (msg.author.id != bot.user.id && (msg.content[0] === '!' || msg.content.indexOf(bot.user.mention()) == 0)) {

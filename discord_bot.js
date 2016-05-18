@@ -497,8 +497,7 @@ var commands = {
     description: "See a list of who's playing what.",
     process: function(bot,msg) {
       var output = "Currently being played:\n";
-      
-      var userList = bot.internal.users.getAll("status","online");
+      var userList = msg.client.users.getAll("status","online");
       var gamers = "";
 
       for (var i = 0; i < userList.length; i++) {
@@ -527,7 +526,7 @@ var commands = {
 
       var targetGame = suffix.toProperCase();
       var output = "People that are currently playing " +targetGame+":\n";
-      var userList = bot.internal.users.getAll("status","online");
+      var userList = msg.client.users.getAll("status","online");
       var gamers = "";
 
       for (var i = 0; i < userList.length; i++) {

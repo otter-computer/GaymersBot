@@ -260,6 +260,7 @@ var commands = {
       }
     }
   },
+  
   "uptime": {
     usage: "",
     description: "Returns the amount of time since the bot started.",
@@ -290,6 +291,7 @@ var commands = {
       bot.sendMessage(msg.channel, "Uptime: " + timestr);
     }
   },
+  
   "regions": {
     usage: "",
     description: "List the available regions.",
@@ -309,6 +311,7 @@ var commands = {
       bot.sendMessage(msg.channel, message);
     }
   },
+  
   "setregion": {
     usage: "[Your region]",
     description: "Set your region, get pretty color.",
@@ -329,6 +332,7 @@ var commands = {
       }
     }
   },
+  
   "unsetregion": {
     usage: "",
     description: "Remove your region, remain mysterious.",
@@ -338,6 +342,7 @@ var commands = {
       bot.sendMessage(msg.channel, message);
     }
   },
+  
   "set18": {
     usage: "",
     description: "Gives you the 18+ role, allows access to #over-18.",
@@ -346,6 +351,7 @@ var commands = {
       bot.sendMessage(msg.channel, message);
     }
   },
+  
   "unset18": {
     usage: "",
     description: "Removes the 18+ role.",
@@ -354,6 +360,7 @@ var commands = {
       bot.sendMessage(msg.channel, message);
     }
   },
+  
   "setlol": {
     usage: "",
     description: "Gives you the League of Legends role, find others to play with!",
@@ -363,6 +370,7 @@ var commands = {
       bot.sendMessage(msg.channel, message);
     }
   },
+  
   "unsetlol": {
     usage: "",
     description: "Removes the League of Legends role.",
@@ -373,6 +381,7 @@ var commands = {
       bot.sendMessage(msg.channel, message);
     }
   },
+  
   "settts": {
     usage: "",
     description: "Gives you the Table Top Simulator role, find others to play with!",
@@ -381,6 +390,7 @@ var commands = {
       bot.sendMessage(msg.channel, message);
     }
   },
+  
   "unsettts": {
     usage: "",
     description: "Removes the Table Top Simulator role.",
@@ -476,6 +486,7 @@ var commands = {
       }
     }
   },
+  
   "lapdance": {
     usage: "",
     description: "Have a *sexy* lapdance.",
@@ -492,6 +503,7 @@ var commands = {
       }
     }
   },
+  
   "playing": {
     usage: "",
     description: "See a list of who's playing what.",
@@ -531,20 +543,21 @@ var commands = {
 
     }
   },
+  
   "choose": {
     usage: "[Option 1] [Option 2] [etc]",
     description: "Let DiscoBot choose for you.",
     process: function(bot,msg,suffix){
 
-  formats = [
-    "I think \"%\" is the best choice",
-    "I've decided on \"%\"",
-    "Definitely \"%\"",
-    "\"%\" would be best",
-    "After much deliberation, \"%\"",
-    "I reckon \"%\"",
-    "I choose \"%\""
-  ];
+    formats = [
+      "I think \"%\" is the best choice",
+      "I've decided on \"%\"",
+      "Definitely \"%\"",
+      "\"%\" would be best",
+      "After much deliberation, \"%\"",
+      "I reckon \"%\"",
+      "I choose \"%\""
+    ];
 
     var options = suffix.split(/\s*[ ,;]\s*|\sor\s/i)
     var choice = options[Math.floor(Math.random()*options.length)];
@@ -562,6 +575,7 @@ var commands = {
 
     }
   },
+  
   "8ball": {
     usage: "[Question]",
     description: "See the future, have DiscoBot read your fortune.",
@@ -604,6 +618,7 @@ var commands = {
       }
     }
   },
+  
   "avatar": {
     usage: "[@user]",
     description: "See someone's avatar.",
@@ -624,6 +639,7 @@ var commands = {
       }
     }
   },
+  
   "joined": {
     usage: "[@user]",
     description: "See when someone joined the server.",
@@ -662,27 +678,37 @@ var commands = {
     usage: "@user",
     description: "Gets the Steam ID of a user.",
     process: function(bot, msg, suffix) {
-
-      if(suffix) {
-        var users = msg.mentions;
-        for (var i = 0; i < users.length; i++) {
-          if (users[i]) {
-            queryUserMeta(users[i].id, function(data) {
-
-              var message = "";
-              if(data.steam == null) {
-                message = "Sorry, I dont have their Steam account. :frowning:";
-              }
-              else {
-                message = "Here's the Steam account for " + tagUser(data) + ":\n" +  "http://steamcommunity.com/id/" + data.steam;
-              }
-              if(msg.channel){
-                bot.sendMessage(msg.channel, message);
-              }
-            });
-          }
-        } 
+      
+      if(!suffix) {
+        return; // return early, stop execution.
       }
+      
+      var users = suffix.split(' ');
+      for (var i = 0; i < users.length; i++) {
+        
+        var id;
+        
+        // Server nickname detection
+        if(users[i].substr(2, 1) === "!") {
+          id = users[i].slice(3, users[i].length - 1);
+        } else {
+          id = users[i].slice(2, users[i].length - 1);
+        }
+        
+        queryUserMeta(id, function(data) {
+
+          var message = "";
+          if(data.steam == null) {
+            message = "Sorry, I dont have their Steam account. :frowning:";
+          }
+          else {
+            message = "Here's the Steam account for " + tagUser(data) + ":\n" + data.steam;
+          }
+          if(msg.channel){
+            bot.sendMessage(msg.channel, message);
+          }
+        });
+      } 
     }
   },
   
@@ -703,27 +729,38 @@ var commands = {
     usage: "[@user]",
     description: "Gets the Battletag of a user",
     process: function(bot,msg,suffix) {
-
-      if(suffix){
-        var users = msg.mentions;
-        for (var i = 0; i < users.length; i++) {
-          if (users[i]) {
-            queryUserMeta(users[i].id, function(data) {
-
-              var message = "";
-              if(data.battlenet == null) {
-                message = "Sorry, I dont have their battletag. :frowning:";
-              }
-              else {
-                message = "Here's the BattleTag for " + tagUser(data) + ":\n" +  data.battlenet;
-              }
-              if(msg.channel) {
-                bot.sendMessage(msg.channel, message);
-              }
-            });
-          }
-        } 
+      
+      if(!suffix) {
+        return; // return early, stop execution.
       }
+
+      var users = suffix.split(' ');
+      
+      for (var i = 0; i < users.length; i++) {
+        
+        var id;
+      
+        // Server nickname detection
+        if(users[i].substr(2, 1) === "!") {
+          id = users[i].slice(3, users[i].length - 1);
+        } else {
+          id = users[i].slice(2, users[i].length - 1);
+        }
+        
+        queryUserMeta(id, function(data) {
+          var message = "";
+          
+          if(data.battlenet == null) {
+            message = "Sorry, I dont have their battletag. :frowning:";
+          }
+          else {
+            message = "Here's the BattleTag for " + tagUser(data) + ":\n" +  data.battlenet;
+          }
+          if(msg.channel) {
+            bot.sendMessage(msg.channel, message);
+          }
+        });
+      } 
     }
   },
 
@@ -743,28 +780,39 @@ var commands = {
   "getsummonername": {
     usage: "[@user]",
     description: "Gets the summoner name of a user",
-    process: function(bot,msg,suffix) {
-
-      if(suffix){
-        var users = msg.mentions;
-        for (var i = 0; i < users.length; i++) {
-          if (users[i]) {
-            queryUserMeta(users[i].id, function(data) {
-
-              var message = "";
-              if(data.summonername == null) {
-                message = "Sorry, I dont have their summoner name. :frowning:";
-              }
-              else {
-                message = "Here's the summoner name for " + tagUser(data) + ":\n" +  data.summonername;
-              }
-              if(msg.channel) {
-                bot.sendMessage(msg.channel, message);
-              }
-            });
-          }
-        } 
+    process: function(bot, msg, suffix) {
+      
+      if(!suffix) {
+        return; // return early, stop execution.
       }
+      
+      var users = suffix.split(' ');
+      
+      for (var i = 0; i < users.length; i++) {
+        
+        var id;
+        
+        // Server nickname detection
+        if(users[i].substr(2, 1) === "!") {
+          id = users[i].slice(3, users[i].length - 1);
+        } else {
+          id = users[i].slice(2, users[i].length - 1);
+        }
+        
+        queryUserMeta(id, function(data) {
+
+          var message = "";
+          if(data.summonername == null) {
+            message = "Sorry, I dont have their summoner name. :frowning:";
+          }
+          else {
+            message = "Here's the summoner name for " + tagUser(data) + ":\n" +  data.summonername;
+          }
+          if(msg.channel) {
+            bot.sendMessage(msg.channel, message);
+          }
+        });
+      } 
     }
   },
   
@@ -785,27 +833,38 @@ var commands = {
     usage: "[@user]",
     description: "Gets the Twitch username of a user",
     process: function(bot,msg,suffix) {
-
-      if(suffix){
-        var users = msg.mentions;
-        for (var i = 0; i < users.length; i++) {
-          if (users[i]) {
-            queryUserMeta(users[i].id, function(data) {
-
-              var message = "";
-              if(data.twitch == null) {
-                message = "Sorry, I dont have their Twitch channel. :frowning:";
-              }
-              else {
-                message = "Here's the Twitch channel for " + tagUser(data) + ":\n" + "https://twitch.tv/" + data.twitch;
-              }
-              if(msg.channel) {
-                bot.sendMessage(msg.channel, message);
-              }
-            });
-          }
-        } 
+      
+      if(!suffix) {
+        return; // return early, stop execution.
       }
+
+      var users = suffix.split(' ');
+      
+      for (var i = 0; i < users.length; i++) {
+        
+        var id;
+        
+        // Server nickname detection
+        if(users[i].substr(2, 1) === "!") {
+          id = users[i].slice(3, users[i].length - 1);
+        } else {
+          id = users[i].slice(2, users[i].length - 1);
+        }
+        
+        queryUserMeta(id, function(data) {
+
+          var message = "";
+          if(data.twitch == null) {
+            message = "Sorry, I dont have their Twitch channel. :frowning:";
+          }
+          else {
+            message = "Here's the Twitch channel for " + tagUser(data) + ":\n" + "https://twitch.tv/" + data.twitch;
+          }
+          if(msg.channel) {
+            bot.sendMessage(msg.channel, message);
+          }
+        });
+      } 
     }
   },
   
@@ -827,26 +886,37 @@ var commands = {
     description: "Gets the YouTube Channel of a user",
     process: function(bot,msg,suffix) {
 
-      if(suffix){
-        var users = msg.mentions;
-        for (var i = 0; i < users.length; i++) {
-          if (users[i]) {
-            queryUserMeta(users[i].id, function(data) {
-
-              var message = "";
-              if(data.youtube == null) {
-                message = "Sorry, I dont have their YouTube channel. :frowning:";
-              }
-              else {
-                message = "Here's the YouTube channel for " + tagUser(data) + ":\n" + "https://youtube.com/" + data.youtube;
-              }
-              if(msg.channel) {
-                bot.sendMessage(msg.channel, message);
-              }
-            });
-          }
-        } 
+      if(!suffix) {
+        return; // return early, stop execution.
       }
+      
+      var users = suffix.split(' ');
+      
+      for (var i = 0; i < users.length; i++) {
+        
+        var id;
+        
+        // Server nickname detection
+        if(users[i].substr(2, 1) === "!") {
+          id = users[i].slice(3, users[i].length - 1);
+        } else {
+          id = users[i].slice(2, users[i].length - 1);
+        }
+        
+        queryUserMeta(id, function(data) {
+
+          var message = "";
+          if(data.youtube == null) {
+            message = "Sorry, I dont have their YouTube channel. :frowning:";
+          }
+          else {
+            message = "Here's the YouTube channel for " + tagUser(data) + ":\n" + "https://youtube.com/" + data.youtube;
+          }
+          if(msg.channel) {
+            bot.sendMessage(msg.channel, message);
+          }
+        });
+      } 
     }
   },
   
@@ -855,46 +925,56 @@ var commands = {
     description: "Gets all saved account information for a user.",
     process: function(bot, msg, suffix) {
 
-      if(suffix) {
-        var users = msg.mentions;
-        for (var i = 0; i < users.length; i++) {
-          if (users[i]) {
-            queryUserMeta(users[i].id, function(data) {
-
-              var message = "";
-              if (!data) {
-                message = "Sorry, I dont have any info. :frowning:";
-              }
-              else {
-                message = "User info for " + tagUser(data) + ":";
-                
-                if (data.steam != null) {
-                  message = message + "\n" + "Steam ID: http://steamcommunity.com/id/" + data.steam;
-                }
-                
-                if (data.battlenet != null) {
-                  message = message + "\n" + "BattleTag: " + data.battlenet;
-                }
-
-                if (data.summonername != null) {
-                  message = message + "\n" + "League of Legends Summoner Name: " + data.summonername;
-                }
-                
-                if (data.twitch != null) {
-                  message = message + "\n" + "Twitch: https://twitch.tv/" + data.twitch;
-                }
-                
-                if (data.youtube != null) {
-                  message = message + "\n" + "Youtube: https://youtube.com/" + data.youtube;
-                }
-              }
-              if (msg.channel) {
-                bot.sendMessage(msg.channel, message);
-              }
-            });
-          }
-        } 
+      if(!suffix) {
+        return; // return early, stop execution.
       }
+      
+      var users = suffix.split(' ');
+      
+      for (var i = 0; i < users.length; i++) {
+        
+        var id;
+        
+        // Server nickname detection
+        if(users[i].substr(2, 1) === "!") {
+          id = users[i].slice(3, users[i].length - 1);
+        } else {
+          id = users[i].slice(2, users[i].length - 1);
+        }
+        
+        queryUserMeta(id, function(data) {
+          var message = "";
+          
+          if (!data) {
+            message = "Sorry, I dont have any info. :frowning:";
+          } else {
+            message = "User info for " + tagUser(data) + ":";
+            
+            if (data.steam != null) {
+              message = message + "\n" + "Steam ID: " + data.steam;
+            }
+            
+            if (data.battlenet != null) {
+              message = message + "\n" + "BattleTag: " + data.battlenet;
+            }
+
+            if (data.summonername != null) {
+              message = message + "\n" + "League of Legends Summoner Name: " + data.summonername;
+            }
+            
+            if (data.twitch != null) {
+              message = message + "\n" + "Twitch: https://twitch.tv/" + data.twitch;
+            }
+            
+            if (data.youtube != null) {
+              message = message + "\n" + "Youtube: https://youtube.com/" + data.youtube;
+            }
+          }
+          if (msg.channel) {
+            bot.sendMessage(msg.channel, message);
+          }
+        });
+      } 
     }
   },
 

@@ -504,7 +504,7 @@ var commands = {
         var isBot = userList[i].bot;
         var username = tagUser(userList[i]);
         var game = userList[i].game;
-        
+
         if (!isBot && game) {
           if (suffix){
             var targetGame = suffix.toLowerCase();
@@ -1041,6 +1041,7 @@ bot.on("message", function(msg) {
       if (cmdTxt === "help") {
         //help is special since it iterates over the other commands
         bot.sendMessage(msg.author, "Available Commands:", function() {
+          var cmdArray = [];
           var cmdString = '```';
           for (var cmd in commands) {
             
@@ -1059,22 +1060,22 @@ bot.on("message", function(msg) {
             }
             else{
               cmdString += "```";
-              bot.sendMessage(msg.author, cmdString, function(e){
-                if(e) {
-                  console.log(e);
-                }              
-              });
-              cmdString = "```";
+              cmdArray.push(cmdString);
+              cmdString = "```"; //reset
               cmdString += info + "\n";
             }
 
           }
           cmdString += "```";
-          bot.sendMessage(msg.author, cmdString, function(e){
-            if(e) {
-                  console.log(e);
-                } 
-          });
+          cmdArray.push(cmdString);
+          
+          for (var i = 0; i < cmdArray.length; i++) {
+            bot.sendMessage(msg.author, cmdArray[i], function(e){
+              if(e) {
+                    console.log(e);
+                  } 
+            });
+          }
         });
       } else if (cmd) {
         try {

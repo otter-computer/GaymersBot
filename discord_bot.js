@@ -492,10 +492,10 @@ var commands = {
       }
     }
   },
-  "currentlyplaying": {
+  "playing": {
     usage: "",
     description: "See a list of who's playing what.",
-    process: function(bot,msg) {
+    process: function(bot,msg,suffix) {
       var output = "Currently being played:\n";
       var userList = msg.client.users.getAll("status","online");
       var gamers = "";
@@ -504,39 +504,18 @@ var commands = {
         var isBot = userList[i].bot;
         var username = tagUser(userList[i]);
         var game = userList[i].game;
-
+        
         if (!isBot && game) {
-          gamers += "\t"+username + " is currently playing "+ game.name+"\n";
-        }
-      }
-      if (gamers == ""){
-        gamers = "No Games! :(";
-      }
-      output += gamers
-      output += "";
+          if (suffix){
+            var targetGame = suffix.toLowerCase();
+            var gameLower = game.name.toLowerCase();
 
-      bot.sendMessage(msg.author, output);
-
-    }
-  },
-  "whoisplaying": {
-    usage: "[Game]",
-    description: "Find out who's playing a specific game.",
-    process: function(bot,msg,suffix) {
-
-      var targetGame = suffix.toProperCase();
-      var output = "People that are currently playing " +targetGame+":\n";
-      var userList = msg.client.users.getAll("status","online");
-      var gamers = "";
-
-      for (var i = 0; i < userList.length; i++) {
-        var isBot = userList[i].bot;
-        var username = tagUser(userList[i]);
-        var game = userList[i].game;
-
-        if (!isBot && game) {
-          if (targetGame == game.name){
-            gamers += "\t"+username + " is currently playing "+ game.name+"\n";
+            if (targetGame == gameLower){
+              gamers += "\t"+username + " is currently playing "+ game.name+"\n";
+            }
+          }
+          else {
+              gamers += "\t"+username + " is currently playing "+ game.name+"\n";
           }
         }
       }

@@ -1,6 +1,7 @@
 var Discord = require("discord.js");
 var d20 = require("d20");
-
+var http = require('http');
+var URL = require('url');
 
 // Authentication token
 var token = process.env.AUTH_TOKEN;
@@ -117,6 +118,31 @@ var regionRoles = function(msg) {
   ];
   
   return regionArray;
+}
+
+var getUrlData = function (url,cb){
+  var str = '';
+  var oURL = URL.parse(url);
+
+  //TODO handle urls passed with a path 
+  var options = {
+        host: oURL.host,
+        path: oURL.path
+  };
+
+  callback = function(response) {
+
+    response.on('data', function (chunk) {
+      str += chunk;
+    });
+
+    response.on('end', function () {
+      cb(str);
+    });
+  }
+
+  var req = http.request(options, callback).end();
+
 }
 
 var welcomeMessage = "Welcome to Gaymers! \n" +
@@ -887,6 +913,29 @@ var commands = {
           }
         } 
       }
+    }
+  },
+
+  "penguin": {
+    usage: "",
+    description: "Gets a penguin.",
+    process: function(bot, msg) {
+      getUrlData('http://penguin.wtf',function(data) {
+        bot.sendMessage(msg.channel, data);
+      });
+      
+    }
+  },
+
+  "cat": {
+    usage: "",
+    description: "Gets a cat.",
+    process: function(bot, msg) {
+      getUrlData('http://random.cat/meow',function(data) {
+        var jData = JSON.parse(data);
+        bot.sendMessage(msg.channel, jData.file);
+      });
+      
     }
   }
 };

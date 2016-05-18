@@ -2,6 +2,8 @@ var Discord = require("discord.js");
 var d20 = require("d20");
 var http = require('http');
 var URL = require('url');
+var cron = require('node-cron');
+var mysql = require('mysql');
 
 // Authentication token
 var token = process.env.AUTH_TOKEN;
@@ -919,6 +921,46 @@ var commands = {
       });
       
     }
+  },
+
+  "timeout": {
+    usage: "@user",
+    description: "Times a user out for 30 mins.",
+    process: function(bot,msg,suffix) {
+      var users = suffix.split(' ');
+      var adminRole = msg.channel.server.roles.get("name", "Admin");
+      var restrictedRole = msg.channel.server.roles.get("name", "Restricted");
+      var message;
+
+      if (msg.sender.hasRole(adminRole)){
+
+        for (var i = 0; i < users.length; i++) {
+          var id;
+          // Server nickname detection
+          if(users[i].substr(2, 1) === "!") {
+            id = users[i].slice(3, users[i].length - 1);
+          } else {
+             id = users[i].slice(2, users[i].length - 1);
+          }
+
+          var user = bot.internal.users.get("id", id);
+          var hasRole = user.hasRole(restrictedRole);
+
+          if (!hasRole) {
+              
+              addTimeout(id);
+                bot.addMemberToRole(user,restrictedRole);
+                message = user.mention() + " has been added to timeout.";
+                bot.sendMessage(msg.channel, message);
+              
+
+          } else {
+              message = user.mention() + " already has timeout.";
+              bot.sendMessage(msg.channel, message);
+          }
+        }
+      }
+    }
   }
 };
 
@@ -926,7 +968,7 @@ var queryUserMeta = function(userid, cb) {
 
 // RDS connect - this should be moved to a more modular mechanism
 try {
-  var mysql = require('mysql');
+
   var con = mysql.createConnection({
     host     : process.env.RDS_HOSTNAME,
     user     : process.env.RDS_USERNAME,
@@ -957,7 +999,7 @@ var setUserMeta = function(userid, key, value) {
 
   // RDS connect - this should be moved to a more modular mechanism
   try {
-    var mysql = require('mysql');
+
     var con = mysql.createConnection({
       host     : process.env.RDS_HOSTNAME,
       user     : process.env.RDS_USERNAME,
@@ -986,6 +1028,140 @@ var setUserMeta = function(userid, key, value) {
   
 }
 
+
+var addTimeout = function(id,cb) {
+
+  // RDS connect - this should be moved to a more modular mechanism
+  try {
+
+    var con = mysql.createConnection({
+      host     : process.env.RDS_HOSTNAME,
+      user     : process.env.RDS_USERNAME,
+      password : process.env.RDS_PASSWORD,
+      port     : process.env.RDS_PORT,
+      database : process.env.RDS_DB_NAME
+    });
+    con.connect();
+  }
+  catch (e) { //no db
+    console.log(e);
+    console.log("Could connect to database.");
+    return;
+  }
+
+  var member = bot.internal.users.get("id", id);
+
+  var now = Date.now();
+  var expireTime = now + 1800000; // 30 mins in milliseconds
+
+  logMessage(bot, member.mention() + " has been given the `Restricted` role. I will attempt to remove it at: "+ new Date(expireTime));
+
+  con.query('INSERT INTO timeout (id,expires) VALUES('+id+','+expireTime+') ON DUPLICATE KEY UPDATE `expires`="'+expireTime+'"', function(err, rows, fields) {
+    if (err) {
+      console.log(err);
+    }
+    if (rows[0]) {
+      cb(rows[0]);
+    }
+    
+    con.end();
+  });
+  
+}
+
+var removeTimeout = function(id,cb) {
+
+  // RDS connect - this should be moved to a more modular mechanism
+  try {
+
+    var con = mysql.createConnection({
+      host     : process.env.RDS_HOSTNAME,
+      user     : process.env.RDS_USERNAME,
+      password : process.env.RDS_PASSWORD,
+      port     : process.env.RDS_PORT,
+      database : process.env.RDS_DB_NAME
+    });
+    con.connect();
+  }
+  catch (e) { //no db
+    console.log(e);
+    console.log("Could connect to database.");
+    return;
+  }
+
+  var member = bot.internal.users.get("id", id);
+  var role = bot.servers[0].roles.get("name", 'Restricted');
+
+  if(member && role) {
+    bot.removeMemberFromRole(member, role, function(e){
+      console.log(e);
+      logMessage(bot, member.mention() + " has been automatically removed from the `Restricted` role.");
+    })
+
+    con.query('DELETE FROM timeout WHERE id = '+id, function(err, rows, fields) {
+      if (err) {
+        console.log(err);
+      }
+      if (rows[0]) {
+        cb(rows[0]);
+      }
+      
+      con.end();
+    });
+  }
+}
+
+var checkTimeout = function(cb) {
+
+  // RDS connect - this should be moved to a more modular mechanism
+  try {
+    
+    var con = mysql.createConnection({
+      host     : process.env.RDS_HOSTNAME,
+      user     : process.env.RDS_USERNAME,
+      password : process.env.RDS_PASSWORD,
+      port     : process.env.RDS_PORT,
+      database : process.env.RDS_DB_NAME
+    });
+    con.connect();
+  }
+  catch (e) { //no db
+    console.log(e);
+    console.log("Could connect to database.");
+    return;
+  }
+
+  con.query('SELECT * FROM timeout', function(err, rows, fields) {
+    if (err) {
+      console.log(err);
+    }
+    for(var row in rows){
+
+      var expires = parseInt(rows[row].expires);
+
+      if(expires < Date.now() ){
+        // Remove room cmd
+        var expDate = new Date(expires);
+        console.log('RESTRICTED ROLE REMOVAL: ' + rows[row].id + ', expired: '+ expDate);
+        removeTimeout(rows[row].id);
+        // callback rooms removed
+      }
+      else {
+        var expDate = new Date(parseInt(rows[row].expires));
+        console.log('restricted role on ' + rows[row].id + ' still valid until: '+ expDate);
+      }
+    }
+   
+    // callback all checked 
+      cb();
+        
+    con.end();
+  });
+  
+}
+
+
+
 var bot = new Discord.Client();
 
 bot.on("ready", function() {
@@ -1002,6 +1178,15 @@ bot.on("ready", function() {
           console.log("Status set to: "+version);
         });
       }
+
+  // kick off the clock
+  cron.schedule('*/10 * * * *', function(){
+    console.log('running a task every 10 minutes');
+    checkTimeout(function(resp) {
+      // Do Stuff
+    });
+  });
+
 });
 
 bot.on("disconnected", function(e) {
@@ -1015,8 +1200,6 @@ bot.on("message", function(msg) {
   // Role to 'ban' users from bot commands.
   var botMute = false;
   if (!msg.channel.recipient && msg.author.id != bot.user.id){
-    //console.log(msg.channel);
-    //console.log(msg.channel.server);
     muteRole = msg.channel.server.roles.get("name", "Bot Restricted");
     botMute = msg.author.hasRole(muteRole);
   }

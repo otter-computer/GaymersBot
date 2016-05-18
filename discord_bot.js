@@ -722,6 +722,47 @@ var commands = {
       }
     }
   },
+
+  "setsummonername": {
+    usage: "[Summoner name]",
+    description: "Save your summoner name so others can find you on League of Legends.",
+    process: function(bot,msg,suffix){
+
+      if(suffix){
+        var user = msg.author.id;
+        setUserMeta(user,'summonername',suffix);
+        bot.sendMessage(msg.channel, 'set your summoner name to: ' + suffix);
+      }
+    }
+  },
+  
+  "getsummonername": {
+    usage: "[@user]",
+    description: "Gets the summoner name of a user",
+    process: function(bot,msg,suffix) {
+
+      if(suffix){
+        var users = msg.mentions;
+        for (var i = 0; i < users.length; i++) {
+          if (users[i]) {
+            queryUserMeta(users[i].id, function(data) {
+
+              var message = "";
+              if(data.summonername == null) {
+                message = "Sorry, I dont have their summoner name. :frowning:";
+              }
+              else {
+                message = "Here's the summoner name for " + tagUser(data) + ":\n" +  data.summonername;
+              }
+              if(msg.channel) {
+                bot.sendMessage(msg.channel, message);
+              }
+            });
+          }
+        } 
+      }
+    }
+  },
   
   "settwitch": {
     usage: "[Twitch channel ID]",

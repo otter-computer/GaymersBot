@@ -637,7 +637,7 @@ var commands = {
 
           var id = users[i].id;
           var avatar = users[i].avatar;
-          var oURL = "https://discordapp.com/api/users/"+id+"/avatars/"+avatar+".jpg";
+          var oURL = users[i].mention() + "'s avatar https://discordapp.com/api/users/"+id+"/avatars/"+avatar+".jpg";
 
           if(msg.channel) {
             bot.sendMessage(msg.channel, oURL);

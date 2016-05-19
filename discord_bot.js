@@ -999,6 +999,18 @@ var commands = {
       });
       
     }
+  },
+  
+  "catfact": {
+    usage: "",
+    description: "Gets a cat fact!",
+    process: function(bot, msg) {
+      getUrlData('http://catfacts-api.appspot.com/api/facts?number=1',function(data) {
+        var jData = JSON.parse(data);
+        bot.sendMessage(msg.channel, jData.facts[0]);
+      });
+      
+    }
   }
 };
 

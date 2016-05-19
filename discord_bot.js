@@ -1116,7 +1116,7 @@ bot.on("message", function(msg) {
   if (!botMute){
 
     //check if message is a command
-    if (msg.author.id != bot.user.id && (msg.content[0] === '~' || msg.content.indexOf(bot.user.mention()) == 0)) {
+    if (msg.author.id != bot.user.id && (msg.content[0] === '!' || msg.content.indexOf(bot.user.mention()) == 0)) {
       console.log("treating " + msg.content + " from " + msg.author + " as command");
       var cmdTxt = msg.content.split(" ")[0].substring(1);
       var suffix = msg.content.substring(cmdTxt.length + 2); //add one for the ! and one for the space

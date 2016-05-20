@@ -1103,7 +1103,7 @@ var commands = {
       var restrictedRole = msg.channel.server.roles.get("name", "Restricted");
       var message;
 
-      if (msg.sender.hasRole(adminRole)){
+      if (msg.sender.hasRole(adminRole)) {
 
         for (var i = 0; i < users.length; i++) {
           var id;
@@ -1133,12 +1133,16 @@ var commands = {
       }
     }
   },
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> origin/feature/cronTasks
   "catfact": {
     usage: "",
     description: "Gets a cat fact!",
     process: function(bot, msg) {
-      getUrlData('http://catfacts-api.appspot.com/api/facts?number=1',function(data) {
+      getUrlData('http://catfacts-api.appspot.com/api/facts?number=1', function(data) {
         var jData = JSON.parse(data);
         bot.sendMessage(msg.channel, jData.facts[0]);
       });

@@ -159,7 +159,7 @@ var rotateRooms = function(bot, roomRotation) {
       if(debug) console.log(moment().format(momentFormat) + '.', 'Opening room.');
       
       if(!activeRooms[room].active) {
-        logMessage(bot, channel.mention() + " has opened for business, it will close again in "+ roomRotation[room].closes.fromNow(true), announceChannel);
+        logMessage(bot, "It's " + channel.mention() + " Saturday! The " + channel.mention() + " channel will close again in "+ roomRotation[room].closes.fromNow(true), announceChannel);
         activeRooms[room].active = true;
       }
 

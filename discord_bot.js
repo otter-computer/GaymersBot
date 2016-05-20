@@ -45,19 +45,16 @@ var startTime = Date.now();
 
 var rotateRooms = function(bot) {
 
-
-var roomRotation = {
-  temptest : {
-    opens: moment().startOf('hour'),
-    closes: moment().startOf('hour').add(30,'minutes')
-  }
-};
-
-/*,
-temptest2 : {
-    opens: moment().tz('Australia/Sydney').day('Saturday').startOf('day'),
-    closes: moment().tz('America/Los_Angeles').add(1, 'week').day('Sunday').endOf('day')
-  }*/
+  var roomRotation = {
+    temptest : {
+      opens: moment().startOf('hour'),
+      closes: moment().startOf('hour').add(30,'minutes')
+    } /*,
+    temptest2 : {
+      opens: moment().tz('Australia/Sydney').day('Saturday').startOf('day'),
+      closes: moment().tz('America/Los_Angeles').add(1, 'week').day('Sunday').endOf('day')
+    }*/
+  };
 
   var everyoneRole = bot.servers[0].roles.get("name", '@everyone');
   var openPermissions = {
@@ -115,34 +112,52 @@ temptest2 : {
       voiceUseVAD: false
   };
 
-
-  for(var room in roomRotation){
+  for(var room in roomRotation) {
     var channel = bot.channels.get("name", 'temptest');
-    logMessage(bot, 'DEBUG - channel.id:'+channel.id + "room"+room+", open: "+ roomRotation[room].opens.format("dddd, MMMM Do YYYY, h:mm:ss a zz")+", closes: "+ roomRotation[room].closes.format("dddd, MMMM Do YYYY, h:mm:ss a zz"));
-    if(channel && roomRotation[room].opens > moment() && roomRotation[room].closes < moment() ){
+    var general = bot.channels.get("name", "general");
+    
+    if(!channel) {
+      if (debug) console.log('Could not find the specified channel. Please create it.');
+      break;
+    }
+    
+    if(debug) {
+      console.log(
+        "Channel.id: " + channel.id + ", \n" +
+        "Room: " + room + ", \n" + 
+        "Open: " + roomRotation[room].opens.format("dddd, MMMM Do YYYY, h:mm:ss a zz") + ", \n" +
+        "Close: " + roomRotation[room].closes.format("dddd, MMMM Do YYYY, h:mm:ss a zz")
+       );
+    }
+    
+    console.log(channel.permissionOverwrites);
+    
+    if(channel && roomRotation[room].opens > moment() && roomRotation[room].closes < moment()) {
+      
+      // if (!channel.hasPermission('readMessages')) {
+      //   logMessage(bot, channel.id + " has opened for business, it will close again at: "+ roomRotation[room].closes.format("dddd, MMMM Do"));
+      // }
+      
       //give read permissions
-      if(!everyoneRole.hasPermission(openPermissions)){
-       bot.internal.overwritePermissions(channel,everyoneRole,openPermissions,function(e){
-        console.log(e);
+      if(!everyoneRole.hasPermission(openPermissions)) {
+       bot.internal.overwritePermissions(channel, everyoneRole, openPermissions, function(e) {
+        if(debug) console.log(e);
        });
-       logMessage(bot, channel.id + " has opened for business, it will close again at: "+ roomRotation[room].closes.format("dddd, MMMM Do YYYY, h:mm:ss a zz"));
       }
-    }
-    else if(channel) {
+    } else {
       //remove read permissions
-      if(!everyoneRole.hasPermission(openPermissions)){
+      if(!everyoneRole.hasPermission(openPermissions)) {
+        
+        // if (channel.hasPermission('readMessages')) {
+        //   logMessage(bot, channel.id + " has closed, it will open again at: "+ roomRotation[room].opens.format("dddd, MMMM Do"));
+        // }
+        
         bot.internal.overwritePermissions(channel,everyoneRole,closePermissions,function(e){
-         console.log(e);
+         if(debug) console.log(e);
         });
-        logMessage(bot, channel.id + " has closed, it will open again at: "+ roomRotation[room].opens.format("dddd, MMMM Do YYYY, h:mm:ss a zz"));
       }
     }
-    else {
-      console.log('could not find channel please create it');
-    }
-
   }
-
 }
 
 

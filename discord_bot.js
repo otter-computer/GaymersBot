@@ -4,6 +4,7 @@ var http = require('http');
 var URL = require('url');
 var cron = require('node-cron');
 var mysql = require('mysql');
+var moment = require('moment-timezone');
 
 // Authentication token
 var token = process.env.AUTH_TOKEN;
@@ -41,6 +42,96 @@ catch (e) { //no version
 }
 
 var startTime = Date.now();
+
+var rotateRooms = function(bot) {
+
+
+var roomRotation = {
+  temptest : {
+    opens: moment().tz('Australia/Sydney').day('Saturday').startOf('day'),
+    closes: moment().tz('America/Los_Angeles').add(1, 'week').day('Sunday').endOf('day')
+  },
+temptest2 : {
+    opens: "",
+    closes: ""
+  }
+};
+
+  var everyoneRole = channel.server.roles.get("name", '@everyone');
+  var openPermissions = {
+      // general
+      createInstantInvite: false,
+      kickMembers: false,
+      banMembers: false,
+      manageRoles: false,
+      manageChannels: false,
+      manageServer: false,
+      // text
+      readMessages: true,
+      sendMessages: true,
+      sendTTSMessages: false,
+      manageMessages: false,
+      embedLinks: true,
+      attachFiles: true,
+      readMessageHistory: true,
+      mentionEveryone: false,
+      // voice
+      voiceConnect: false,
+      voiceSpeak: false,
+      voiceMuteMembers: false,
+      voiceDeafenMembers: false,
+      voiceMoveMembers: false,
+      voiceUseVAD: false
+  }
+  var closePermissions = {
+      // general
+      createInstantInvite: false,
+      kickMembers: false,
+      banMembers: false,
+      manageRoles: false,
+      manageChannels: false,
+      manageServer: false,
+      // text
+      readMessages: false,
+      sendMessages: false,
+      sendTTSMessages: false,
+      manageMessages: false,
+      embedLinks: false,
+      attachFiles: false,
+      readMessageHistory: false,
+      mentionEveryone: false,
+      // voice
+      voiceConnect: false,
+      voiceSpeak: false,
+      voiceMuteMembers: false,
+      voiceDeafenMembers: false,
+      voiceMoveMembers: false,
+      voiceUseVAD: false
+  }
+
+
+console.log(roomRotation.temptest.opens.format("dddd, MMMM Do YYYY, h:mm:ss a zz"));
+console.log(roomRotation.temptest.closes.format("dddd, MMMM Do YYYY, h:mm:ss a zz"));
+  for(var room in roomRotation){
+    var channel = bot.channels.get("name", 'temptest');
+    if(channel && roomRotation[room].opens > moment() && roomRotation[room].closes < moment() ){
+      //give read permissions
+     bot.internal.overwritePermissions(channel,role,openPermissions,function(e){
+      console.log(e);
+     });
+    }
+    else {
+      //remove read permissions
+     bot.internal.overwritePermissions(channel,role,closePermissions,function(e){
+      console.log(e);
+     });
+    }
+
+  }
+
+}
+
+rotateRooms();
 
 // Util function to choose a random from array
 var randomFromArray = function(array) {
@@ -1276,6 +1367,11 @@ bot.on("ready", function() {
     checkTimeout(function(resp) {
       // Do Stuff
     });
+  });
+
+  cron.schedule('*/10 * * * *', function(){
+    console.log('running room role permissions check');
+    roomRotation(bot);
   });
 
 });

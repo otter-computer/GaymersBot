@@ -1461,19 +1461,11 @@ bot.on("ready", function() {
         });
       }
 
-  // kick off the clock
-  var timeoutCron = cron.schedule('*/10 * * * *', function() {
-    if(debug) console.log('running a task every 10 minutes');
-    checkTimeout(function(resp) {
-      // Do Stuff
-    });
-  }, true);
-
-  var roomsCron = cron.schedule('*/1 * * * *', function() {
-    if(debug) console.log('running room role permissions check');
-    var rooms = roomRotation();
-    rotateRooms(bot, rooms);
-  }, true);
+  // var roomsCron = cron.schedule('*/1 * * * *', function() {
+  //   if(debug) console.log('running room role permissions check');
+  //   var rooms = roomRotation();
+  //   rotateRooms(bot, rooms);
+  // }, true);
 });
 
 bot.on("disconnected", function(e) {

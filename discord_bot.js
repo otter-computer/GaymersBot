@@ -656,35 +656,50 @@ var commands = {
       var output = "Currently being played:\n";
       var userList = msg.client.users.getAll("status","online");
       var gamers = "";
+      var messages = [];
 
       for (var i = 0; i < userList.length; i++) {
         var isBot = userList[i].bot;
         var username = tagUser(userList[i]);
         var game = userList[i].game;
 
-        if (!isBot && game) {
-          if (suffix){
-            var targetGame = suffix.toLowerCase();
-            var gameLower = game.name.toLowerCase();
+        if (gamers.length>1900){
+          messages.push(gamers);
+          var gamers = "";
+        }
 
-            if (targetGame == gameLower){
-              gamers += "\t"+username + " is currently playing "+ game.name+"\n";
+          if (!isBot && game) {
+            if (suffix){
+              var targetGame = suffix.toLowerCase();
+              var gameLower = game.name.toLowerCase();
+
+              if (targetGame == gameLower){
+                gamers += "\t"+username + " is currently playing "+ game.name+"\n";
+
+              }
+            }
+            else {
+                gamers += "\t"+username + " is currently playing "+ game.name+"\n";
             }
           }
-          else {
-              gamers += "\t"+username + " is currently playing "+ game.name+"\n";
-          }
         }
-      }
 
-      if (gamers == ""){
+      if (gamers.length==0){
         gamers = "Nobody! :(";
+        messages.unshift(gamers);
+      }
+      else if (gamers.length>0){
+        messages.unshift(gamers);
       }
 
-      output += gamers
-      output += "";
-
-      bot.sendMessage(msg.author, output);
+          
+      for (var i = 0; i < messages.length; i++) {
+        bot.sendMessage(msg.author, messages[i], function(e){
+          if(e) {
+                console.log(e);
+              } 
+        });
+      }
 
     }
   },
@@ -1212,6 +1227,21 @@ var commands = {
         bot.sendMessage(msg.channel, message);
       }
 
+    }
+  },
+  
+  "giphy": {
+    usage: "<search term>",
+    description: "Gets a gif from your search term!.",
+    process: function(bot, msg, suffix) {
+      var giphyApiKey = process.env.GIPHY_API_KEY;
+      var suffix = suffix.replace(" ","+");
+      if (giphyApiKey){
+        getUrlData('http://api.giphy.com/v1/gifs/random?limit=1&api_key='+giphyApiKey+'&tag='+suffix,function(data) {
+          var jData = JSON.parse(data);
+          bot.sendMessage(msg.channel, jData.data.url);
+        });
+      }
     }
   }
 };

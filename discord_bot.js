@@ -1016,15 +1016,15 @@ var commands = {
   "giphy": {
     usage: "<search term>",
     description: "Gets a gif from your search term!.",
-    process: function(bot, msg) {
+    process: function(bot, msg, suffix) {
       var giphyApiKey = process.env.GIPHY_API_KEY;
-      if (GIPHY_API_KEY){
-        getUrlData('http://api.giphy.com/v1'+GIPHY_API_KEY,function(data) {
+      var suffix = suffix.replace(" ","+");
+      if (giphyApiKey){
+        getUrlData('http://api.giphy.com/v1/gifs/random?limit=1&api_key='+giphyApiKey+'&tag='+suffix,function(data) {
           var jData = JSON.parse(data);
-          bot.sendMessage(msg.channel, jData.facts[0]);
+          bot.sendMessage(msg.channel, jData.data.url);
         });
       }
-      
     }
   }
 };

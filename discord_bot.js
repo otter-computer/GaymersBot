@@ -42,13 +42,13 @@ catch (e) { //no version
 }
 
 var startTime = Date.now();
-
-var rotateRooms = function(bot) {
-
+var open = moment().startOf('hour');
+var close = moment().startOf('hour').add(5,'minutes');
   var roomRotation = {
     temptest : {
-      opens: moment().startOf('hour'),
-      closes: moment().startOf('hour').add(30,'minutes')
+      opens: open,
+      closes: close,
+      status: false
     } /*,
     temptest2 : {
       opens: moment().tz('Australia/Sydney').day('Saturday').startOf('day'),
@@ -56,7 +56,10 @@ var rotateRooms = function(bot) {
     }*/
   };
 
-  var everyoneRole = bot.servers[0].roles.get("name", '@everyone');
+
+
+var rotateRooms = function(bot,roomRotation) {
+
   var openPermissions = {
       // general
       createInstantInvite: false,
@@ -115,7 +118,10 @@ var rotateRooms = function(bot) {
   for(var room in roomRotation) {
     var channel = bot.channels.get("name", 'temptest');
     var general = bot.channels.get("name", "general");
-    
+    var everyoneRole = bot.servers[0].roles.get("name", '@everyone');
+    var channelEveryoneRole = new Discord.PermissionOverwrite(channel.permissionOverwrites.get("id", everyoneRole.id));
+
+
     if(!channel) {
       if (debug) console.log('Could not find the specified channel. Please create it.');
       break;
@@ -129,33 +135,32 @@ var rotateRooms = function(bot) {
         "Close: " + roomRotation[room].closes.format("dddd, MMMM Do YYYY, h:mm:ss a zz")
        );
     }
-    
-    console.log(channel.permissionOverwrites);
-    
-    if(channel && roomRotation[room].opens > moment() && roomRotation[room].closes < moment()) {
+
+    if(channel && roomRotation[room].opens < moment() && roomRotation[room].closes > moment()) {
       
-      // if (!channel.hasPermission('readMessages')) {
-      //   logMessage(bot, channel.id + " has opened for business, it will close again at: "+ roomRotation[room].closes.format("dddd, MMMM Do"));
-      // }
-      
-      //give read permissions
-      if(!everyoneRole.hasPermission(openPermissions)) {
-       bot.internal.overwritePermissions(channel, everyoneRole, openPermissions, function(e) {
-        if(debug) console.log(e);
-       });
+      if (!roomRotation[room].status) {
+        logMessage(bot, channel.id + " has opened for business, it will close again at: "+ roomRotation[room].closes.format("dddd, MMMM Do"));
       }
+
+     bot.internal.overwritePermissions(channel, everyoneRole, openPermissions, function(e) {
+      if(debug) console.log(e);
+      roomRotation[room].status = true;
+     });
+
     } else {
-      //remove read permissions
-      if(!everyoneRole.hasPermission(openPermissions)) {
-        
-        // if (channel.hasPermission('readMessages')) {
-        //   logMessage(bot, channel.id + " has closed, it will open again at: "+ roomRotation[room].opens.format("dddd, MMMM Do"));
-        // }
+        console.log('fail');
+
+
+        console.log(channelEveryoneRole);
+        if (roomRotation[room].status) {
+          logMessage(bot, channel.id + " has closed, it will open again at: "+ roomRotation[room].opens.format("dddd, MMMM Do"));
+        }
         
         bot.internal.overwritePermissions(channel,everyoneRole,closePermissions,function(e){
          if(debug) console.log(e);
+         roomRotation[room].status = false;
         });
-      }
+
     }
   }
 }
@@ -1399,10 +1404,10 @@ bot.on("ready", function() {
 
   cron.schedule('*/1 * * * *', function(){
     console.log('running room role permissions check');
-    rotateRooms(bot);
+    rotateRooms(bot,roomRotation);
   });
 
-  rotateRooms(bot);
+  //rotateRooms(bot,roomRotation);
 
 });
 

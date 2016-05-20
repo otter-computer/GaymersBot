@@ -43,13 +43,16 @@ catch (e) { //no version
 
 var startTime = Date.now();
 
+var momentFormat = "dddd, MMMM Do, HH:mm";
+
 var roomRotation = function() {
   var rooms = {};
-  
+
   rooms.selfies = {
     name: 'selfies',
-    opens: moment().startOf('hour').add(58, 'minutes'),
-    closes: moment().startOf('hour').add(59, 'minutes'),
+    opens: moment().tz('Australia/Sydney').day('Saturday').startOf('day'),
+    closes: moment().tz('America/Los_Angeles').add(1, 'week').day('Sunday').endOf('day'),
+    next: moment().tz('Australia/Sydney').add(1, 'week').day('Saturday').startOf('day'),
     active: false,
     status: function() {
       if (this.opens < moment() && this.closes > moment()) {
@@ -124,7 +127,7 @@ var rotateRooms = function(bot, roomRotation) {
 
   for(var room in roomRotation) {
     var channel = bot.channels.get("name", room);
-    var announceChannel = "anouncements";
+    var announceChannel = "announcements";
     var everyoneRole = bot.servers[0].roles.get("name", '@everyone');
     var channelEveryoneRole = new Discord.PermissionOverwrite({id: everyoneRole.id});
     
@@ -146,16 +149,17 @@ var rotateRooms = function(bot, roomRotation) {
       console.log(
         "Channel.id: " + channel.id + ", \n" +
         "Room: " + room + ", \n" + 
-        "Open: " + roomRotation[room].opens.format("dddd, MMMM Do, h:mm") + ", \n" +
-        "Close: " + roomRotation[room].closes.format("dddd, MMMM Do, h:mm")
+        "Open: " + roomRotation[room].opens.format(momentFormat) + ", \n" +
+        "Close: " + roomRotation[room].closes.format(momentFormat) + ", \n" +
+        "Next: " + roomRotation[room].next.format(momentFormat)
        );
     }
 
     if(channel && roomRotation[room].opens < moment() && roomRotation[room].closes > moment()) {
-      if(debug) console.log(moment().format("dddd, MMMM Do, h:mm") + '.', 'Opening room.');
+      if(debug) console.log(moment().format(momentFormat) + '.', 'Opening room.');
       
       if(!activeRooms[room].active) {
-        logMessage(bot, channel.mention() + " has opened for business, it will close again at: "+ roomRotation[room].closes.format("dddd, MMMM Do, h:mm"), announceChannel);
+        logMessage(bot, channel.mention() + " has opened for business, it will close again in "+ roomRotation[room].closes.fromNow(true), announceChannel);
         activeRooms[room].active = true;
       }
 
@@ -165,10 +169,10 @@ var rotateRooms = function(bot, roomRotation) {
      });
 
     } else {
-      if(debug) console.log(moment().format("dddd, MMMM Do, h:mm") + '.', 'Closing room.');
+      if(debug) console.log(moment().format("dddd, MMMM Do, HH:mm") + '.', 'Closing room.');
       
       if(activeRooms[room].active) {
-        logMessage(bot, channel.mention() + " has closed, it will open again at: "+ roomRotation[room].opens.format("dddd, MMMM Do, h:mm"), announceChannel);
+        logMessage(bot, channel.mention() + " has closed, it will open again in "+ roomRotation[room].next.fromNow(true), announceChannel);
         activeRooms[room].active = false;
       }
       
@@ -1191,6 +1195,24 @@ var commands = {
         bot.sendMessage(msg.channel, jData.facts[0]);
       });
     }
+  },
+
+  "rooms": {
+    usage: "",
+    description: "Gets room rotation list.",
+    process: function(bot, msg) {
+      var roomList = roomRotation();
+      for (var room in roomList){
+        var status = roomList[room].active; 
+        if(status) {
+          var message = bot.channels.get("name", roomList[room].name).mention() + " opened " + roomList[room].opens.fromNow() + ", closes in " + roomList[room].closes.fromNow(true);  
+        } else {
+          var message = roomList[room].name + " opens in " + roomList[room].next.fromNow(true);
+        }
+        bot.sendMessage(msg.channel, message);
+      }
+
+    }
   }
 };
 
@@ -1411,14 +1433,14 @@ bot.on("ready", function() {
 
   // kick off the clock
   var timeoutCron = cron.schedule('*/10 * * * *', function() {
-    console.log('running a task every 10 minutes');
+    if(debug) console.log('running a task every 10 minutes');
     checkTimeout(function(resp) {
       // Do Stuff
     });
   }, true);
 
   var roomsCron = cron.schedule('*/1 * * * *', function() {
-    console.log('running room role permissions check');
+    if(debug) console.log('running room role permissions check');
     var rooms = roomRotation();
     rotateRooms(bot, rooms);
   }, true);

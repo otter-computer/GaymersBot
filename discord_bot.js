@@ -1336,7 +1336,7 @@ var addTimeout = function(id,cb) {
   var now = Date.now();
   var expireTime = now + 1800000; // 30 mins in milliseconds
 
-  logMessage(bot, member.mention() + " has been given the `Restricted` role. I will attempt to remove it at: "+ new Date(expireTime));
+  logMessage(bot, member.mention() + " has been given the `Restricted` role. I will attempt to remove it in "+ moment(expireTime).fromNow(true));
 
   con.query('INSERT INTO timeout (id,expires) VALUES('+id+','+expireTime+') ON DUPLICATE KEY UPDATE `expires`="'+expireTime+'"', function(err, rows, fields) {
     if (err) {

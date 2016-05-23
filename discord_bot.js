@@ -562,9 +562,9 @@ var commands = {
       }
       
       if (suffix) {
-        message.replace('$USER', user);
+        message = message.replace('$USER', user);
       } else {
-        message.replace('$USER', msg.sender);
+        message = message.replace('$USER', msg.sender);
       }
       
       bot.sendMessage(msg.channel, message);

@@ -555,7 +555,7 @@ var commands = {
       var user = args.shift();
       var message;
       
-      if (Math.floor(Math.random() * 5) + 1 === 5) {
+      if (Math.floor(Math.random() * 50) + 1 === 50) {
         message = spraySpecial;
       } else {
         message = randomFromArray(sprayReplies);

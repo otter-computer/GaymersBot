@@ -461,7 +461,7 @@ var commands = {
     usage: "[Your region]",
     description: "Set your region, get pretty color.",
     process: function(bot, msg, suffix) {
-      var region = suffix.toProperCase();
+      var region = suffix.replace("[","").replace("]","").toProperCase();
       var role = msg.channel.server.roles.get("name", region);
 
       if (suffix) {

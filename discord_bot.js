@@ -820,8 +820,8 @@ var commands = {
 
         for (var i = 0; i < users.length; i++) {
           var user = msg.channel.server.detailsOfUser(users[i]);
-          var d = new Date(user.joinedAt);
-          var message =  tagUser(users[i]) + " joined at " + d;
+          var d = moment(user.joinedAt);
+          var message =  tagUser(users[i]) + " joined at " + d.fromNow() + " (" + d.format("dddd, MMMM Do YYYY, h:mm a") + ")";
 
           if(msg.channel){
             bot.sendMessage(msg.channel, message);
@@ -1346,7 +1346,7 @@ var addTimeout = function(id,cb) {
   var now = Date.now();
   var expireTime = now + 1800000; // 30 mins in milliseconds
 
-  logMessage(bot, member.mention() + " has been given the `Restricted` role. I will attempt to remove it at: "+ new Date(expireTime));
+  logMessage(bot, member.mention() + " has been given the `Restricted` role. I will attempt to remove it in "+ moment(expireTime).fromNow(true));
 
   con.query('INSERT INTO timeout (id,expires) VALUES('+id+','+expireTime+') ON DUPLICATE KEY UPDATE `expires`="'+expireTime+'"', function(err, rows, fields) {
     if (err) {

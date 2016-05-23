@@ -363,6 +363,8 @@ var sprayReplies = [
   "\*sprays $USER with a fire hose.\*"
 ];
 
+var spraySpecial = "\*sprays $USER with canned cheese.\*";
+
 var commands = {
   "ping": {
     usage: "",
@@ -551,13 +553,21 @@ var commands = {
     process: function(bot, msg, suffix) {
       var args = suffix.split(' ');
       var user = args.shift();
-      if (suffix) {
-        var message = randomFromArray(sprayReplies).replace('$USER', user)
-        bot.sendMessage(msg.channel, message);
+      var message;
+      
+      if (Math.floor(Math.random() * 50) + 1 === 50) {
+        message = spraySpecial;
       } else {
-        var message = randomFromArray(sprayReplies).replace('$USER', msg.sender);
-        bot.sendMessage(msg.channel, message);
+        message = randomFromArray(sprayReplies);
       }
+      
+      if (suffix) {
+        message = message.replace('$USER', user);
+      } else {
+        message = message.replace('$USER', msg.sender);
+      }
+      
+      bot.sendMessage(msg.channel, message);
     }
   },
 

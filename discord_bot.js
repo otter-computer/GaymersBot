@@ -810,8 +810,8 @@ var commands = {
 
         for (var i = 0; i < users.length; i++) {
           var user = msg.channel.server.detailsOfUser(users[i]);
-          var d = new Date(user.joinedAt);
-          var message =  tagUser(users[i]) + " joined at " + d;
+          var d = moment(user.joinedAt);
+          var message =  tagUser(users[i]) + " joined at " + d.fromNow() + " (" + d.format("dddd, MMMM Do YYYY, h:mm a") + ")";
 
           if(msg.channel){
             bot.sendMessage(msg.channel, message);

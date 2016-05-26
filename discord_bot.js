@@ -1174,8 +1174,8 @@ var commands = {
   "timeout": {
     usage: "@user",
     description: "Times a user out for 30 mins.",
-    process: function(bot,msg,suffix) {
-      var users = suffix.split(' ');
+    process: function(bot,msg) {
+      var users = msg.mentions;
       var adminRole = msg.channel.server.roles.get("name", "Admin");
       var restrictedRole = msg.channel.server.roles.get("name", "Restricted");
       var message;
@@ -1351,7 +1351,9 @@ var addTimeout = function(id,cb) {
   con.query('INSERT INTO timeout (id,expires) VALUES('+id+','+expireTime+') ON DUPLICATE KEY UPDATE `expires`="'+expireTime+'"', function(err, rows, fields) {
     if (err) {
       console.log(err);
+      return;
     }
+    
     if (rows[0]) {
       cb(rows[0]);
     }
@@ -1365,7 +1367,6 @@ var removeTimeout = function(id,cb) {
 
   // RDS connect - this should be moved to a more modular mechanism
   try {
-
     var con = mysql.createConnection({
       host     : process.env.RDS_HOSTNAME,
       user     : process.env.RDS_USERNAME,
@@ -1375,6 +1376,7 @@ var removeTimeout = function(id,cb) {
     });
     con.connect();
   }
+  
   catch (e) { //no db
     console.log(e);
     console.log("Could connect to database.");
@@ -1407,7 +1409,6 @@ var checkTimeout = function(cb) {
 
   // RDS connect - this should be moved to a more modular mechanism
   try {
-    
     var con = mysql.createConnection({
       host     : process.env.RDS_HOSTNAME,
       user     : process.env.RDS_USERNAME,
@@ -1427,7 +1428,8 @@ var checkTimeout = function(cb) {
     if (err) {
       console.log(err);
     }
-    for(var row in rows){
+    
+    for(var row in rows) {
 
       var expires = parseInt(rows[row].expires);
 
@@ -1477,6 +1479,14 @@ bot.on("ready", function() {
   //   rotateRooms(bot, rooms);
   // }, true);
 });
+
+// kick off the clock
+var timeoutCron = cron.schedule('*/5 * * * *', function() {
+  if(debug) console.log('Checking timed-out users');
+  checkTimeout(function(resp) {
+    
+  });		
+}, true);
 
 bot.on("disconnected", function(e) {
   console.log("Disconnected!");

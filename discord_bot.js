@@ -1191,10 +1191,10 @@ var commands = {
           if (!hasRole) {
             addTimeout(user);
             bot.addMemberToRole(user,restrictedRole);
-            message = user.mention() + " has been added to timeout.";
+            message = user.mention() + " is on a timeout.";
             bot.sendMessage(msg.channel, message);
           } else {
-            message = user.mention() + " already has timeout.";
+            message = user.mention() + " is already on timeout.";
             bot.sendMessage(msg.channel, message);
           }
         }
@@ -1335,10 +1335,10 @@ var addTimeout = function(user, cb) {
 
   var now = Date.now();
   var expireTime = now + 1800000; // 30 mins in milliseconds
-
+  
   logMessage(bot, user.mention() + " has been given the `Restricted` role. I will attempt to remove it in "+ moment(expireTime).fromNow(true));
 
-  con.query('INSERT INTO timeout (id,expires) VALUES('+id+','+expireTime+') ON DUPLICATE KEY UPDATE `expires`="'+expireTime+'"', function(err, rows, fields) {
+  con.query('INSERT INTO timeout (id,expires) VALUES('+ user.id +',' + expireTime + ') ON DUPLICATE KEY UPDATE `expires`="' + expireTime + '"', function(err, rows, fields) {
     if (err) {
       console.log(err);
       return;
@@ -1381,7 +1381,7 @@ var removeTimeout = function(user, cb) {
       logMessage(bot, user.mention() + " has been automatically removed from the `Restricted` role.");
     });
 
-    con.query('DELETE FROM timeout WHERE id = '+id, function(err, rows, fields) {
+    con.query('DELETE FROM timeout WHERE id = '+ user.id, function(err, rows, fields) {
       if (err) {
         console.log(err);
       }
@@ -1487,7 +1487,7 @@ bot.on("message", function(msg) {
 
   // Role to 'ban' users from bot commands.
   var botMute = false;
-  if (!msg.channel.recipient && msg.author.id != bot.user.id){
+  if (!msg.channel.recipient && msg.author.id != bot.user.id) {
     muteRole = msg.channel.server.roles.get("name", "Bot Restricted");
     botMute = msg.author.hasRole(muteRole);
   }

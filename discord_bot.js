@@ -1174,8 +1174,8 @@ var commands = {
   "timeout": {
     usage: "@user",
     description: "Times a user out for 30 mins.",
-    process: function(bot,msg,suffix) {
-      var users = suffix.split(' ');
+    process: function(bot,msg) {
+      var users = msg.mentions;
       var adminRole = msg.channel.server.roles.get("name", "Admin");
       var restrictedRole = msg.channel.server.roles.get("name", "Restricted");
       var message;
@@ -1183,28 +1183,19 @@ var commands = {
       if (msg.sender.hasRole(adminRole)) {
 
         for (var i = 0; i < users.length; i++) {
-          var id;
-          // Server nickname detection
-          if(users[i].substr(2, 1) === "!") {
-            id = users[i].slice(3, users[i].length - 1);
-          } else {
-             id = users[i].slice(2, users[i].length - 1);
-          }
 
-          var user = bot.internal.users.get("id", id);
+          var user = users[i];
+          var id = user.id;
           var hasRole = user.hasRole(restrictedRole);
 
           if (!hasRole) {
-              
-              addTimeout(id);
-                bot.addMemberToRole(user,restrictedRole);
-                message = user.mention() + " has been added to timeout.";
-                bot.sendMessage(msg.channel, message);
-              
-
+            addTimeout(user);
+            bot.addMemberToRole(user,restrictedRole);
+            message = user.mention() + " is on a timeout.";
+            bot.sendMessage(msg.channel, message);
           } else {
-              message = user.mention() + " already has timeout.";
-              bot.sendMessage(msg.channel, message);
+            message = user.mention() + " is already on timeout.";
+            bot.sendMessage(msg.channel, message);
           }
         }
       }
@@ -1321,11 +1312,10 @@ var setUserMeta = function(userid, key, value) {
 }
 
 
-var addTimeout = function(id,cb) {
+var addTimeout = function(user, cb) {
 
   // RDS connect - this should be moved to a more modular mechanism
   try {
-
     var con = mysql.createConnection({
       host     : process.env.RDS_HOSTNAME,
       user     : process.env.RDS_USERNAME,
@@ -1341,17 +1331,19 @@ var addTimeout = function(id,cb) {
     return;
   }
 
-  var member = bot.internal.users.get("id", id);
+  // var member = bot.internal.users.get("id", id);
 
   var now = Date.now();
   var expireTime = now + 1800000; // 30 mins in milliseconds
+  
+  logMessage(bot, user.mention() + " has been given the `Restricted` role. I will attempt to remove it in "+ moment(expireTime).fromNow(true));
 
-  logMessage(bot, member.mention() + " has been given the `Restricted` role. I will attempt to remove it in "+ moment(expireTime).fromNow(true));
-
-  con.query('INSERT INTO timeout (id,expires) VALUES('+id+','+expireTime+') ON DUPLICATE KEY UPDATE `expires`="'+expireTime+'"', function(err, rows, fields) {
+  con.query('INSERT INTO timeout (id,expires) VALUES('+ user.id +',' + expireTime + ') ON DUPLICATE KEY UPDATE `expires`="' + expireTime + '"', function(err, rows, fields) {
     if (err) {
       console.log(err);
+      return;
     }
+    
     if (rows[0]) {
       cb(rows[0]);
     }
@@ -1361,11 +1353,10 @@ var addTimeout = function(id,cb) {
   
 }
 
-var removeTimeout = function(id,cb) {
+var removeTimeout = function(user, cb) {
 
   // RDS connect - this should be moved to a more modular mechanism
   try {
-
     var con = mysql.createConnection({
       host     : process.env.RDS_HOSTNAME,
       user     : process.env.RDS_USERNAME,
@@ -1375,22 +1366,22 @@ var removeTimeout = function(id,cb) {
     });
     con.connect();
   }
+  
   catch (e) { //no db
     console.log(e);
     console.log("Could connect to database.");
     return;
   }
 
-  var member = bot.internal.users.get("id", id);
   var role = bot.servers[0].roles.get("name", 'Restricted');
 
-  if(member && role) {
-    bot.removeMemberFromRole(member, role, function(e){
+  if(user && role) {
+    bot.removeMemberFromRole(user, role, function(e) {
       console.log(e);
-      logMessage(bot, member.mention() + " has been automatically removed from the `Restricted` role.");
-    })
+      logMessage(bot, user.mention() + " has been automatically removed from the `Restricted` role.");
+    });
 
-    con.query('DELETE FROM timeout WHERE id = '+id, function(err, rows, fields) {
+    con.query('DELETE FROM timeout WHERE id = '+ user.id, function(err, rows, fields) {
       if (err) {
         console.log(err);
       }
@@ -1407,7 +1398,6 @@ var checkTimeout = function(cb) {
 
   // RDS connect - this should be moved to a more modular mechanism
   try {
-    
     var con = mysql.createConnection({
       host     : process.env.RDS_HOSTNAME,
       user     : process.env.RDS_USERNAME,
@@ -1427,7 +1417,8 @@ var checkTimeout = function(cb) {
     if (err) {
       console.log(err);
     }
-    for(var row in rows){
+    
+    for(var row in rows) {
 
       var expires = parseInt(rows[row].expires);
 
@@ -1435,7 +1426,7 @@ var checkTimeout = function(cb) {
         // Remove room cmd
         var expDate = new Date(expires);
         console.log('RESTRICTED ROLE REMOVAL: ' + rows[row].id + ', expired: '+ expDate);
-        removeTimeout(rows[row].id);
+        removeTimeout(bot.internal.users.get("id", rows[row].id));
         // callback rooms removed
       }
       else {
@@ -1478,6 +1469,14 @@ bot.on("ready", function() {
   // }, true);
 });
 
+// kick off the clock
+var timeoutCron = cron.schedule('*/5 * * * *', function() {
+  if(debug) console.log('Checking timed-out users');
+  checkTimeout(function(resp) {
+    console.log('CHECKED CRON');
+  });		
+}, true);
+
 bot.on("disconnected", function(e) {
   console.log("Disconnected!");
   process.exit(1); //exit node.js with an error
@@ -1488,7 +1487,7 @@ bot.on("message", function(msg) {
 
   // Role to 'ban' users from bot commands.
   var botMute = false;
-  if (!msg.channel.recipient && msg.author.id != bot.user.id){
+  if (!msg.channel.recipient && msg.author.id != bot.user.id) {
     muteRole = msg.channel.server.roles.get("name", "Bot Restricted");
     botMute = msg.author.hasRole(muteRole);
   }

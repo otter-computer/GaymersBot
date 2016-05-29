@@ -547,6 +547,27 @@ var commands = {
     }
   },
   
+  "setoverwatch": {
+    usage: "",
+    description: "Gives you the Overwatch role, find others to play with!",
+    process: function(bot, msg) {
+      var message = setRole(msg, "Overwatch");
+      console.log('setlol', message);
+      bot.sendMessage(msg.channel, message);
+    }
+  },
+  
+  "unsetoverwatch": {
+    usage: "",
+    description: "Removes the Overwatch role.",
+    process: function(bot, msg) {
+      var message = unsetRole(msg, "Overwatch");
+      console.log(message);
+      console.log('unsetlol', message);
+      bot.sendMessage(msg.channel, message);
+    }
+  },
+  
   "spray": {
     usage: "[@user]",
     description: "Spray someone thirsty...",

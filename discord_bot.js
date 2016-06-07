@@ -1321,7 +1321,7 @@ var setUserMeta = function(userid, key, value) {
 
   var lastSegment = value.split('/').pop();
 
-  con.query('INSERT INTO meta (id,?) VALUES(?,?) ON DUPLICATE KEY UPDATE `?`=?', [key, userid, lastSegment, key, lastSegment], function(err, rows, fields) {
+  con.query('INSERT INTO meta (id,'+key+') VALUES(?,?) ON DUPLICATE KEY UPDATE `'+key+'`=?', [userid, lastSegment, key, lastSegment], function(err, rows, fields) {
     if (err) {
       console.log(err);
     }

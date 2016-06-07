@@ -1287,7 +1287,7 @@ catch (e) { //no db
   console.log("Could connect to database meta data will not be loaded.")
   return;
 }
-  con.query('SELECT * FROM meta WHERE id = \''+userid+'\'', function(err, rows, fields) {
+  con.query('SELECT * FROM meta WHERE id = ?', [userid], function(err, rows, fields) {
     if (err) {
       console.log(err);
     }
@@ -1321,7 +1321,7 @@ var setUserMeta = function(userid, key, value) {
 
   var lastSegment = value.split('/').pop();
 
-  con.query('INSERT INTO meta (id,'+key+') VALUES('+userid+',\''+lastSegment+'\') ON DUPLICATE KEY UPDATE `'+key+'`=\''+lastSegment+'\'', function(err, rows, fields) {
+  con.query('INSERT INTO meta (id,?) VALUES(?,?) ON DUPLICATE KEY UPDATE `?`=?', [key, userid, lastSegment, key, lastSegment], function(err, rows, fields) {
     if (err) {
       console.log(err);
     }
@@ -1359,7 +1359,7 @@ var addTimeout = function(user, cb) {
   
   logMessage(bot, user.mention() + " has been given the `Restricted` role. I will attempt to remove it in "+ moment(expireTime).fromNow(true));
 
-  con.query('INSERT INTO timeout (id,expires) VALUES('+ user.id +',' + expireTime + ') ON DUPLICATE KEY UPDATE `expires`="' + expireTime + '"', function(err, rows, fields) {
+  con.query('INSERT INTO timeout (id,expires) VALUES(?,?) ON DUPLICATE KEY UPDATE `expires`=?', [user.id, expireTime, expireTime],function(err, rows, fields) {
     if (err) {
       console.log(err);
       return;
@@ -1402,7 +1402,7 @@ var removeTimeout = function(user, cb) {
       logMessage(bot, user.mention() + " has been automatically removed from the `Restricted` role.");
     });
 
-    con.query('DELETE FROM timeout WHERE id = '+ user.id, function(err, rows, fields) {
+    con.query('DELETE FROM timeout WHERE id = ?', [user.id], function(err, rows, fields) {
       if (err) {
         console.log(err);
       }

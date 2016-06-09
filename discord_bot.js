@@ -1440,7 +1440,7 @@ var addTimeout = function(user, cb) {
     connection.query('INSERT INTO timeout (id,expires) VALUES(?,?) ON DUPLICATE KEY UPDATE `expires`=?', [user.id, expireTime, expireTime],function(err, rows, fields) {
       if (err) {
         console.log(err);
-        connection.return();
+        connection.release();
         return;
       }
       
@@ -1448,7 +1448,7 @@ var addTimeout = function(user, cb) {
         cb(rows[0]);
       }
       
-      connection.return();
+      connection.release();
     });
   });
   
@@ -1473,7 +1473,7 @@ var removeTimeout = function(user, cb) {
           cb(rows[0]);
         }
         
-        connection.return();
+        connection.release();
       });
     });
   }
@@ -1507,7 +1507,7 @@ var checkTimeout = function(cb) {
       // callback all checked 
         cb();
           
-      connection.return();
+      connection.release();
     });
   });
   

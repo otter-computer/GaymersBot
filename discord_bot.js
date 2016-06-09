@@ -1280,6 +1280,14 @@ var commands = {
             if (data.youtube != null) {
               message = message + "\n" + "Youtube: https://youtube.com/" + data.youtube;
             }
+
+            if (data.psn != null) {
+              message = message + "\n" + "PSN name: " + data.psn;
+            }
+
+            if (data.gamertag != null) {
+              message = message + "\n" + "XBox Gamertag: " + data.gamertag;
+            }
           }
           if (msg.channel) {
             bot.sendMessage(msg.channel, message);

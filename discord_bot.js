@@ -45,6 +45,22 @@ var startTime = Date.now();
 
 var momentFormat = "dddd, MMMM Do, HH:mm";
 
+try {
+  var pool  = mysql.createPool({
+    connectionLimit : 15,
+    host     : process.env.RDS_HOSTNAME,
+    user     : process.env.RDS_USERNAME,
+    password : process.env.RDS_PASSWORD,
+    port     : process.env.RDS_PORT,
+    database : process.env.RDS_DB_NAME
+  });
+}
+catch (e) { //MySQL Error
+  console.log(e);
+  console.log("Could connect to database meta data will not be loaded.")
+  return;
+}
+
 var roomRotation = function() {
   var rooms = {};
 
@@ -1264,6 +1280,14 @@ var commands = {
             if (data.youtube != null) {
               message = message + "\n" + "Youtube: https://youtube.com/" + data.youtube;
             }
+
+            if (data.psn != null) {
+              message = message + "\n" + "PSN name: " + data.psn;
+            }
+
+            if (data.gamertag != null) {
+              message = message + "\n" + "XBox Gamertag: " + data.gamertag;
+            }
           }
           if (msg.channel) {
             bot.sendMessage(msg.channel, message);
@@ -1373,88 +1397,37 @@ var commands = {
 };
 
 var queryUserMeta = function(userid, cb) {
-
-// RDS connect - this should be moved to a more modular mechanism
-try {
-
-  var con = mysql.createConnection({
-    host     : process.env.RDS_HOSTNAME,
-    user     : process.env.RDS_USERNAME,
-    password : process.env.RDS_PASSWORD,
-    port     : process.env.RDS_PORT,
-    database : process.env.RDS_DB_NAME
-  });
-  con.connect();
-}
-catch (e) { //no db
-  console.log(e);
-  console.log("Could connect to database meta data will not be loaded.")
-  return;
-}
-  con.query('SELECT * FROM meta WHERE id = ?', [userid], function(err, rows, fields) {
-    if (err) {
-      console.log(err);
-    }
-    if (rows[0]) {
-      cb(rows[0]);
-    }
-    
-    con.end();
+  pool.getConnection(function(err, connection) {
+    connection.query('SELECT * FROM meta WHERE id = ?', [userid], function(err, rows, fields) {
+      if (err) {
+        console.log(err);
+      }
+      if (rows[0]) {
+        cb(rows[0]);
+      }
+      
+      connection.release();
+    });
   });
 }
 
 var setUserMeta = function(userid, key, value) {
 
-  // RDS connect - this should be moved to a more modular mechanism
-  try {
-
-    var con = mysql.createConnection({
-      host     : process.env.RDS_HOSTNAME,
-      user     : process.env.RDS_USERNAME,
-      password : process.env.RDS_PASSWORD,
-      port     : process.env.RDS_PORT,
-      database : process.env.RDS_DB_NAME
-    });
-    con.connect();
-  }
-  catch (e) { //no db
-    console.log(e);
-    console.log("Could connect to database meta data will not be loaded.");
-    return;
-  }
-
   var lastSegment = value.split('/').pop();
-
-  con.query('INSERT INTO meta (id,'+key+') VALUES(?,?) ON DUPLICATE KEY UPDATE `'+key+'`=?', [userid, lastSegment, key, lastSegment], function(err, rows, fields) {
-    if (err) {
-      console.log(err);
-    }
-   
-    con.end();
-    return rows;
-  });
-  
+  pool.getConnection(function(err, connection) {
+    connection.query('INSERT INTO meta (id,'+key+') VALUES(?,?) ON DUPLICATE KEY UPDATE `'+key+'`=?', [userid, lastSegment, lastSegment], function(err, rows, fields) {
+      if (err) {
+        console.log(err);
+      }
+     
+      connection.release();
+      return rows;
+    });
+  }); 
 }
 
 
 var addTimeout = function(user, cb) {
-
-  // RDS connect - this should be moved to a more modular mechanism
-  try {
-    var con = mysql.createConnection({
-      host     : process.env.RDS_HOSTNAME,
-      user     : process.env.RDS_USERNAME,
-      password : process.env.RDS_PASSWORD,
-      port     : process.env.RDS_PORT,
-      database : process.env.RDS_DB_NAME
-    });
-    con.connect();
-  }
-  catch (e) { //no db
-    console.log(e);
-    console.log("Could connect to database.");
-    return;
-  }
 
   // var member = bot.internal.users.get("id", id);
 
@@ -1463,40 +1436,25 @@ var addTimeout = function(user, cb) {
   
   logMessage(bot, user.mention() + " has been given the `Restricted` role. I will attempt to remove it in "+ moment(expireTime).fromNow(true));
 
-  con.query('INSERT INTO timeout (id,expires) VALUES(?,?) ON DUPLICATE KEY UPDATE `expires`=?', [user.id, expireTime, expireTime],function(err, rows, fields) {
-    if (err) {
-      console.log(err);
-      return;
-    }
-    
-    if (rows[0]) {
-      cb(rows[0]);
-    }
-    
-    con.end();
+  pool.getConnection(function(err, connection) {
+    connection.query('INSERT INTO timeout (id,expires) VALUES(?,?) ON DUPLICATE KEY UPDATE `expires`=?', [user.id, expireTime, expireTime],function(err, rows, fields) {
+      if (err) {
+        console.log(err);
+        connection.release();
+        return;
+      }
+      
+      if (rows[0]) {
+        cb(rows[0]);
+      }
+      
+      connection.release();
+    });
   });
   
 }
 
 var removeTimeout = function(user, cb) {
-
-  // RDS connect - this should be moved to a more modular mechanism
-  try {
-    var con = mysql.createConnection({
-      host     : process.env.RDS_HOSTNAME,
-      user     : process.env.RDS_USERNAME,
-      password : process.env.RDS_PASSWORD,
-      port     : process.env.RDS_PORT,
-      database : process.env.RDS_DB_NAME
-    });
-    con.connect();
-  }
-  
-  catch (e) { //no db
-    console.log(e);
-    console.log("Could connect to database.");
-    return;
-  }
 
   var role = bot.servers[0].roles.get("name", 'Restricted');
 
@@ -1506,64 +1464,51 @@ var removeTimeout = function(user, cb) {
       logMessage(bot, user.mention() + " has been automatically removed from the `Restricted` role.");
     });
 
-    con.query('DELETE FROM timeout WHERE id = ?', [user.id], function(err, rows, fields) {
-      if (err) {
-        console.log(err);
-      }
-      if (rows[0]) {
-        cb(rows[0]);
-      }
-      
-      con.end();
+    pool.getConnection(function(err, connection) {
+      connection.query('DELETE FROM timeout WHERE id = ?', [user.id], function(err, rows, fields) {
+        if (err) {
+          console.log(err);
+        }
+        if (rows[0]) {
+          cb(rows[0]);
+        }
+        
+        connection.release();
+      });
     });
   }
 }
 
 var checkTimeout = function(cb) {
 
-  // RDS connect - this should be moved to a more modular mechanism
-  try {
-    var con = mysql.createConnection({
-      host     : process.env.RDS_HOSTNAME,
-      user     : process.env.RDS_USERNAME,
-      password : process.env.RDS_PASSWORD,
-      port     : process.env.RDS_PORT,
-      database : process.env.RDS_DB_NAME
+  pool.getConnection(function(err, connection) {
+    connection.query('SELECT * FROM timeout', function(err, rows, fields) {
+      if (err) {
+        console.log(err);
+      }
+      
+      for(var row in rows) {
+
+        var expires = parseInt(rows[row].expires);
+
+        if(expires < Date.now() ){
+          // Remove room cmd
+          var expDate = new Date(expires);
+          console.log('RESTRICTED ROLE REMOVAL: ' + rows[row].id + ', expired: '+ expDate);
+          removeTimeout(bot.internal.users.get("id", rows[row].id));
+          // callback rooms removed
+        }
+        else {
+          var expDate = new Date(parseInt(rows[row].expires));
+          console.log('restricted role on ' + rows[row].id + ' still valid until: '+ expDate);
+        }
+      }
+     
+      // callback all checked 
+        cb();
+          
+      connection.release();
     });
-    con.connect();
-  }
-  catch (e) { //no db
-    console.log(e);
-    console.log("Could connect to database.");
-    return;
-  }
-
-  con.query('SELECT * FROM timeout', function(err, rows, fields) {
-    if (err) {
-      console.log(err);
-    }
-    
-    for(var row in rows) {
-
-      var expires = parseInt(rows[row].expires);
-
-      if(expires < Date.now() ){
-        // Remove room cmd
-        var expDate = new Date(expires);
-        console.log('RESTRICTED ROLE REMOVAL: ' + rows[row].id + ', expired: '+ expDate);
-        removeTimeout(bot.internal.users.get("id", rows[row].id));
-        // callback rooms removed
-      }
-      else {
-        var expDate = new Date(parseInt(rows[row].expires));
-        console.log('restricted role on ' + rows[row].id + ' still valid until: '+ expDate);
-      }
-    }
-   
-    // callback all checked 
-      cb();
-        
-    con.end();
   });
   
 }

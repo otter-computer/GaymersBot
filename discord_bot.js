@@ -1414,9 +1414,8 @@ var queryUserMeta = function(userid, cb) {
 var setUserMeta = function(userid, key, value) {
 
   var lastSegment = value.split('/').pop();
-
   pool.getConnection(function(err, connection) {
-    connection.query('INSERT INTO meta (id,'+key+') VALUES(?,?) ON DUPLICATE KEY UPDATE `'+key+'`=?', [userid, lastSegment, key, lastSegment], function(err, rows, fields) {
+    connection.query('INSERT INTO meta (id,'+key+') VALUES(?,?) ON DUPLICATE KEY UPDATE `'+key+'`=?', [userid, lastSegment, lastSegment], function(err, rows, fields) {
       if (err) {
         console.log(err);
       }

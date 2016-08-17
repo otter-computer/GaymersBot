@@ -858,7 +858,12 @@ var commands = {
         for (var i = 0; i < users.length; i++) {
           var user = msg.channel.server.detailsOfUser(users[i]);
           var d = moment(user.joinedAt);
-          var message =  tagUser(users[i]) + " joined " + d.fromNow() + " (" + d.format("dddd, MMMM Do YYYY, h:mm a") + ")";
+
+          if(user.id == "107937923755704320") {
+            var message =  tagUser(users[i]) + " joined fucking ages ago.";
+          } else {
+            var message = tagUser(users[i]) + " joined " + d.fromNow() + " (" + d.format("dddd, MMMM Do YYYY, h:mm a") + ")";
+          }
 
           if(msg.channel){
             bot.sendMessage(msg.channel, message);

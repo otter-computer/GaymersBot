@@ -859,7 +859,7 @@ var commands = {
           var user = msg.channel.server.detailsOfUser(users[i]);
           var d = moment(user.joinedAt);
 
-          if(user.id == "107937923755704320") {
+          if(users[i].id == "107937923755704320") {
             var message =  tagUser(users[i]) + " joined fucking ages ago.";
           } else {
             var message = tagUser(users[i]) + " joined " + d.fromNow() + " (" + d.format("dddd, MMMM Do YYYY, h:mm a") + ")";

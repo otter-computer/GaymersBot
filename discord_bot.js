@@ -306,13 +306,15 @@ var getUrlData = function (url,cb){
 
 }
 
-var welcomeMessage = "Welcome to Gaymers! \n" +
-  "type `!help` to see how I work. \n" +
-  "To set your region type `!setregion [Your region]` in any channel. \n" +
-  "For help on what regions are available type `!regions` in any channel. \n" +
-  "To gain access to the #over-18 channel, type `!set18` in any channel. \n" +
-  "If you have any questions, use the `@admin` command or PM one of the admins. \n" +
-  "Please review our rules here: https://goo.gl/670LtP";
+var welcomeMessage = "__**Welcome to Gaymers!**__\n \n" +
+  "Please follow our rules. You can find them here: https://goo.gl/670LtP \n \n" +
+  "If you have any questions you can use the @admin mention in any channel or PM an admin directly \n \n" +
+  "__**Useful Commands**__ \n" +
+  "These commands can be used in any channel on the server. \n \n" +
+  "**!help** - Discobot will PM you a complete list of commands. \n" +\
+  "**!regions** - Discobot will respond with a list of regions for the set region command. \n" +\
+  "**!setregion [region]** - Discobot will set your colour based on your region. For example `!setregion Europe` or `!setregion North America` \n" +
+  "**!set18** - Discobot will give you access to the #over-18 channel. \n";
   
 var welcomeBackMessage = "Welcome back to Gaymers! \n" +
   "type `!help` to see how I work. \n" +

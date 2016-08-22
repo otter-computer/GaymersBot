@@ -307,7 +307,7 @@ var getUrlData = function (url,cb){
 }
 
 var welcomeMessage = "__**Welcome to Gaymers!**__\n \n" +
-  "Please follow our rules. You can find them here: https://goo.gl/670LtP \n \n" +
+  "Please follow our rules. You can find them in the #info-rules channel. \n \n" +
   "If you have any questions you can use the @admin mention in any channel or PM an admin directly \n \n" +
   "__**Useful Commands**__ \n" +
   "These commands can be used in any channel on the server. \n \n" +
@@ -317,7 +317,7 @@ var welcomeMessage = "__**Welcome to Gaymers!**__\n \n" +
   "**!set18** - Discobot will give you access to the #over-18 channel. \n";
   
 var welcomeBackMessage = "__**Welcome back to Gaymers!**__\n \n" +
-  "Please follow our rules. You can find them here: https://goo.gl/670LtP \n \n" +
+  "Please follow our rules. You can find them in the #info-rules channel. \n \n" +
   "If you have any questions you can use the @admin mention in any channel or PM an admin directly \n \n" +
   "__**Useful Commands**__ \n" +
   "These commands can be used in any channel on the server. \n \n" +

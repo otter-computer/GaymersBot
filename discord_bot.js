@@ -865,6 +865,8 @@ var commands = {
 
           if(users[i].id == "107937923755704320") {
             var message =  tagUser(users[i]) + " joined fucking ages ago.";
+          } else if(users[i].id == "123395731548536832") {
+            var message =  tagUser(users[i]) + " BOUNCED IN HERE LIKE A FEISTY 'ROO ABOUT 8 MONTHS AGO (Sunday, December 27th 2015, 1:00 am), MATE.";
           } else {
             var message = tagUser(users[i]) + " joined " + d.fromNow() + " (" + d.format("dddd, MMMM Do YYYY, h:mm a") + ")";
           }

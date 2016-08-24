@@ -306,21 +306,25 @@ var getUrlData = function (url,cb){
 
 }
 
-var welcomeMessage = "Welcome to Gaymers! \n" +
-  "type `!help` to see how I work. \n" +
-  "To set your region type `!setregion [Your region]` in any channel. \n" +
-  "For help on what regions are available type `!regions` in any channel. \n" +
-  "To gain access to the #over-18 channel, type `!set18` in any channel. \n" +
-  "If you have any questions, use the `@admin` command or PM one of the admins. \n" +
-  "Please review our rules here: https://goo.gl/670LtP";
+var welcomeMessage = "__**Welcome to Gaymers!**__\n \n" +
+  "Please follow our rules. You can find them in the #info-rules channel. \n \n" +
+  "If you have any questions you can use the @admin mention in any channel or PM an admin directly \n \n" +
+  "__**Useful Commands**__ \n" +
+  "These commands can be used in any channel on the server. \n \n" +
+  "**!help** - Discobot will PM you a complete list of commands. \n" +
+  "**!regions** - Discobot will respond with a list of regions for the set region command. \n" +
+  "**!setregion [region]** - Discobot will set your colour based on your region. For example `!setregion Europe` or `!setregion North America` \n" +
+  "**!set18** - Discobot will give you access to the #over-18 channel. \n";
   
-var welcomeBackMessage = "Welcome back to Gaymers! \n" +
-  "type `!help` to see how I work. \n" +
-  "To set your region type `!setregion [Your region]` in any channel. \n" +
-  "For help on what regions are available type `!regions` in any channel. \n" +
-  "To gain access to the #over-18 channel, type `!set18` in any channel. \n" +
-  "If you have any questions, use the `@admin` command or PM one of the admins. \n" +
-  "Please remember our rules that are available here: https://goo.gl/670LtP";
+var welcomeBackMessage = "__**Welcome back to Gaymers!**__\n \n" +
+  "Please follow our rules. You can find them in the #info-rules channel. \n \n" +
+  "If you have any questions you can use the @admin mention in any channel or PM an admin directly \n \n" +
+  "__**Useful Commands**__ \n" +
+  "These commands can be used in any channel on the server. \n \n" +
+  "**!help** - Discobot will PM you a complete list of commands. \n" +
+  "**!regions** - Discobot will respond with a list of regions for the set region command. \n" +
+  "**!setregion [region]** - Discobot will set your colour based on your region. For example `!setregion Europe` or `!setregion North America` \n" +
+  "**!set18** - Discobot will give you access to the #over-18 channel. \n";
   
 var regionMessage = "To set your region type `!setregion [Your region]` in any channel. \n" +
   "Here is the list of available regions: \n";
@@ -858,7 +862,22 @@ var commands = {
         for (var i = 0; i < users.length; i++) {
           var user = msg.channel.server.detailsOfUser(users[i]);
           var d = moment(user.joinedAt);
-          var message =  tagUser(users[i]) + " joined " + d.fromNow() + " (" + d.format("dddd, MMMM Do YYYY, h:mm a") + ")";
+
+          // Alex
+          if(users[i].id == "107937923755704320") {
+            var message =  tagUser(users[i]) + " joined fucking ages ago.";
+
+          // Reynbow
+          } else if(users[i].id == "123395731548536832") {
+            var dr = moment("2015-12-27 01:00");
+            var now = dr.fromNow().toUpperCase();
+            var format = dr.format("dddd, MMMM Do YYYY, h:mm a").toUpperCase();
+            var message =  tagUser(users[i]) + " BOUNCED IN HERE LIKE A FEISTY 'ROO ABOUT " + now + " (" + format + "), MATE.";
+
+          // Everyone else
+          } else {
+            var message = tagUser(users[i]) + " joined " + d.fromNow() + " (" + d.format("dddd, MMMM Do YYYY, h:mm a") + ")";
+          }
 
           if(msg.channel){
             bot.sendMessage(msg.channel, message);

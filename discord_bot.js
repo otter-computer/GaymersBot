@@ -1326,10 +1326,11 @@ var commands = {
     process: function(bot,msg) {
       var users = msg.mentions;
       var adminRole = msg.channel.server.roles.get("name", "Admin");
+      var modRole = msg.channel.server.roles.get("name", "Moderator");
       var restrictedRole = msg.channel.server.roles.get("name", "Restricted");
       var message;
 
-      if (msg.sender.hasRole(adminRole)) {
+      if (msg.sender.hasRole(adminRole) || msg.sender.hasRole(modRole)) {
 
         for (var i = 0; i < users.length; i++) {
 

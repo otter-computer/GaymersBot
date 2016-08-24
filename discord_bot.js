@@ -652,37 +652,6 @@ var commands = {
     }
   },
 
-  "suggest": {
-    usage: "[DiscoBot suggestion]",
-    description: "Suggest a new bot feature.",
-    process: function(bot, msg, suffix) {
-      if (suffix) {
-        var message = "Thanks for the suggestion, I've PM'd it to a developer."
-
-        if(!msg.channel.recipient){
-          var chan = msg.channel;  
-          var devRole = chan.server.roles.get("name", "Bot Developer");
-          var devUsers = chan.server.usersWithRole(devRole);
-
-          for (var devUser in devUsers){
-            var devMsg = tagUser(msg.sender)+" has suggested: \n```\n"+suffix+"\n```";
-            bot.sendMessage(devUsers[devUser], devMsg);
-          }
-          bot.sendMessage(msg.channel, message);
-
-        }
-        else{
-          var message = "I cant take suggestions in private, sorry!"
-          bot.sendMessage(msg.author, message);
-        }
-      }
-      else {
-        var message = "If you have something to say, then say it!"
-        bot.sendMessage(msg.channel, message);
-      }
-    }
-  },
-  
   "lapdance": {
     usage: "",
     description: "Have a *sexy* lapdance.",
@@ -938,6 +907,58 @@ var commands = {
     }
   },
   
+  "setnintendo": {
+    usage: "[network id]",
+    description: "Save your Nintendo Network ID so others can find you",
+    process: function(bot,msg,suffix){
+
+      if(suffix){
+        var user = msg.author.id;
+        setUserMeta(user,'nintendo',suffix);
+        bot.sendMessage(msg.channel, 'set your Nintendo Network ID to: ' + suffix);
+      }
+    }
+  },
+
+  "getnintendo": {
+    usage: "[@user]",
+    description: "Gets the PlayStation Network name of a user",
+    process : function(bot,msg,suffix) {
+
+      if(!suffix) {
+        return; // return early, stop execution.
+      }
+
+      var users = suffix.split(' ');
+      
+      for (var i = 0; i < users.length; i++) {
+        
+        var id;
+      
+        // Server nickname detection
+        if(users[i].substr(2, 1) === "!") {
+          id = users[i].slice(3, users[i].length - 1);
+        } else {
+          id = users[i].slice(2, users[i].length - 1);
+        }
+        
+        queryUserMeta(id, function(data) {
+          var message = "";
+          
+          if(data.nintendo == null) {
+            message = "Sorry, I dont have their Nintendo Network ID. :frowning:";
+          }
+          else {
+            message = "Here's the Nintendo Network ID name for " + tagUser(data) + ":\n" +  data.nintendo;
+          }
+          if(msg.channel) {
+            bot.sendMessage(msg.channel, message);
+          }
+        });
+      } 
+    }
+  },
+
   "setpsn": {
     usage: "[gamertag]",
     description: "Save your PSN name so others can find you on Playstation",
@@ -976,7 +997,7 @@ var commands = {
         queryUserMeta(id, function(data) {
           var message = "";
           
-          if(data.gamertag == null) {
+          if(data.psn == null) {
             message = "Sorry, I dont have their PSN name. :frowning:";
           }
           else {

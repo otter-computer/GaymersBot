@@ -1328,6 +1328,10 @@ var commands = {
             if (data.gamertag != null) {
               message = message + "\n" + "XBox Gamertag: " + data.gamertag;
             }
+
+            if (data.nintendo != null) {
+              message = message + "\n" + "Nintendo Network ID: " + data.nintendo;
+            }
           }
           if (msg.channel) {
             bot.sendMessage(msg.channel, message);

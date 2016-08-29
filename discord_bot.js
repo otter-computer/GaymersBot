@@ -1384,6 +1384,7 @@ var commands = {
             if (data.nintendo != null) {
               message = message + "\n" + "Nintendo Network ID: " + data.nintendo;
             }
+
             if (data.3ds != null) {
               message = message + "\n" + "3DS Friend Code: " + data.3ds;
             }

@@ -922,7 +922,7 @@ var commands = {
 
   "getnintendo": {
     usage: "[@user]",
-    description: "Gets the PlayStation Network name of a user",
+    description: "Gets the Nintendo Network ID of a user",
     process : function(bot,msg,suffix) {
 
       if(!suffix) {
@@ -949,7 +949,7 @@ var commands = {
             message = "Sorry, I dont have their Nintendo Network ID. :frowning:";
           }
           else {
-            message = "Here's the Nintendo Network ID name for " + tagUser(data) + ":\n" +  data.nintendo;
+            message = "Here's the Nintendo Network ID for " + tagUser(data) + ":\n" +  data.nintendo;
           }
           if(msg.channel) {
             bot.sendMessage(msg.channel, message);

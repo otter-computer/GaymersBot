@@ -1433,7 +1433,7 @@ var commands = {
             images.push(childObj);
           }
         }
-        var image = images[Math.floor(Math.random() * items.length)];
+        var image = images[Math.floor(Math.random() * images.length)];
         bot.sendMessage(msg.channel, image.data.preview.images.source.url);
       });
       

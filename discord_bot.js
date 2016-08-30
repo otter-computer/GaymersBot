@@ -1428,12 +1428,12 @@ var commands = {
         var jData = JSON.parse(data);
         var children = jData.data.children;
         var images = [];
-        for(var childObj in children){
+        for (var childObj in children) {
           if (childObj.kind == "t3") {
-            images.push(childObj)
+            images.push(childObj);
           }
         }
-        var image = images[Math.floor(Math.random() * items.length)]
+        var image = images[Math.floor(Math.random() * items.length)];
         bot.sendMessage(msg.channel, image.data.preview.images.source.url);
       });
       

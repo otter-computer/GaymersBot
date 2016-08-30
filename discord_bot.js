@@ -966,7 +966,7 @@ var commands = {
 
       if(suffix){
         var user = msg.author.id;
-        setUserMeta(user,'3ds',suffix);
+        setUserMeta(user,'ds',suffix);
         bot.sendMessage(msg.channel, 'set your 3DS Friend Code to: ' + suffix);
       }
     }
@@ -997,11 +997,11 @@ var commands = {
         queryUserMeta(id, function(data) {
           var message = "";
           
-          if(data.3ds == null) {
+          if(data.ds == null) {
             message = "Sorry, I dont have their 3DS Friend Code. :frowning:";
           }
           else {
-            message = "Here's the 3DS Friend Code for " + tagUser(data) + ":\n" +  data.3ds;
+            message = "Here's the 3DS Friend Code for " + tagUser(data) + ":\n" +  data.ds;
           }
           if(msg.channel) {
             bot.sendMessage(msg.channel, message);
@@ -1385,8 +1385,8 @@ var commands = {
               message = message + "\n" + "Nintendo Network ID: " + data.nintendo;
             }
 
-            if (data.3ds != null) {
-              message = message + "\n" + "3DS Friend Code: " + data.3ds;
+            if (data.ds != null) {
+              message = message + "\n" + "3DS Friend Code: " + data.ds;
             }
           }
           if (msg.channel) {

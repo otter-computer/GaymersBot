@@ -922,7 +922,7 @@ var commands = {
 
   "getnintendo": {
     usage: "[@user]",
-    description: "Gets the PlayStation Network name of a user",
+    description: "Gets the Nintendo Network ID of a user",
     process : function(bot,msg,suffix) {
 
       if(!suffix) {
@@ -949,7 +949,59 @@ var commands = {
             message = "Sorry, I dont have their Nintendo Network ID. :frowning:";
           }
           else {
-            message = "Here's the Nintendo Network ID name for " + tagUser(data) + ":\n" +  data.nintendo;
+            message = "Here's the Nintendo Network ID for " + tagUser(data) + ":\n" +  data.nintendo;
+          }
+          if(msg.channel) {
+            bot.sendMessage(msg.channel, message);
+          }
+        });
+      } 
+    }
+  },
+
+  "set3ds": {
+    usage: "[0000-1111-2222]",
+    description: "Save your 3DS Friend Code so others can add you on the 3DS",
+    process: function(bot,msg,suffix){
+
+      if(suffix){
+        var user = msg.author.id;
+        setUserMeta(user,'3ds',suffix);
+        bot.sendMessage(msg.channel, 'set your 3DS Friend Code to: ' + suffix);
+      }
+    }
+  },
+
+  "get3ds": {
+    usage: "[@user]",
+    description: "Gets the 3DS Friend Code of a user",
+    process : function(bot,msg,suffix) {
+
+      if(!suffix) {
+        return; // return early, stop execution.
+      }
+
+      var users = suffix.split(' ');
+      
+      for (var i = 0; i < users.length; i++) {
+        
+        var id;
+      
+        // Server nickname detection
+        if(users[i].substr(2, 1) === "!") {
+          id = users[i].slice(3, users[i].length - 1);
+        } else {
+          id = users[i].slice(2, users[i].length - 1);
+        }
+        
+        queryUserMeta(id, function(data) {
+          var message = "";
+          
+          if(data.3ds == null) {
+            message = "Sorry, I dont have their 3DS Friend Code. :frowning:";
+          }
+          else {
+            message = "Here's the 3DS Friend Code for " + tagUser(data) + ":\n" +  data.3ds;
           }
           if(msg.channel) {
             bot.sendMessage(msg.channel, message);
@@ -1327,6 +1379,14 @@ var commands = {
 
             if (data.gamertag != null) {
               message = message + "\n" + "XBox Gamertag: " + data.gamertag;
+            }
+
+            if (data.nintendo != null) {
+              message = message + "\n" + "Nintendo Network ID: " + data.nintendo;
+            }
+
+            if (data.3ds != null) {
+              message = message + "\n" + "3DS Friend Code: " + data.3ds;
             }
           }
           if (msg.channel) {

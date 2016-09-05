@@ -587,6 +587,50 @@ var commands = {
       bot.sendMessage(msg.channel, message);
     }
   },
+
+
+  "setdota2": {
+    usage: "",
+    description: "Gives you the Dota 2 role, find others to play with!",
+    process: function(bot, msg) {
+      var message = setRole(msg, "Dota 2");
+      console.log('setdota2', message);
+      bot.sendMessage(msg.channel, message);
+    }
+  },
+  
+  "unsetdota2": {
+    usage: "",
+    description: "Removes the Dota 2 role.",
+    process: function(bot, msg) {
+      var message = unsetRole(msg, "Dota 2");
+      console.log(message);
+      console.log('unsetdota2', message);
+      bot.sendMessage(msg.channel, message);
+    }
+  },
+
+
+  "setminecraft": {
+    usage: "",
+    description: "Gives you the Minecraft role, find others to play with!",
+    process: function(bot, msg) {
+      var message = setRole(msg, "Minecraft");
+      console.log('setminecraft', message);
+      bot.sendMessage(msg.channel, message);
+    }
+  },
+  
+  "unsetminecraft": {
+    usage: "",
+    description: "Removes the Minecraft role.",
+    process: function(bot, msg) {
+      var message = unsetRole(msg, "Minecraft");
+      console.log(message);
+      console.log('unsetminecraft', message);
+      bot.sendMessage(msg.channel, message);
+    }
+  },
   
   "spray": {
     usage: "[@user]",

@@ -1,5 +1,5 @@
 {
-  "name": "DiscoBot.js",
+  "name": "DiscoBot",
   "version": "0.1.1",
   "description": "DiscoBot MK 2",
   "readme": "README.md",
@@ -12,7 +12,8 @@
   "license": "GNU",
   "dependencies": {
     "d20": "^1.4.0",
-    "discord.io": "^2.1.2",
+    "discord.js": "^9.0.2",
+    "firebase": "^3.3.0",
     "http": "0.0.0",
     "moment": "^2.13.0",
     "moment-timezone": "^0.5.4",

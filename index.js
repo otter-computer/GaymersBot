@@ -1,77 +1,74 @@
-var Discord = require('discord.io');
-var fs = require('fs');
-// var http = require('http');
-// var URL = require('url');
-// var cron = require('node-cron');
-var moment = require('moment-timezone');
-// var d20 = require("d20");
+const Discord = require('discord.js');
 
-// Discord auth token
-var token = process.env.AUTH_TOKEN;
-
-if(!token) {
-  console.log("Please set the AUTH_TOKEN environment variable. \n");
+// Auth token
+const token = process.env.AUTH_TOKEN;
+if (!token) {
+  console.log('No auth token found, please set the AUTH_TOKEN environment variable.\n');
   process.exit();
 }
 
 // Debug mode
-var debug = false;
+let debug = false;
+if (process.env.APP_DEBUG === 'true') debug = true;
 
-if(process.env.APP_DEBUG) {
-  debug = true;
-}
+// Time
+const startTime = Date.now();
 
-// Bot version
-var version, versionFull;
+// Commands
+let commands = {};
 
-try {
-  var filename = 'version.txt';
+// Import commands
+commands.avatar = require('./commands/avatar');
+commands.joined = require('./commands/joined');
 
-  fs.readFile(filename, 'utf8', function(err, data) {
-    if(err) {
-      version = false;
-      versionFull = false;
-    } else {
-      version = data.substring(0, 7);
-      versionFull = data;
+// Init bot
+const bot = new Discord.Client();
+bot.on('ready', () => {
+  console.log('Bot ready!');
+});
+
+// Handle messages
+bot.on('message', message => {
+  if (message.author.bot) { // No bots!
+
+    if (debug) console.log('No bots!');
+    return;
+
+  } else {
+    if (debug) console.log('treating ' + message.content + ' from ' + message.author + ' as command.');
+
+    let commandText, suffix;
+
+    // if (message.content.indexOf(bot.user.mention()) == 0) { // Check for a command via bot tag
+
+    //   commandText = message.content.split(' ')[1].toLowerCase();
+    //   suffix = message.content.substring(bot.user.mention().length + commandText.length + 2);
+
+    // } else
+    if (message.content[0] === '!') { // Check for a command via ! prefix
+
+      commandText = message.content.split(' ')[0].substring(1);
+      suffix = message.content.substring(commandText.length + 2);
+
+    } else { // no command
+      if (debug) console.log('No command.');
+      return;
     }
-  })
+
+    let command = commands[commandText.toLowerCase()];
+
+    try {
+      command.process(bot, message, suffix);
+    } catch (e) {
+      if (debug) console.log('Command ' + commandText + ' failed :(\n' + e.stack);
+    }
+  }
+});
+
+// Login
+if (debug) {
+  console.log('Token: ', token);
+  console.log('Start time: ', startTime);
 }
-catch (e) {
-  console.log("Couldn't read version, won't set status");
-}
 
-// Start time
-var startTime = Date.now();
-
-// Moment Setup
-var momentFormat = "dddd, MMMM Do, HH:mm";
-
-// Bot
-var bot = new Discord.Client({
-  token: token,
-  autorun: true
-});
-
-bot.on("ready", function() {
-  console.log("DiscoBot ready!");
-});
-
-bot.on("disconnected", function() {
-  console.log("DiscoBot disconnected :( Attempting to reconnect...");
-  try {
-    bot.connect(); // Reconnect
-  }
-  catch (e) {
-    process.exit(1); // Exit node.js with an error
-  }
-});
-
-bot.on("message", function(user, userID, channelID, message, event) {
-  if(message === "ping") {
-    bot.sendMessage({
-      to: channelID,
-      message: "pong"
-    });
-  }
-});
+bot.login(token);

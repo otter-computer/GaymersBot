@@ -41,20 +41,14 @@ bot.on('message', message => {
   } else {
     if (debug) console.log('treating ' + message.content + ' from ' + message.author + ' as command.');
 
-    let commandText, suffix;
+    let commandText;
 
-    // if (message.content.indexOf(bot.user.mention()) == 0) { // Check for a command via bot tag
-
-    //   commandText = message.content.split(' ')[1].toLowerCase();
-    //   suffix = message.content.substring(bot.user.mention().length + commandText.length + 2);
-
-    // } else
     if (message.content[0] === '!') { // Check for a command via ! prefix
-
       commandText = message.content.split(' ')[0].substring(1);
-      suffix = message.content.substring(commandText.length + 2);
-
-    } else { // no command
+    } // else if (message.content.indexOf(bot.user.mention()) == 0) { // Check for a command via bot tag
+      // commandText = message.content.split(' ')[1].toLowerCase();
+    // }
+    else { // no command
       if (debug) console.log('No command.');
       return;
     }
@@ -62,7 +56,7 @@ bot.on('message', message => {
     let command = commands[commandText.toLowerCase()];
 
     try {
-      command.process(bot, message, suffix);
+      command.process(bot, message);
     } catch (e) {
       if (debug) console.log('Command ' + commandText + ' failed :(\n' + e.stack);
     }

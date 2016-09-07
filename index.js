@@ -19,7 +19,11 @@ let commands = {};
 
 // Import commands
 commands.avatar = require('./commands/avatar');
+commands.help = require('./commands/help');
 commands.joined = require('./commands/joined');
+
+// Export commands for use in other modules
+module.exports.commands = commands;
 
 // Init bot
 const bot = new Discord.Client();

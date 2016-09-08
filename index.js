@@ -20,6 +20,7 @@ let commands = {};
 
 // Import commands
 commands.avatar = require('./commands/avatar');
+commands.choose = require('./commands/choose');
 commands.help = require('./commands/help');
 commands.hug = require('./commands/hug');
 commands.joined = require('./commands/joined');
@@ -44,7 +45,7 @@ bot.on('ready', () => {
 bot.on('message', message => {
   if (message.author.bot) { // No bots!
 
-    if (debug) console.log('No bots!');
+    if (debug) console.log('Ignoring bot message');
     return;
 
   } else {

@@ -21,9 +21,9 @@ let commands = {};
 // Import commands
 commands.avatar = require('./commands/avatar');
 commands.help = require('./commands/help');
+commands.hug = require('./commands/hug');
 commands.joined = require('./commands/joined');
 commands.role = require('./commands/role');
-commands.removeregion = require('./commands/unsetregion');
 commands.setregion = require('./commands/setregion');
 commands.unsetregion = require('./commands/unsetregion');
 

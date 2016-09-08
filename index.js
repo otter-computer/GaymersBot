@@ -24,9 +24,11 @@ commands.help = require('./commands/help');
 commands.hug = require('./commands/hug');
 commands.joined = require('./commands/joined');
 commands.role = require('./commands/role');
+commands.set18 = require('./commands/set18');
 commands.setregion = require('./commands/setregion');
 commands.slap = require('./commands/slap');
 commands.spray = require('./commands/spray');
+commands.unset18 = require('./commands/unset18');
 commands.unsetregion = require('./commands/unsetregion');
 
 // Export commands for use in other modules

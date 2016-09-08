@@ -1,6 +1,6 @@
 module.exports = {
   usage: '[@user]',
-  description: 'Slap someone that deserves it.',
+  description: 'Spray someone thirsty...',
   process: (bot, message) => {
 
     const sprayReplies = [

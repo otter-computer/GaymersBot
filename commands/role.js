@@ -2,9 +2,7 @@ module.exports = {
   usage: 'add/remove [role]',
   description: 'Set or remove a role from yourself',
   process: (bot, message) => {
-    console.log(message.channel.type);
-
-    // Error check so not in PM here
+    // Error check so not in PM
     if (message.channel.type !== 'text') {
       message.reply('sorry... I can\'t set roles inside private messages.');
       return;
@@ -25,6 +23,7 @@ module.exports = {
     // Concat roles with spaces
     for (let i = 2; i < msg.length; i++) {
       if (roleName.length > 1) roleName += ' ';
+
       roleName += msg[i].replace('[','').replace(']','').toProperCase();
     }
 

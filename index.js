@@ -1,4 +1,5 @@
 const Discord = require('discord.js');
+require('./utils');
 
 // Auth token
 const token = process.env.AUTH_TOKEN;
@@ -21,6 +22,7 @@ let commands = {};
 commands.avatar = require('./commands/avatar');
 commands.help = require('./commands/help');
 commands.joined = require('./commands/joined');
+commands.role = require('./commands/role');
 
 // Export commands for use in other modules
 module.exports.commands = commands;

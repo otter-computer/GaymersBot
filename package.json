@@ -20,6 +20,9 @@
     "node-cron": "^1.1.1",
     "url": "^0.11.0"
   },
+  "engines": {
+    "node": "^6.4.0"
+  },
   "main": "index.js",
   "scripts": {
     "start": "node index.js"

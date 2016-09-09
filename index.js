@@ -20,9 +20,9 @@ let commands = {};
 
 // Import commands
 commands.avatar = require('./commands/avatar');
-// commands.choose = require('./commands/choose');
+commands.choose = require('./commands/choose');
 commands.help = require('./commands/help');
-// commands.hug = require('./commands/hug');
+commands.hug = require('./commands/hug');
 commands.joined = require('./commands/joined');
 commands.magic8ball = require('./commands/magic8ball');
 commands.role = require('./commands/role');

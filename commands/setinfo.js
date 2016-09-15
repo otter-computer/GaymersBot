@@ -6,7 +6,14 @@ module.exports = {
   process: (bot, message) => {
     let msg = message.content.split(' ');
 
-    let service = msg[1].replace('[','').replace(']','').toLowerCase();
+    let service = msg[1];
+
+    if (!service || service.length < 1) {
+      message.reply('Sorry, I don\'t know what you\'re trying to set. :frowning: Try using the command like this: ```!setinfo [service] [username]```');
+      return;
+    }
+
+    service.replace('[','').replace(']','').toLowerCase();
 
     let username = '';
 
@@ -17,9 +24,14 @@ module.exports = {
       username += msg[i].replace('[','').replace(']','');
     }
 
+    if (username.length < 1) {
+      message.reply('You need to include a username when trying to save your info. Try using the command like this: ```!setinfo [service] [username]```');
+      return;
+    }
+
     var updates = {};
 
-    updates['/users/' + message.author.id + '/' + service] = username;
+    updates['/users/info/' + message.author.id + '/' + service] = username;
 
     firebase.database().ref().update(updates);
 

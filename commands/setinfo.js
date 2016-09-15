@@ -1,8 +1,8 @@
 const firebase = require('firebase');
 
 module.exports = {
-  usage: 'add/remove [role]',
-  description: 'Set or remove a role from yourself',
+  usage: '[service] [username]',
+  description: 'Save your gamertag/username for any gaming service.',
   process: (bot, message) => {
     let msg = message.content.split(' ');
 

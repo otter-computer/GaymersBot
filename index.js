@@ -1,4 +1,5 @@
 const Discord = require('discord.js');
+const firebase = require('firebase');
 require('./utils');
 
 // Auth token
@@ -15,18 +16,31 @@ if (process.env.APP_DEBUG === 'true') debug = true;
 // Time
 const startTime = Date.now();
 
+// Firebase
+const config = {
+  apiKey: process.env.FIREBASE_API,
+  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+  databaseURL: process.env.FIREBASE_DATABASE_URL,
+  storageBucket: process.env.FIREBASE_STORAGE_BUCKET
+};
+
+firebase.initializeApp(config);
+
 // Commands
 let commands = {};
 
 // Import commands
 commands.avatar = require('./commands/avatar');
+commands.cat = require('./commands/cat');
 commands.choose = require('./commands/choose');
 commands.help = require('./commands/help');
-// commands.hug = require('./commands/hug');
+commands.hug = require('./commands/hug');
 commands.joined = require('./commands/joined');
 commands.magic8ball = require('./commands/magic8ball');
+commands.penguin = require('./commands/penguin');
 commands.role = require('./commands/role');
 commands.set18 = require('./commands/set18');
+commands.setinfo = require('./commands/setinfo');
 commands.setregion = require('./commands/setregion');
 commands.slap = require('./commands/slap');
 commands.spray = require('./commands/spray');

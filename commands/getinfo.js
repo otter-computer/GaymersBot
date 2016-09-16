@@ -52,7 +52,11 @@ module.exports = {
             message.reply('sorry, I don\'t have any ' + service + ' data for ' + user + '. :sob:');
           }
         }
+
+        // Close the listener so it doesn't stay open forever
+        getData.off();
       });
+
     } else {
       // No service specified
       let getData = firebase.database().ref('/users/info/' + user.id);
@@ -87,6 +91,9 @@ module.exports = {
             message.reply('sorry, I don\'t have any data for ' + user + '. :sob:');
           }
         }
+
+        // Close the listener so it doesn't stay open forever
+        getData.off();
       });
     }
   }

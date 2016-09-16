@@ -54,7 +54,7 @@ module.exports = {
         }
 
         // Close the listener so it doesn't stay open forever
-        getData.off();
+        getData.off(); // 😏 http://i.giphy.com/dmB5vD2t2gR8Y.gif
       });
 
     } else {
@@ -93,7 +93,7 @@ module.exports = {
         }
 
         // Close the listener so it doesn't stay open forever
-        getData.off();
+        getData.off(); // 😏 http://i.giphy.com/dmB5vD2t2gR8Y.gif
       });
     }
   }

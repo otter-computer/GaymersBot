@@ -120,7 +120,7 @@ bot.on('guildMemberUpdate', (guild, oldMember, newMember) => {
 
 // Message deleted
 bot.on('messageDelete', (message) => {
-  events.messageDeleted.process(bot, message);
+  // events.messageDeleted.process(bot, message);
 });
 
 // Message edited

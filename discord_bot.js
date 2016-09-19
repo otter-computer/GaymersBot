@@ -1420,6 +1420,26 @@ var commands = {
     }
   },
 
+  "dog": {
+    usage: "",
+    description: "Gets a dog.",
+    process: function(bot, msg) {
+      getUrlData('https://www.reddit.com/r/dogpictures.json',function(data) {
+        var jData = JSON.parse(data);
+        var children = jData.data.children;
+        var images = [];
+        for (var childObj in children) {
+          if (childObj.kind == "t3") {
+            images.push(childObj);
+          }
+        }
+        var image = images[Math.floor(Math.random() * images.length)];
+        bot.sendMessage(msg.channel, image.data.preview.images.source.url);
+      });
+      
+    }
+  },
+
   "timeout": {
     usage: "@user",
     description: "Times a user out for 30 mins.",

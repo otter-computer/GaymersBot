@@ -4,6 +4,9 @@ const format = require('../momentFormat');
 module.exports = {
   // Welcomes a user to the chat, logs them joining in #user-logs
   process: (bot, oldMessage, newMessage) => {
+    // Don't tag bot message updates
+    if (oldMessage.author === bot || newMessage.author === bot) return;
+
     let userLogs = bot.channels.find('name', 'user-logs');
 
     userLogs.sendMessage(

@@ -125,7 +125,7 @@ bot.on('messageDelete', (message) => {
 
 // Message edited
 bot.on('messageUpdate', (oldMessage, newMessage) => {
-  events.messageUpdated.process(bot, oldMessage, newMessage);
+  // events.messageUpdated.process(bot, oldMessage, newMessage);
 });
 
 // Login

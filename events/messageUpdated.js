@@ -10,7 +10,7 @@ module.exports = {
       '**' + newMessage.author.username +
       '**#' + newMessage.author.discriminator +
       ' edited a message. ' +
-      '(' + moment(Date.now()).format(format) + ')' +
+      '(' + moment(Date.now()).format(format) + ') ' +
       '```' +
       oldMessage.content +
       '```' +

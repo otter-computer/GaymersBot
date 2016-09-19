@@ -1,5 +1,8 @@
 const Discord = require('discord.js');
 const firebase = require('firebase');
+const moment = require('moment');
+const format = require('./momentFormat');
+
 require('./utils');
 
 // Auth token
@@ -49,15 +52,15 @@ commands.unset18 = require('./commands/unset18');
 commands.unsetinfo = require('./commands/unsetinfo');
 commands.unsetregion = require('./commands/unsetregion');
 
-// Special commands
-let specialCommands = {};
+// Events
+let events = {};
 
-// Import special commands
-specialCommands.welcome = require('./commands/welcome');
-specialCommands.memberLeft = require('./commands/memberLeft');
-specialCommands.memberUpdated = require('./commands/memberUpdated');
-specialCommands.messageDeleted = require('./commands/messageDeleted');
-specialCommands.messageUpdated = require('./commands/messageUpdated');
+// Import events
+events.welcome = require('./events/memberJoined');
+events.memberLeft = require('./events/memberLeft');
+events.memberUpdated = require('./events/memberUpdated');
+events.messageDeleted = require('./events/messageDeleted');
+events.messageUpdated = require('./events/messageUpdated');
 
 // Export commands for use in other modules
 module.exports.commands = commands;
@@ -102,33 +105,33 @@ bot.on('message', message => {
 
 // User joined
 bot.on('guildMemberAdd', (guild, member) => {
-  specialCommands.welcome.process(bot, guild, member);
+  events.memberJoined.process(bot, guild, member);
 });
 
 // User left
 bot.on('guildMemberRemove', (guild, member) => {
-  specialCommands.memberLeft.process(bot, message);
+  events.memberLeft.process(bot, guild, member);
 });
 
 // User update (Added/removed role, changed nickname)
 bot.on('guildMemberUpdate', (guild, oldMember, newMember) => {
-  specialCommands.memberUpdated.process(bot, oldMember, newMember);
+  events.memberUpdated.process(bot, guild, oldMember, newMember);
 });
 
 // Message deleted
-client.on('messageDelete', (message) => {
-  specialCommands.messageDeleted.process(bot, message);
+bot.on('messageDelete', (message) => {
+  events.messageDeleted.process(bot, message);
 });
 
 // Message edited
-client.on('messageUpdate', (oldMessage, newMessage) => {
-  specialCommands.messageUpdated.process(bot, oldMessage, newMessage);
+bot.on('messageUpdate', (oldMessage, newMessage) => {
+  events.messageUpdated.process(bot, oldMessage, newMessage);
 });
 
 // Login
 if (debug) {
   console.log('Token: ', token);
-  console.log('Start time: ', startTime);
+  console.log('Start time: ', moment(startTime).format(format));
 }
 
 bot.login(token);

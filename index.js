@@ -56,7 +56,7 @@ commands.unsetregion = require('./commands/unsetregion');
 let events = {};
 
 // Import events
-events.welcome = require('./events/memberJoined');
+events.memberJoined = require('./events/memberJoined');
 events.memberLeft = require('./events/memberLeft');
 events.memberUpdated = require('./events/memberUpdated');
 events.messageDeleted = require('./events/messageDeleted');

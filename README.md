@@ -13,6 +13,7 @@ A chat bot for discord app built with [discord.js](https://github.com/hydrabolt/
 - joined: See when someone joined the server.
 - magic8ball: See the future, have DiscoBot read your fortune.
 - penguin: Gets a random penguin picture.
+- regions: Lists all available regions for use with the !setregion command.
 - role: Set or remove a role from yourself.
 - set18: Gives you the 18+ role, allows access to #over-18 and #over-18-text.
 - setinfo: Save your gamertag/username for any gaming service to the database.

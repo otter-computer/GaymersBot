@@ -2,7 +2,7 @@ const moment = require('moment');
 const format = require('../momentFormat');
 
 module.exports = {
-  // Welcomes a user to the chat, logs them joining in #user-logs
+  // Logs a deleted message in #user-logs.
   process: (bot, message) => {
     // Don't repeat bot messages
     if (message.author === bot) return;

@@ -2,7 +2,7 @@ const firebase = require('firebase');
 
 module.exports = {
   usage: '[service] [username]',
-  description: 'Save your gamertag/username for any gaming service.',
+  description: 'Save your gamertag/username for any gaming service to the database.',
   process: (bot, message) => {
     let msg = message.content.split(' ');
 

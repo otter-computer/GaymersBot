@@ -1,6 +1,6 @@
 module.exports = {
   usage: 'add/remove [role]',
-  description: 'Set or remove a role from yourself',
+  description: 'Set or remove a role from yourself.',
   process: (bot, message) => {
     // Error check so not in PM
     if (message.channel.type !== 'text') {

@@ -2,7 +2,7 @@ const moment = require('moment');
 const format = require('../momentFormat');
 
 module.exports = {
-  // Welcomes a user to the chat, logs them joining in #user-logs
+  // Logs a username change in #user-logs.
   process: (bot, guild, oldMember, newMember) => {
     // Cancel on role (or other user) changes we don't care about
     if (oldMember.nickname === newMember.nickname) return;

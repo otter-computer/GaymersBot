@@ -2,7 +2,7 @@ const request = require('request');
 
 module.exports = {
   usage: '',
-  description: 'Gets a random cat picture',
+  description: 'Gets a random cat picture.',
   process: (bot, message) => {
     // http://random.cat/meow
     request('http://random.cat/meow', (error, response, body) => {

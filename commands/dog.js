@@ -4,7 +4,7 @@ const request = require('request');
 
 module.exports = {
   usage: '',
-  description: 'Gets a random cat picture',
+  description: 'Gets a random cat picture.',
   process: (bot, message) => {
     request('https://www.reddit.com/r/dogpictures.json', (error, response, body) => {
       if (error) {

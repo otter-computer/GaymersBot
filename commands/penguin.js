@@ -2,7 +2,7 @@ const request = require('request');
 
 module.exports = {
   usage: '',
-  description: 'Gets a random penguin picture',
+  description: 'Gets a random penguin picture.',
   process: (bot, message) => {
     // http://penguin.wtf
     request('http://penguin.wtf', (error, response, body) => {

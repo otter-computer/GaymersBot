@@ -2,7 +2,7 @@ const firebase = require('firebase');
 
 module.exports = {
   usage: '[service (optional)] [@user (optional)]',
-  description: 'Get info on a user',
+  description: 'Gets user\'s saved info from the database',
   process: (bot, message) => {
 
     let user;

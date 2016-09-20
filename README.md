@@ -1,37 +1,55 @@
 # DiscoBot
-A chat bot for discord app based off <a href="https://github.com/hydrabolt/discord.js/">discord.js</a>
+A chat bot for discord app built with [discord.js](https://github.com/hydrabolt/discord.js/).
 
-# Features:
-Use !help to get a full list of available commands
+## Features:
+### Commands
+- avatar: See someone's avatar.
+- cat: Gets a random cat picture.
+- choose: Let DiscoBot choose for you.
+- dog: Gets a random cat picture.
+- getinfo: Gets user's saved info from the database
+- help: See what commands I can run!
+- hug: Give someone a hug :blush:
+- joined: See when someone joined the server.
+- magic8ball: See the future, have DiscoBot read your fortune.
+- penguin: Gets a random penguin picture.
+- role: Set or remove a role from yourself.
+- set18: Gives you the 18+ role, allows access to #over-18 and #over-18-text.
+- setinfo: Save your gamertag/username for any gaming service to the database.
+- setregion: Set your region, get pretty color.
+- slap: Slap someone that deserves it.
+- spray: Spray someone thirsty...
+- unset18: Removes the 18+ role.
+- unsetinfo: Delete a gamertag/username, or all your saved data.
+- unsetregion: Remove your region, remain mysterious.
 
-# Installation
+### Events
+- memberBanned: Logs a member being banned in #user-logs.
+- memberJoined: Welcomes a user to the chat, logs them joining in #user-logs, sends them a welcome PM.
+- memberLeft: Logs a member leaving in #user-logs.
+- memberUnbanned: Logs a member being unbanned in #user-logs.
+- memberUpdated: Logs a username change in #user-logs.
+- messageDeleted: Logs a deleted message in #user-logs.
+- messageUpdated: Logs a message edit in #user-logs.
 
-This bot is written to run on top of node.js. Please see https://nodejs.org/en/download/
 
-Once you have node installed running `npm install` from the bot directory should install all the needed packages. If this command prints errors the bot won't work!
+## Requirements
+- node.js
 
-## Windows Users
-Please note that you must have a working C compiler and Python in your path for
-`npm install` to work. The bot has been tested to work on Windows using Visual Studio 2015 Community and Python 2.7, except for `!pullanddeploy`.
-* [Installing Node on Windows](http://blog.teamtreehouse.com/install-node-js-npm-windows)
-* [npm errors on Windows](http://stackoverflow.com/questions/21365714/nodejs-error-installing-with-npm)
-* [Visual Studio Community 2015](https://www.visualstudio.com/en-us/products/visual-studio-community-vs.aspx)
-* [Python 2.7](https://www.python.org/downloads/)
+## Running
+Run `npm install` to install required dependancies.
 
-# Running
-Before first run you will need to add the 'AUTH_TOKEN' environment variable. On windows you can use `set AUTH_TOKEN=xxxx` on mac/linux you can use `export AUTH_TOKEN=xxx`. The token for a discord bot user are required. The token can be generated from the [Discord Developer Site](https://discordapp.com/developers/applications/me). See `auth.json.example`.
+You will need to set the `AUTH_TOKEN` environment variable in order to run the bot locally. You can create one of these [here](https://discordapp.com/developers/applications/me). The application must be created as a 'Bot User'and invited to your test server following the instructions in the Discord docs.
 
-*Important*
-- Your application must be converted to a 'Bot User' to generate a token
-- To invite your bot to your server you need the "Client/Application ID" and replace it in the following url https://discordapp.com/oauth2/authorize?client_id=APP_ID_HERE&scope=bot
+You will also need to set the following Firebase environment variables in order to test saving to the database.
 
-To start the bot just run
-`node discord_bot.js`.
+  FIREBASE_API
+  FIREBASE_AUTH_DOMAIN
+  FIREBASE_DATABASE_URL
+  FIREBASE_STORAGE_BUCKET
 
-# Updates
-If you update the bot, please run `npm update` before starting it again. If you have
-issues with this, you can try deleting your node_modules folder and then running
-`npm install` again. Please see [Installation](#Installation).
+These can be generated from the [Firebase console](https://console.firebase.google.com/).
 
-# ToDo:
-All the things!
+Finally, you can set the `APP_DEBUG` environment variable to `"true"` to ensure you get a few extra logging messages to the console.
+
+After adding these, run `npm start` to run the bot.

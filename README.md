@@ -42,12 +42,12 @@ Run `npm install` to install required dependancies.
 You will need to set the `AUTH_TOKEN` environment variable in order to run the bot locally. You can create one of these [here](https://discordapp.com/developers/applications/me). The application must be created as a 'Bot User'and invited to your test server following the instructions in the Discord docs.
 
 You will also need to set the following Firebase environment variables in order to test saving to the database.
-
+```
   FIREBASE_API
   FIREBASE_AUTH_DOMAIN
   FIREBASE_DATABASE_URL
   FIREBASE_STORAGE_BUCKET
-
+```
 These can be generated from the [Firebase console](https://console.firebase.google.com/).
 
 Finally, you can set the `APP_DEBUG` environment variable to `"true"` to ensure you get a few extra logging messages to the console.

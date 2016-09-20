@@ -56,8 +56,10 @@ commands.unsetregion = require('./commands/unsetregion');
 let events = {};
 
 // Import events
+events.memberBanned = require('./events/memberBanned');
 events.memberJoined = require('./events/memberJoined');
 events.memberLeft = require('./events/memberLeft');
+events.memberUnbanned = require('./events/memberUnbanned');
 events.memberUpdated = require('./events/memberUpdated');
 events.messageDeleted = require('./events/messageDeleted');
 events.messageUpdated = require('./events/messageUpdated');
@@ -103,17 +105,27 @@ bot.on('message', message => {
   }
 });
 
-// User joined
+// Member joined
 bot.on('guildMemberAdd', (guild, member) => {
   events.memberJoined.process(bot, guild, member);
 });
 
-// User left
+// Member left
 bot.on('guildMemberRemove', (guild, member) => {
   events.memberLeft.process(bot, guild, member);
 });
 
-// User update (Added/removed role, changed nickname)
+// Member banned
+bot.on('guildBanAdd', (guild, member) => {
+  events.memberBanned.process(bot, guild, member);
+});
+
+// Member unbanned
+bot.on('guildBanRemove', (guild, member) => {
+  events.memberUnbanned.process(bot, guild, member);
+});
+
+// Member update (Added/removed role, changed nickname)
 bot.on('guildMemberUpdate', (guild, oldMember, newMember) => {
   // events.memberUpdated.process(bot, guild, oldMember, newMember);
 });

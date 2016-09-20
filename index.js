@@ -115,7 +115,7 @@ bot.on('guildMemberRemove', (guild, member) => {
 
 // User update (Added/removed role, changed nickname)
 bot.on('guildMemberUpdate', (guild, oldMember, newMember) => {
-  events.memberUpdated.process(bot, guild, oldMember, newMember);
+  // events.memberUpdated.process(bot, guild, oldMember, newMember);
 });
 
 // Message deleted

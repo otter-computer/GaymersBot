@@ -50,6 +50,6 @@ You will also need to set the following Firebase environment variables in order 
 ```
 These can be generated from the [Firebase console](https://console.firebase.google.com/).
 
-Finally, you can set the `APP_DEBUG` environment variable to `"true"` to ensure you get a few extra logging messages to the console.
+Finally, you can set the `APP_DEBUG` environment variable to `'true'` to ensure you get a few extra logging messages to the console.
 
 After adding these, run `npm start` to run the bot.

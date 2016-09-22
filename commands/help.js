@@ -37,5 +37,7 @@ module.exports = {
     for (let i = 0; i < commandArray.length; i++) {
       message.author.sendMessage(commandArray[i]);
     }
+
+    // TODO include admin commands
   }
 };

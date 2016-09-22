@@ -6,25 +6,6 @@ module.exports = {
   usage: '[@user]',
   description: 'ADMIN ONLY: Give a user the \'Restricted\' role for 30 minutes. Will also remove the \'18+\' role.',
   process: (bot, message) => {
-    const adminRole = message.guild.roles.find('name', 'Admin');
-    const moderatorRole = message.guild.roles.find('name', 'Moderator');
-
-    let author = message.guild.member(message.author);
-    let permission = false;
-
-    for (let [id, currentRole] of author.roles) {
-      // Admin/Mod check
-      if (currentRole === adminRole || currentRole === moderatorRole) {
-        permission = true;
-      }
-    }
-
-    // End if no permission
-    if (!permission) {
-      message.reply('naughty naughty... :wink: Only Admins and Moderators can use the !timeout command.');
-      return;
-    }
-
     let timeoutEnd = Date.now() + 1800000;
 
     const userLogs = bot.channels.find('name', 'user-logs');

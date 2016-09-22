@@ -54,11 +54,15 @@ commands.unset18 = require('./commands/unset18');
 commands.unsetinfo = require('./commands/unsetinfo');
 commands.unsetregion = require('./commands/unsetregion');
 
+// Admin commands
+let adminCommands = {};
+
 // Import admin commands
-commands.timeout = require('./admin-commands/timeout');
+adminCommands.timeout = require('./admin-commands/timeout');
 
 // Export commands for use in other modules (help)
 module.exports.commands = commands;
+module.exports.adminCommands = adminCommands;
 
 // Events
 let events = {};
@@ -92,13 +96,8 @@ bot.on('ready', () => {
 
 // Handle messages
 bot.on('message', message => {
-  if (message.author.bot) { // No bots!
-
-    if (debug) console.log('Ignoring bot message');
-    return;
-
-  } else {
-    if (debug) console.log('treating ' + message.content + ' from ' + message.author + ' as command.');
+  if (!message.author.bot) { // No bots!
+    if (debug) console.log('Treating ' + message.content + ' from ' + message.author + ' as command.');
 
     let commandText;
 
@@ -113,6 +112,29 @@ bot.on('message', message => {
     }
 
     let command = commands[commandText.toLowerCase()];
+
+    // If command is not a regular command, check if it's an admin command instead
+    if (!command) {
+      command = adminCommands[commandText.toLowerCase()];
+    }
+
+    // Admin/Mod check
+    const adminRole = message.guild.roles.find('name', 'Admin');
+    const moderatorRole = message.guild.roles.find('name', 'Moderator');
+    let author = message.guild.member(message.author);
+    let permission = false;
+
+    for (let [id, currentRole] of author.roles) {
+      if (currentRole === adminRole || currentRole === moderatorRole) {
+        permission = true;
+      }
+    }
+
+    // Admin only command but no permission
+    if (command && !permission) {
+      message.reply('naughty naughty... :wink: Only Admins and Moderators can use the `!' + commandText + '` command.');
+      return;
+    }
 
     try {
       command.process(bot, message);

@@ -113,28 +113,30 @@ bot.on('message', message => {
 
     let command = commands[commandText.toLowerCase()];
 
-    // If command is not a regular command, check if it's an admin command instead
-    // if (!command) {
-    //   command = adminCommands[commandText.toLowerCase()];
-    // }
-
     // Admin/Mod check
-    // const adminRole = message.guild.roles.find('name', 'Admin');
-    // const moderatorRole = message.guild.roles.find('name', 'Moderator');
-    // let author = message.guild.member(message.author);
-    // let permission = false;
+    const adminRole = message.guild.roles.find('name', 'Admin');
+    const moderatorRole = message.guild.roles.find('name', 'Moderator');
+    let author = message.guild.member(message.author);
+    let permission = false;
+    let adminCommand = false;
 
-    // for (let [id, currentRole] of author.roles) {
-    //   if (currentRole === adminRole || currentRole === moderatorRole) {
-    //     permission = true;
-    //   }
-    // }
+    for (let [id, currentRole] of author.roles) {
+      if (currentRole === adminRole || currentRole === moderatorRole) {
+        permission = true;
+      }
+    }
+
+    // If command is not a regular command, check if it's an admin command instead
+    if (!command && permission) {
+      command = adminCommands[commandText.toLowerCase()];
+      if (adminCommands[commandText.toLowerCase()]) adminCommand = true;
+    }
 
     // Admin only command but no permission
-    // if (command && !permission) {
-    //   message.reply('naughty naughty... :wink: Only Admins and Moderators can use the `!' + commandText + '` command.');
-    //   return;
-    // }
+    if (adminCommand && !permission) {
+      message.reply('naughty naughty... :wink: Only Admins and Moderators can use the `!' + commandText + '` command.');
+      return;
+    }
 
     try {
       command.process(bot, message);

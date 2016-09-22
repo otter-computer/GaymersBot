@@ -2,6 +2,7 @@ const Discord = require('discord.js');
 const firebase = require('firebase');
 const moment = require('moment');
 const format = require('./momentFormat');
+const cron = require('node-cron');
 
 require('./utils');
 
@@ -53,6 +54,12 @@ commands.unset18 = require('./commands/unset18');
 commands.unsetinfo = require('./commands/unsetinfo');
 commands.unsetregion = require('./commands/unsetregion');
 
+// Import admin commands
+commands.timeout = require('./admin-commands/timeout');
+
+// Export commands for use in other modules (help)
+module.exports.commands = commands;
+
 // Events
 let events = {};
 
@@ -65,8 +72,17 @@ events.memberUpdated = require('./events/memberUpdated');
 events.messageDeleted = require('./events/messageDeleted');
 events.messageUpdated = require('./events/messageUpdated');
 
-// Export commands for use in other modules
-module.exports.commands = commands;
+// Cron
+let cronJobs = {};
+
+// Import cron tasks
+cronJobs.timeout = require('./admin-commands/utilities/check-timeout');
+
+// Cron
+cron.schedule('*/5 * * * *', function() {
+  if (debug) console.log('Checking for expired timeouts');
+  cronJobs.timeout.process(bot);
+}, true);
 
 // Init bot
 const bot = new Discord.Client();

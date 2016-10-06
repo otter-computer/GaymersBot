@@ -139,7 +139,7 @@ bot.on('message', message => {
     }
 
     try {
-      command.process(bot, message);
+      command.process(bot, message, permission);
     } catch (e) {
       if (debug) console.log('Command ' + commandText + ' failed :(\n' + e.stack);
     }

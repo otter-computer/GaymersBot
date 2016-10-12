@@ -9,6 +9,8 @@ module.exports = {
       let joinDate = moment(message.guild.member(user).joinDate);
 
       message.channel.sendMessage(user.toString() + ' joined ' + joinDate.fromNow() + ' (' + joinDate.format(format) + ')');
+
+      message.channel.sendMessage('**DEBUG:** Here\'s the unix timestamp for '  + user.toString() + ': ' + message.guild.member(user).joinDate);
     }
   }
 };

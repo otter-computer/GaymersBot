@@ -5,14 +5,14 @@ module.exports = {
   // Logs a deleted message in #user-logs.
   process: (bot, message) => {
     // Don't repeat bot messages
-    if (message.author === bot) return;
+    if (message.author.id === bot.user.id) return;
 
     let userLogs = bot.channels.find('name', 'user-logs');
 
     userLogs.sendMessage(
-      '**' + message.author.username +
-      '**#' + message.author.discriminator +
-      ' deleted a message. ' +
+      message.author +
+      ' deleted a message in ' +
+      message.channel + '. ' +
       '(' + moment(Date.now()).format(format) + ')' +
       '```' +
       message.content +

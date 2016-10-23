@@ -97,7 +97,6 @@ bot.on('ready', () => {
 // Handle messages
 bot.on('message', message => {
   if (!message.author.bot) { // No bots!
-    if (debug) console.log('Treating ' + message.content + ' from ' + message.author + ' as command.');
 
     let commandText;
 
@@ -173,7 +172,7 @@ bot.on('guildMemberUpdate', (guild, oldMember, newMember) => {
 
 // Message deleted
 bot.on('messageDelete', (message) => {
-  // events.messageDeleted.process(bot, message);
+  events.messageDeleted.process(bot, message);
 });
 
 // Message edited

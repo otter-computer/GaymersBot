@@ -7,7 +7,7 @@ module.exports = {
     // Cancel on role (or other user) changes we don't care about
     if (oldMember.nickname === newMember.nickname) return;
 
-    let userLogs = bot.channels.find('name', 'user-logs');
+    let channel = bot.channels.find('name', 'user-logs');
 
     let oldMemberName, newMemberName;
 
@@ -23,7 +23,7 @@ module.exports = {
       newMemberName = '**' + newMember.nickname + '**#' + newMember.user.discriminator;
     }
 
-    userLogs.sendMessage(
+    channel.sendMessage(
       oldMemberName + ' is now ' + newMemberName + ' ' +
       '(' + moment(Date.now()).format(format) + ')'
     );

@@ -7,12 +7,12 @@ module.exports = {
     // Don't tag bot message updates
     if (oldMessage.author === bot || newMessage.author === bot) return;
 
-    let userLogs = bot.channels.find('name', 'user-logs');
+    let channel = bot.channels.find('name', 'message-logs');
 
-    userLogs.sendMessage(
-      '**' + newMessage.author.username +
-      '**#' + newMessage.author.discriminator +
-      ' edited a message. ' +
+    channel.sendMessage(
+      newMessage.author +
+      ' edited a message in ' +
+      newMessage.channel + '. ' +
       '(' + moment(Date.now()).format(format) + ') ' +
       '```' +
       oldMessage.content +

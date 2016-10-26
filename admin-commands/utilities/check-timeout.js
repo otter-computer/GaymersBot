@@ -20,7 +20,7 @@ module.exports = {
           let expires = data[user];
 
           // If timeout has expired
-          if (expires < Date.now()) {
+          if (expires < Date.now() && member) {
             let currentRoles = [];
             let restrictedRole = guild.roles.find('name', 'Restricted');
 

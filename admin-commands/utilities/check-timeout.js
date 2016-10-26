@@ -13,14 +13,18 @@ module.exports = {
       if (snapshot.val()) {
         let data = snapshot.val();
 
+        console.log('data: ', data);
+
         let updates = {};
 
         for (let user in data) {
           let member = guild.member(user);
           let expires = data[user];
 
+          console.log('member: ', member);
+
           // If timeout has expired
-          if (expires < Date.now()) {
+          if (expires < Date.now() && member) {
             let currentRoles = [];
             let restrictedRole = guild.roles.find('name', 'Restricted');
 

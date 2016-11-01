@@ -12,19 +12,23 @@ module.exports = {
 
     let channel = bot.channels.find('name', 'message-logs');
 
-    let logMessage = message.author +
-    '\'s message was deleted in ' +
-    message.channel + '. ' +
-    '(' + moment(Date.now()).format(format) + ')\n' +
-    '**---**\n' +
-    message.content +
-    '\n**---**';
+    let logMessage = 'Message Deleted.\n' +
+      'Author: ' + message.author + '\n' +
+      'Channel: ' + message.channel + '\n' +
+      'Time: ' + moment(Date.now()).format(format) + '\n';
+
+    // Message content
+    if (message.content) {
+      logMessage += 'Content:\n\n' + message.content;
+    }
 
     // Attachments
     if (message.attachments) {
+      if (message.content) {
+        logMessage += '\n\n';
+      }
       for (let [id, attachment] of message.attachments) {
-        console.log(id, attachment.url);
-        logMessage += '\n' + attachment.url;
+        logMessage += 'Attachments:\n\n' + attachment.url;
       }
     }
 

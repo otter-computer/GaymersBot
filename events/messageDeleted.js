@@ -12,7 +12,7 @@ module.exports = {
 
     let channel = bot.channels.find('name', 'message-logs');
 
-    let logMessage = 'Message Deleted.\n' +
+    let logMessage = '**Message Deleted**\n' +
       'Author: ' + message.author + '\n' +
       'Channel: ' + message.channel + '\n' +
       'Time: ' + moment(Date.now()).format(format) + '\n';

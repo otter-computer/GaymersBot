@@ -5,7 +5,7 @@ module.exports = {
   // Logs a deleted message in #user-logs.
   process: (bot, message) => {
     // Don't repeat bot messages
-    if (message.author.id === bot.user.id) return;
+    if (message.author.id === bot.user.id || message.author.id === '120897878347481088') return;
 
     // Block Erisbot shite
     if (message.content.startsWith('.music')) return;

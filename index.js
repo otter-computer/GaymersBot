@@ -96,7 +96,7 @@ bot.on('ready', () => {
 
 // Handle messages
 bot.on('message', message => {
-  if (!message.author.bot) { // No bots!
+  if (!message.author.bot && message.guild) { // No bots or non-server messages
 
     let commandText;
 

@@ -8,7 +8,7 @@ module.exports = {
     if (message.author.id === bot.user.id || message.author.id === '120897878347481088') return;
 
     // Block Erisbot shite
-    if (message.content.startsWith('.music')) return;
+    if (message.content.startsWith('.music') || message.content.startsWith('.m ')) return;
 
     let channel = bot.channels.find('name', 'message-logs');
 

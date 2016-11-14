@@ -96,7 +96,7 @@ bot.on('ready', () => {
 
 // Handle messages
 bot.on('message', message => {
-  if (!message.author.bot && message.guild) { // No bots or non-server messages
+  if (!message.author.bot) { // No bots
 
     let commandText;
 
@@ -113,15 +113,22 @@ bot.on('message', message => {
     let command = commands[commandText.toLowerCase()];
 
     // Admin/Mod check
-    const adminRole = message.guild.roles.find('name', 'Admin');
-    const moderatorRole = message.guild.roles.find('name', 'Moderator');
-    let author = message.guild.member(message.author);
     let permission = false;
     let adminCommand = false;
 
-    for (let [id, currentRole] of author.roles) {
-      if (currentRole === adminRole || currentRole === moderatorRole || message.author.id === '120897878347481088') {
-        permission = true;
+    // Only do this check if we're in a guild, otherwise ignore and move on.
+    // So some commands can still be run in DMs
+    //
+    // TODO: There's a hacky way round this but I'm not sure if I want to?
+    if (message.guild) {
+      const adminRole = message.guild.roles.find('name', 'Admin');
+      const moderatorRole = message.guild.roles.find('name', 'Moderator');
+      let author = message.guild.member(message.author);
+
+      for (let [id, currentRole] of author.roles) {
+        if (currentRole === adminRole || currentRole === moderatorRole || message.author.id === '120897878347481088') {
+          permission = true;
+        }
       }
     }
 

@@ -35,6 +35,7 @@ let commands = {};
 
 // Import commands
 commands.avatar = require('./commands/avatar');
+commands.boop = require('./commands/boop');
 commands.cat = require('./commands/cat');
 commands.choose = require('./commands/choose');
 commands.getinfo = require('./commands/getinfo');

@@ -28,7 +28,7 @@ module.exports = {
     }
 
     // Check for restricted roles
-    if (roleName.match(/^(admin|moderator|bots|selfies mod|advice room mod|news and politics mod|over 18 mod|general chat mod|bot developer|restricted|bot restricted|no links\/files|AwesomeBot|Under 18|dj|erisbot)$/gi)) {
+    if (roleName.match(/^(admin|moderator|bots|selfies mod|advice room mod|news and politics mod|over 18 mod|general chat mod|bot developer|restricted|bot restricted|no links\/files|AwesomeBot|Under 18|dj|erisbot|event manager)$/gi)) {
       if (toggle === 'add' || toggle === 'set') {
         message.reply('naughty naughty... :wink: You can\'t ' + toggle + ' the ' + roleName + ' role to yourself.');
       } else {

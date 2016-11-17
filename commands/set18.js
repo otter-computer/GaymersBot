@@ -9,7 +9,7 @@ module.exports = {
     }
 
     let role = message.guild.roles.find('name', '18+');
-    let under18 = message.guild.roles.find('name', 'under 18');
+    let under18 = message.guild.roles.find('name', 'Under 18');
     let member = message.guild.member(message.author);
     let currentRoles = [];
 

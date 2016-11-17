@@ -9,6 +9,7 @@ module.exports = {
     }
 
     let role = message.guild.roles.find('name', '18+');
+    let under18 = message.guild.roles.find('Under 18');
     let member = message.guild.member(message.author);
     let currentRoles = [];
 
@@ -18,6 +19,11 @@ module.exports = {
       if (currentRole === role) {
         message.reply('you\'ve already been set to ' + role.name);
         return;
+      }
+
+      if (currentRole === under18){
+      	message.reply('You are under 18 years of age. I cannot add the 18+ role. :frowning: ');
+      	return;
       }
 
       currentRoles.push(currentRole);

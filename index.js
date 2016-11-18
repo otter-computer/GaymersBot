@@ -20,6 +20,17 @@ if (process.env.APP_DEBUG === 'true') debug = true;
 // Time
 const startTime = Date.now();
 
+// Handle graceful shutdowns
+function cleanup() {
+  if (bot)
+    bot.destroy();
+  console.log("Bot shutting down.");
+  process.exit();
+}
+
+process.on('SIGINT', cleanup);
+process.on('SIGTERM', cleanup);
+
 // Firebase
 const config = {
   apiKey: process.env.FIREBASE_API,

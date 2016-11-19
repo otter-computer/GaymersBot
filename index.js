@@ -106,8 +106,7 @@ bot.on('ready', () => {
   console.log('Bot ready!');
 });
 
-// Handle messages
-bot.on('message', message => {
+function messageHandler(message) {
   if (!message.author.bot) { // No bots
 
     let commandText;
@@ -156,11 +155,16 @@ bot.on('message', message => {
       return;
     }
 
-    try {
-      command.process(bot, message, permission);
-    } catch (e) {
-      if (debug) console.log('Command ' + commandText + ' failed :(\n' + e.stack);
-    }
+    command.process(bot, message, permission);
+  }
+}
+
+// Handle messages
+bot.on('message', message => {
+  try {
+    messageHandler(message);
+  } catch (e) {
+    console.trace(e.message);
   }
 });
 

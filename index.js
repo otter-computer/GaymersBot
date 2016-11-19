@@ -106,98 +106,127 @@ bot.on('ready', () => {
   console.log('Bot ready!');
 });
 
-// Handle messages
-bot.on('message', message => {
-  if (!message.author.bot) { // No bots
+function messageHandler(message) {
+  if (message.author.bot) // Ignore bot messages
+    return;
 
-    let commandText;
+  if (message.content[0] !== '!') // Commands start with '!'
+    return;
 
-    if (message.content[0] === '!') { // Check for a command via ! prefix
-      commandText = message.content.split(' ')[0].substring(1);
-    } // else if (message.content.indexOf(bot.user.mention()) == 0) { // Check for a command via bot tag
-      // commandText = message.content.split(' ')[1].toLowerCase();
-    // }
-    else { // no command
-      if (debug) console.log('No command.');
-      return;
-    }
+  let commandText = message.content.split(' ')[0].substring(1);
 
-    let command = commands[commandText.toLowerCase()];
+  let command = commands[commandText.toLowerCase()];
 
-    // Admin/Mod check
-    let permission = false;
-    let adminCommand = false;
+  // Admin/Mod check
+  let permission = false;
+  let adminCommand = false;
 
-    // Only do this check if we're in a guild, otherwise ignore and move on.
-    // So some commands can still be run in DMs
-    //
-    // TODO: There's a hacky way round this but I'm not sure if I want to?
-    if (message.guild) {
-      const adminRole = message.guild.roles.find('name', 'Admin');
-      const moderatorRole = message.guild.roles.find('name', 'Moderator');
-      let author = message.guild.member(message.author);
+  // If we're in a guild, check for admin/mod. If not (ie DM), assume
+  // they're a normal user. This allows some commands to be run outside of
+  // a guild context.
+  //
+  // TODO: There's a hacky way round this but I'm not sure if I want to?
+  if (message.guild) {
+    const adminRole = message.guild.roles.find('name', 'Admin');
+    const moderatorRole = message.guild.roles.find('name', 'Moderator');
+    let author = message.guild.member(message.author);
 
-      for (let [id, currentRole] of author.roles) {
-        if (currentRole === adminRole || currentRole === moderatorRole || message.author.id === '120897878347481088') {
-          permission = true;
-        }
+    for (let [id, currentRole] of author.roles) {
+      if (currentRole === adminRole || currentRole === moderatorRole ||
+          message.author.id === '120897878347481088') {
+        permission = true;
       }
     }
+  }
 
-    // If command is not a regular command, check if it's an admin command instead
-    if (!command && permission) {
-      command = adminCommands[commandText.toLowerCase()];
-      if (adminCommands[commandText.toLowerCase()]) adminCommand = true;
-    }
+  // If command is not a regular command, check if it's an admin command
+  if (!command && permission) {
+    command = adminCommands[commandText.toLowerCase()];
+    if (adminCommands[commandText.toLowerCase()])
+      adminCommand = true;
+  }
 
-    // Admin only command but no permission
-    if (adminCommand && !permission) {
-      message.reply('naughty naughty... :wink: Only Admins and Moderators can use the `!' + commandText + '` command.');
-      return;
-    }
+  // Admin only command but no permission
+  if (adminCommand && !permission) {
+    message.reply('naughty naughty... :wink: Only Admins and Moderators ' +
+        'can use the `!' + commandText + '` command.');
+    return;
+  }
 
-    try {
-      command.process(bot, message, permission);
-    } catch (e) {
-      if (debug) console.log('Command ' + commandText + ' failed :(\n' + e.stack);
-    }
+  command.process(bot, message, permission);
+}
+
+// Handle messages
+bot.on('message', message => {
+  try {
+    messageHandler(message);
+  } catch (e) {
+    console.trace(e.message);
   }
 });
 
 // Member joined
 bot.on('guildMemberAdd', (guild, member) => {
-  events.memberJoined.process(bot, guild, member);
+  try {
+    events.memberJoined.process(bot, guild, member);
+  } catch (e) {
+    console.trace(e.message);
+  }
 });
 
 // Member left
 bot.on('guildMemberRemove', (guild, member) => {
-  events.memberLeft.process(bot, guild, member);
+  try {
+    events.memberLeft.process(bot, guild, member);
+  } catch (e) {
+    console.trace(e.message);
+  }
 });
 
 // Member banned
 bot.on('guildBanAdd', (guild, member) => {
-  events.memberBanned.process(bot, guild, member);
+  try {
+    events.memberBanned.process(bot, guild, member);
+  } catch (e) {
+    console.trace(e.message);
+  }
 });
 
 // Member unbanned
 bot.on('guildBanRemove', (guild, member) => {
-  events.memberUnbanned.process(bot, guild, member);
+  try {
+    events.memberUnbanned.process(bot, guild, member);
+  } catch (e) {
+    console.trace(e.message);
+  }
 });
 
 // Member update (Added/removed role, changed nickname)
-bot.on('guildMemberUpdate', (guild, oldMember, newMember) => {
-  // events.memberUpdated.process(bot, guild, oldMember, newMember);
-});
+//bot.on('guildMemberUpdate', (guild, oldMember, newMember) => {
+//  try {
+//    events.memberUpdated.process(bot, guild, oldMember, newMember);
+//  } catch (e) {
+//    console.trace(e.message);
+//  }
+//});
 
 // Message deleted
 bot.on('messageDelete', (message) => {
-  events.messageDeleted.process(bot, message);
+  try {
+    events.messageDeleted.process(bot, message);
+  } catch (e) {
+    console.trace(e.message);
+  }
 });
 
 // Message edited
-bot.on('messageUpdate', (oldMessage, newMessage) => {
-  // events.messageUpdated.process(bot, oldMessage, newMessage);
-});
+//bot.on('messageUpdate', (oldMessage, newMessage) => {
+//  try {
+//    events.messageUpdated.process(bot, oldMessage, newMessage);
+//  } catch (e) {
+//    console.trace(e.message);
+//  }
+//});
 
 // Login
 if (debug) {

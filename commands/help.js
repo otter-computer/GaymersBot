@@ -74,5 +74,10 @@ module.exports = {
         message.author.sendMessage(commandArray[i]);
       }
     }
+
+    // If !help was run in a public channel, send a message to that channel too
+    if (message.channel.type === 'text') {
+      message.reply('Check your DMs :wink:');
+    }
   }
 };

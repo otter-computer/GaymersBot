@@ -166,38 +166,66 @@ bot.on('message', message => {
 
 // Member joined
 bot.on('guildMemberAdd', (guild, member) => {
-  events.memberJoined.process(bot, guild, member);
+  try {
+    events.memberJoined.process(bot, guild, member);
+  } catch (e) {
+    console.trace(e.message);
+  }
 });
 
 // Member left
 bot.on('guildMemberRemove', (guild, member) => {
-  events.memberLeft.process(bot, guild, member);
+  try {
+    events.memberLeft.process(bot, guild, member);
+  } catch (e) {
+    console.trace(e.message);
+  }
 });
 
 // Member banned
 bot.on('guildBanAdd', (guild, member) => {
-  events.memberBanned.process(bot, guild, member);
+  try {
+    events.memberBanned.process(bot, guild, member);
+  } catch (e) {
+    console.trace(e.message);
+  }
 });
 
 // Member unbanned
 bot.on('guildBanRemove', (guild, member) => {
-  events.memberUnbanned.process(bot, guild, member);
+  try {
+    events.memberUnbanned.process(bot, guild, member);
+  } catch (e) {
+    console.trace(e.message);
+  }
 });
 
 // Member update (Added/removed role, changed nickname)
-bot.on('guildMemberUpdate', (guild, oldMember, newMember) => {
-  // events.memberUpdated.process(bot, guild, oldMember, newMember);
-});
+//bot.on('guildMemberUpdate', (guild, oldMember, newMember) => {
+//  try {
+//    events.memberUpdated.process(bot, guild, oldMember, newMember);
+//  } catch (e) {
+//    console.trace(e.message);
+//  }
+//});
 
 // Message deleted
 bot.on('messageDelete', (message) => {
-  events.messageDeleted.process(bot, message);
+  try {
+    events.messageDeleted.process(bot, message);
+  } catch (e) {
+    console.trace(e.message);
+  }
 });
 
 // Message edited
-bot.on('messageUpdate', (oldMessage, newMessage) => {
-  // events.messageUpdated.process(bot, oldMessage, newMessage);
-});
+//bot.on('messageUpdate', (oldMessage, newMessage) => {
+//  try {
+//    events.messageUpdated.process(bot, oldMessage, newMessage);
+//  } catch (e) {
+//    console.trace(e.message);
+//  }
+//});
 
 // Login
 if (debug) {

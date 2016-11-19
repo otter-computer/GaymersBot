@@ -107,56 +107,53 @@ bot.on('ready', () => {
 });
 
 function messageHandler(message) {
-  if (!message.author.bot) { // No bots
+  if (message.author.bot) // Ignore bot messages
+    return;
 
-    let commandText;
+  if (message.content[0] !== '!') // Commands start with '!'
+    return;
 
-    if (message.content[0] === '!') { // Check for a command via ! prefix
-      commandText = message.content.split(' ')[0].substring(1);
-    } // else if (message.content.indexOf(bot.user.mention()) == 0) { // Check for a command via bot tag
-      // commandText = message.content.split(' ')[1].toLowerCase();
-    // }
-    else { // no command
-      if (debug) console.log('No command.');
-      return;
-    }
+  let commandText = message.content.split(' ')[0].substring(1);
 
-    let command = commands[commandText.toLowerCase()];
+  let command = commands[commandText.toLowerCase()];
 
-    // Admin/Mod check
-    let permission = false;
-    let adminCommand = false;
+  // Admin/Mod check
+  let permission = false;
+  let adminCommand = false;
 
-    // Only do this check if we're in a guild, otherwise ignore and move on.
-    // So some commands can still be run in DMs
-    //
-    // TODO: There's a hacky way round this but I'm not sure if I want to?
-    if (message.guild) {
-      const adminRole = message.guild.roles.find('name', 'Admin');
-      const moderatorRole = message.guild.roles.find('name', 'Moderator');
-      let author = message.guild.member(message.author);
+  // If we're in a guild, check for admin/mod. If not (ie DM), assume
+  // they're a normal user. This allows some commands to be run outside of
+  // a guild context.
+  //
+  // TODO: There's a hacky way round this but I'm not sure if I want to?
+  if (message.guild) {
+    const adminRole = message.guild.roles.find('name', 'Admin');
+    const moderatorRole = message.guild.roles.find('name', 'Moderator');
+    let author = message.guild.member(message.author);
 
-      for (let [id, currentRole] of author.roles) {
-        if (currentRole === adminRole || currentRole === moderatorRole || message.author.id === '120897878347481088') {
-          permission = true;
-        }
+    for (let [id, currentRole] of author.roles) {
+      if (currentRole === adminRole || currentRole === moderatorRole ||
+          message.author.id === '120897878347481088') {
+        permission = true;
       }
     }
-
-    // If command is not a regular command, check if it's an admin command instead
-    if (!command && permission) {
-      command = adminCommands[commandText.toLowerCase()];
-      if (adminCommands[commandText.toLowerCase()]) adminCommand = true;
-    }
-
-    // Admin only command but no permission
-    if (adminCommand && !permission) {
-      message.reply('naughty naughty... :wink: Only Admins and Moderators can use the `!' + commandText + '` command.');
-      return;
-    }
-
-    command.process(bot, message, permission);
   }
+
+  // If command is not a regular command, check if it's an admin command
+  if (!command && permission) {
+    command = adminCommands[commandText.toLowerCase()];
+    if (adminCommands[commandText.toLowerCase()])
+      adminCommand = true;
+  }
+
+  // Admin only command but no permission
+  if (adminCommand && !permission) {
+    message.reply('naughty naughty... :wink: Only Admins and Moderators ' +
+        'can use the `!' + commandText + '` command.');
+    return;
+  }
+
+  command.process(bot, message, permission);
 }
 
 // Handle messages

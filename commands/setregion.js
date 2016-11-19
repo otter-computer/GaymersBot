@@ -1,51 +1,71 @@
+// Region names that correspond with Discord roles
+const REGIONS = ['Africa', 'Asia', 'Europe', 'Middle East', 'Oceania',
+                 'North America', 'South America']
+
 module.exports = {
   usage: '[your region]',
   description: 'Set your region, get pretty color.',
   process: (bot, message) => {
-    // Error check so not in PM
+    // This command doesn't make sense in a DM
     if (message.channel.type !== 'text') {
-      message.reply('sorry... I can\'t set your region inside private messages.');
+      message.reply('Sorry... I can\'t set your region in a DM.');
       return;
     }
 
     let msg = message.content.split(' ');
 
-    let regionName = '';
+    // Remove the first element, as it will be '!setregion'
+    msg.shift();
 
-    // Concat region with spaces
-    for (let i = 1; i < msg.length; i++) {
-      if (regionName.length > 1) regionName += ' ';
+    // Collapse parameters into a space-delimited string
+    let regionName = msg.join(' ').toProperCase();
 
-      regionName += msg[i].replace('[','').replace(']','').toProperCase();
+    // Some users mis-read the usage text and assume that they need to
+    // surround the name with square brackets. Let's just tolerate their
+    // ignorance. :(
+    regionName = regionName.replace('[', '').replace(']', '');
+
+    if (!REGIONS.includes(regionName)) {
+      message.reply('To set your region, type `!setregion ' +
+          module.exports.usage + '`\nHere\'s the regions I can give you: ' +
+          REGIONS.join(', '));
+      return;
     }
 
-    // Check if region exists
-    if (message.guild.roles.find('name', regionName)) {
-      let region = message.guild.roles.find('name', regionName);
-      let member = message.guild.member(message.author);
-      let currentRoles = [];
+    if (!message.guild.roles.find('name', regionName)) {
+      // TODO: This means that the bot knows about a region that Discord
+      // doesn't. :confused: The bot should call an admin if this happens.
+      message.reply('Sorry, I had an issue setting your region. :confounded:');
+      return;
+    }
 
-      for (var [id, currentRole] of member.roles) {
+    let region = message.guild.roles.find('name', regionName);
+    let member = message.guild.member(message.author);
+    let newRoles = [];
 
-        // Check if new region is already set on member
-        if (currentRole === region) {
-          message.reply('you\'ve already set your region to ' + region.name);
-          return;
-        }
-
-        // Check for other region roles and ignore
-        if (!currentRole.name.match(/^(North America|South America|Middle East|Oceania|Europe|Africa|Asia)$/gi)) {
-          currentRoles.push(currentRole);
-        }
+    // Rebuild the user's role list into newRoles
+    for (var [id, role] of member.roles) {
+      // The user already has the 'new' role
+      if (role === region) {
+        message.reply('You\'ve already set your region to ' + region.name +
+            '? :confused:');
+        return;
       }
 
-      // Add the new region to the array
-      currentRoles.push(region);
+      // Exclude any region roles
+      if (REGIONS.includes(role.name)) {
+        continue;
+      }
 
-      // Reapply the roles!
-      member.setRoles(currentRoles);
-
-      message.reply('I\'ve set your region to ' + regionName + ' :smile:');
+      newRoles.push(role);
     }
+
+    // Add the new role
+    newRoles.push(region);
+
+    // ...and apply!
+    member.setRoles(newRoles);
+
+    message.reply('I\'ve set your region to ' + region.name + ' :smile:');
   }
 };

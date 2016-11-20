@@ -4,9 +4,9 @@ module.exports = {
   process: (bot, message) => {
 
     const boopReplies = [
-      '\\*boops $USER\\*',
-      '\\*boops $USER right on the schnozz\\*',
-      '\\*boops $USER right on the honker\\*'
+      '*boops $USER*',
+      '*boops $USER right on the schnozz*',
+      '*boops $USER right on the honker*'
     ];
 
     let user;

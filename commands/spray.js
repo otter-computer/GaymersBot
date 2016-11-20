@@ -4,10 +4,10 @@ module.exports = {
   process: (bot, message) => {
 
     const sprayReplies = [
-      '\\*sprays $USER with a fire hose.\\*'
+      '*sprays $USER with a fire hose.*'
     ];
 
-    const spraySpecial = '\\*sprays $USER with canned cheese.\\*';
+    const spraySpecial = '*sprays $USER with canned cheese.*';
 
     let user;
 

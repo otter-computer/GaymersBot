@@ -4,21 +4,21 @@ module.exports = {
   process: (bot, message) => {
 
     const hugReplies = [
-      '\\*hugs $USER\\*',
-      '\\*hugs $USER\\*',
-      '\\*hugs $USER\\*',
-      '\\*hugs $USER\\*',
-      '\\*licks $USER\\*',
-      '\\*pounces $USER\\*',
-      '\\*jumps on $USER\\*',
-      '\\*glomps $USER\\*',
-      '\\*falls on $USER\\*',
-      '\\*bear hugs $USER\\*',
-      '\\*tightly squeezes $USER\\*',
-      '\\*embraces $USER\\*',
-      '\\*holds $USER close\\*',
-      '\\*cuddles $USER\\*',
-      '\\*takes $USER into his arms\\*'
+      '*hugs $USER*',
+      '*hugs $USER*',
+      '*hugs $USER*',
+      '*hugs $USER*',
+      '*licks $USER*',
+      '*pounces $USER*',
+      '*jumps on $USER*',
+      '*glomps $USER*',
+      '*falls on $USER*',
+      '*bear hugs $USER*',
+      '*tightly squeezes $USER*',
+      '*embraces $USER*',
+      '*holds $USER close*',
+      '*cuddles $USER*',
+      '*takes $USER into his arms*'
     ];
 
     let user;

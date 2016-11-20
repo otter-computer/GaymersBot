@@ -4,8 +4,8 @@ module.exports = {
   process: (bot, message) => {
 
     const slapReplies = [
-      '\\*slaps $USER around a bit with a large, girthy trout\\* :fish:',
-      '\\*slaps $USER with a meaty sausage\\*'
+      '*slaps $USER around a bit with a large, girthy trout* :fish:',
+      '*slaps $USER with a meaty sausage*'
     ];
 
     let user;

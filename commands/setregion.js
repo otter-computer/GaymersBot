@@ -1,6 +1,4 @@
-// Region names that correspond with Discord roles
-const REGIONS = ['Africa', 'Asia', 'Europe', 'Middle East', 'Oceania',
-                 'North America', 'South America']
+const REGIONS = require('../roles').REGION_ROLES;
 
 module.exports = {
   usage: '[your region]',

@@ -1,3 +1,5 @@
+const roles = require('../roles');
+
 module.exports = {
   usage: 'add/remove [role]',
   description: 'Set or remove a role from yourself.',
@@ -8,7 +10,15 @@ module.exports = {
       return;
     }
 
-    let msg = message.content.split(' ');
+    let msg = message.content;
+
+    // Some users mis-read the usage text and assume that they need to
+    // surround the operator with square brackets. Let's just tolerate their
+    // ignorance. (replace '[' or ']' with '')
+    msg = msg.replace(/\[|\]/g, '');
+
+    // Split the message into command arguments on spaces
+    msg = msg.split(' ');
 
     let toggle = msg[1].replace('[','').replace(']','').toLowerCase();
 
@@ -27,21 +37,23 @@ module.exports = {
       roleName += msg[i].replace('[','').replace(']','').toProperCase();
     }
 
-    // Direct people trying to change 18+ status to !set18
-    if (roleName.toProperCase() === '18+') {
-      message.reply('Manage your 18+ status with `!set18`/`!unset18` ' +
-          'instead :wink:');
-      return;
-    }
-
-    // Check for restricted roles
-    if (roleName.match(/^(admin|moderator|bots|bot developer|restricted|bot restricted|bot commander|no links\/files|Under 18|dj|erisbot|discobot|mee6|event manager|trial moderator)$/gi)) {
-      if (toggle === 'add' || toggle === 'set') {
-        message.reply('naughty naughty... :wink: You can\'t ' + toggle + ' the ' + roleName + ' role to yourself.');
-      } else {
-        message.reply('sorry... I can\'t ' + toggle + ' the role ' + roleName + ' from you :frowning:');
+    // I could use a simple array 'includes' check to see if roleName is within
+    // RESTRICTED_ROLES, but that doesn't give me a chance to normalize the
+    // contents of RESTRICTED_ROLES. This might waste more CPU time, but it's
+    // more reliable than making sure all additions to RESTRICTED_ROLES are
+    // normalized correctly.
+    const restrictRolesLen = roles.RESTRICTED_ROLES.length;
+    for (let i = 0;i < restrictRolesLen;i++) {
+      if (roles.RESTRICTED_ROLES[i].toProperCase() === roleName) {
+        if (toggle === 'add' || toggle === 'set') {
+          message.reply('naughty naughty... :wink: You can\'t ' + toggle +
+              ' the ' + roleName + ' role to yourself.');
+        } else {
+          message.reply('sorry... I can\'t ' + toggle + ' the role ' +
+              roleName + ' from you :frowning:');
+        }
+        return;
       }
-      return;
     }
 
     // Check if role exists

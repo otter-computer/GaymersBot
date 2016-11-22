@@ -56,6 +56,13 @@ module.exports = {
       }
     }
 
+    // Make sure regions aren't touched by this command
+    if (roles.REGION_ROLES.includes(roleName)) {
+      message.reply('You can change your region using the !setregion ' +
+          'command! :wink:');
+      return;
+    }
+
     // Check if role exists
     if (message.guild.roles.find('name', roleName)) {
       let role = message.guild.roles.find('name', roleName);

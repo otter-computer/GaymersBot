@@ -24,7 +24,7 @@ const startTime = Date.now();
 function cleanup() {
   if (bot)
     bot.destroy();
-  console.log("Bot shutting down.");
+  console.log('Bot shutting down.');
   process.exit();
 }
 

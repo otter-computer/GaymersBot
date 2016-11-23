@@ -161,7 +161,7 @@ bot.on('message', message => {
   try {
     messageHandler(message);
   } catch (e) {
-    console.trace(e.message);
+    console.error(e.stack);
   }
 });
 
@@ -170,7 +170,7 @@ bot.on('guildMemberAdd', (guild, member) => {
   try {
     events.memberJoined.process(bot, guild, member);
   } catch (e) {
-    console.trace(e.message);
+    console.error(e.stack);
   }
 });
 
@@ -179,7 +179,7 @@ bot.on('guildMemberRemove', (guild, member) => {
   try {
     events.memberLeft.process(bot, guild, member);
   } catch (e) {
-    console.trace(e.message);
+    console.error(e.stack);
   }
 });
 
@@ -188,7 +188,7 @@ bot.on('guildBanAdd', (guild, member) => {
   try {
     events.memberBanned.process(bot, guild, member);
   } catch (e) {
-    console.trace(e.message);
+    console.error(e.stack);
   }
 });
 
@@ -197,7 +197,7 @@ bot.on('guildBanRemove', (guild, member) => {
   try {
     events.memberUnbanned.process(bot, guild, member);
   } catch (e) {
-    console.trace(e.message);
+    console.error(e.stack);
   }
 });
 
@@ -206,7 +206,7 @@ bot.on('guildBanRemove', (guild, member) => {
 //  try {
 //    events.memberUpdated.process(bot, guild, oldMember, newMember);
 //  } catch (e) {
-//    console.trace(e.message);
+//    console.error(e.stack);
 //  }
 //});
 
@@ -215,7 +215,7 @@ bot.on('messageDelete', (message) => {
   try {
     events.messageDeleted.process(bot, message);
   } catch (e) {
-    console.trace(e.message);
+    console.error(e.stack);
   }
 });
 
@@ -224,7 +224,7 @@ bot.on('messageDelete', (message) => {
 //  try {
 //    events.messageUpdated.process(bot, oldMessage, newMessage);
 //  } catch (e) {
-//    console.trace(e.message);
+//    console.error(e.stack);
 //  }
 //});
 

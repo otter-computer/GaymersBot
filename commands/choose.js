@@ -1,3 +1,5 @@
+const splitargs = require("splitargs");
+
 module.exports = {
   usage: '[Option 1] [Option 2] [etc]',
   description: 'Let DiscoBot choose for you.',
@@ -13,7 +15,7 @@ module.exports = {
       'I choose \"%\"'
     ];
 
-    let choices = message.content.split(/\s*[ ,;]\s*|\sor\s/i);
+    let choices = splitargs(message.content);
     choices.shift();
 
     let choice = choices[Math.floor(Math.random() * choices.length)];

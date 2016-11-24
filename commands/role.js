@@ -27,6 +27,13 @@ module.exports = {
       roleName += msg[i].replace('[','').replace(']','').toProperCase();
     }
 
+    // Direct people trying to change 18+ status to !set18
+    if (roleName.toProperCase() === '18+') {
+      message.reply('Manage your 18+ status with `!set18`/`!unset18` ' +
+          'instead :wink:');
+      return;
+    }
+
     // Check for restricted roles
     if (roleName.match(/^(admin|moderator|bots|bot developer|restricted|bot restricted|no links\/files|Under 18|dj|erisbot|event manager|trial moderator)$/gi)) {
       if (toggle === 'add' || toggle === 'set') {

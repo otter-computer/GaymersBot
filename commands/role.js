@@ -28,7 +28,7 @@ module.exports = {
     }
 
     // Check for restricted roles
-    if (roleName.match(/^(admin|moderator|bots|bot developer|restricted|bot restricted|no links\/files|Under 18|dj|erisbot|event manager)$/gi)) {
+    if (roleName.match(/^(admin|moderator|bots|bot developer|restricted|bot restricted|no links\/files|Under 18|dj|erisbot|event manager|trial moderator)$/gi)) {
       if (toggle === 'add' || toggle === 'set') {
         message.reply('naughty naughty... :wink: You can\'t ' + toggle + ' the ' + roleName + ' role to yourself.');
       } else {

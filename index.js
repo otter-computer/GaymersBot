@@ -153,6 +153,10 @@ function messageHandler(message) {
     return;
   }
 
+  // If we couldn't find any command, cut out
+  if (!command)
+    return;
+
   command.process(bot, message, permission);
 }
 

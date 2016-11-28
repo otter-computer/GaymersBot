@@ -21,8 +21,6 @@ module.exports = {
       let dogs = jData.data.children;
       let images = [];
 
-      console.log('Data', jData);
-
       for (var dog in dogs) {
         console.log('dog', dog);
         if (dog.kind == 't3') {
@@ -30,11 +28,7 @@ module.exports = {
         }
       }
 
-      console.log('images', images);
-
       let image = images[Math.floor(Math.random() * images.length)];
-
-      console.log('image', image);
 
       message.reply(image.data.preview.images.source.url);
     });

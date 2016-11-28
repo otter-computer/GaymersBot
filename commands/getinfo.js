@@ -65,7 +65,6 @@ module.exports = {
         // Check for data
         if (snapshot.val()) {
           let data = snapshot.val();
-          console.log('snapshot', data);
 
           let msg = '';
 
@@ -76,7 +75,6 @@ module.exports = {
           }
 
           for (var i in data) {
-            console.log(i, data[i]);
             msg += i + ': ' + data[i] + '\n';
           }
 

@@ -6,17 +6,21 @@ module.exports = {
   process: (bot, message) => {
     // http://penguin.wtf
     request('http://penguin.wtf', (error, response, body) => {
-      if (error) {
-        console.log('Error: ', error);
-        return;
-      }
+      try {
+        if (error) {
+          console.log('Error: ', error);
+          return;
+        }
 
-      if (response.statusCode !== 200) {
-        console.log('Invalid status code: ', response.statusCode);
-        return;
-      }
+        if (response.statusCode !== 200) {
+          console.log('Invalid status code: ', response.statusCode);
+          return;
+        }
 
-      message.reply(body);
+        message.reply(body);
+      } catch (e) {
+        console.error(e.stack);
+      }
     });
   }
 };

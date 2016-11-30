@@ -6,6 +6,10 @@ module.exports = {
   process: (bot, message) => {
     let msg = message.content.split(' ');
 
+    // Remove backticks because they can be injected to break the !getinfo
+    // output.
+    msg = msg.replace(/`/g, '');
+
     let service = msg[1];
 
     if (!service || service.length < 1) {

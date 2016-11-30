@@ -30,7 +30,10 @@ module.exports = {
       return;
     }
 
-    const service = msg[0].toLowerCase();
+    let service = msg[0].toLowerCase();
+
+    // Remove characters from service that are invalid as a Firebase key
+    service = service.replace(/\[|\]|\$|\.|\#|\//g, '');
 
     // Remove service name from msg, leaving only username
     msg.shift();

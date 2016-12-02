@@ -30,7 +30,7 @@ module.exports = {
       return;
     }
 
-    let service = msg[0].toLowerCase();
+    let service = msg[0];
 
     // Remove characters from service that are invalid as a Firebase key
     service = service.replace(/\[|\]|\$|\.|\#|\//g, '');

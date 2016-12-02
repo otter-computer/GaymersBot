@@ -6,7 +6,7 @@ module.exports = {
   process: (bot, message) => {
     // This command doesn't make sense in a DM
     if (message.channel.type !== 'text') {
-      message.reply('sorry... I can\'t set roles within a DM.');
+      message.reply('Sorry... I can\'t set roles within a DM.');
       return;
     }
 
@@ -25,11 +25,6 @@ module.exports = {
 
     let operator = msg.shift().toLowerCase();
 
-    // Some users mis-read the usage text and assume that they need to
-    // surround the operator with square brackets. Let's just tolerate their
-    // ignorance. :(
-    operator = operator.replace('[', '').replace(']', '');
-
     // Check that operator is a valid option
     if (operator !== 'add' && operator !== 'set' && operator !== 'remove'
         && operator !== 'unset') {
@@ -41,9 +36,6 @@ module.exports = {
     // Collapse parameters into a space-delimited string
     let roleName = msg.join(' ').toProperCase();
 
-    // More ignorance tolerance regarding help text
-    roleName = roleName.replace('[', '').replace(']', '');
-
     // I could use a simple array 'includes' check to see if roleName is within
     // RESTRICTED_ROLES, but that doesn't give me a chance to normalize the
     // contents of RESTRICTED_ROLES. This might waste more CPU time, but it's
@@ -52,40 +44,34 @@ module.exports = {
     const restrictRolesLen = roles.RESTRICTED_ROLES.length;
     for (let i = 0;i < restrictRolesLen;i++) {
       if (roles.RESTRICTED_ROLES[i].toProperCase() === roleName) {
-        if (operator === 'add' || operator === 'set') {
-          message.reply('naughty naughty... :wink: You can\'t ' + operator +
-              ' the ' + roleName + ' role to yourself.');
-        } else {
-          message.reply('sorry... I can\'t ' + operator + ' the role ' +
-              roleName + ' from you :frowning:');
-        }
+        message.reply('Naughty naughty... :wink: You can\'t ' + operator +
+            ' that role!');
         return;
       }
     }
 
     // Make sure regions aren't touched by this command
     if (roles.REGION_ROLES.includes(roleName)) {
-      message.reply('You can change your region using the !setregion ' +
+      message.reply('You can change your region using the `!setregion` ' +
           'command! :wink:');
       return;
     }
 
     // Make sure the role actually exists
     if (!message.guild.roles.find('name', roleName)) {
-      message.reply('sorry... There isn\'t a role called ' + roleName +
-          ' :sob:');
+      message.reply('Sorry... That\'s not a role :sob:');
       return;
     }
 
-    let targetRole = message.guild.roles.find('name', roleName);
-    let member = message.guild.member(message.author);
-    let newRoles = [];
+    const targetRole = message.guild.roles.find('name', roleName);
+    const member = message.guild.member(message.author);
+    const newRoles = [];
 
     // TODO: If we're removing a role and the user doesn't have the role, let
     // them know that what they're doing doesn't make sense.
 
     // Rebuild the user's role list into newRoles
-    for (var [id, role] of member.roles) {
+    for (let [id, role] of member.roles) {
       if (targetRole === role) {
         if (operator === 'add' || operator === 'set') {
           message.reply('You already have the ' + role.name +
@@ -109,11 +95,9 @@ module.exports = {
 
     // Give the user the appropriate feedback message
     if (operator === 'add' || operator === 'set') {
-      message.reply('I\'ve given you the ' + targetRole.name +
-          ' role. :smile:');
+      message.reply('I\'ve added your new role! :ok_hand:');
     } else {
-      message.reply('I\'ve removed you from the ' + targetRole.name +
-          ' role. :smile:');
+      message.reply('I\'ve removed that role from you! :ok_hand:');
     }
   }
 };

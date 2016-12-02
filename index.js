@@ -65,6 +65,7 @@ commands.spray = require('./commands/spray');
 commands.unset18 = require('./commands/unset18');
 commands.unsetinfo = require('./commands/unsetinfo');
 commands.unsetregion = require('./commands/unsetregion');
+commands.wank = require('./commands/wank');
 
 // Admin commands
 let adminCommands = {};

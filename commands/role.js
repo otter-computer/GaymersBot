@@ -1,88 +1,119 @@
+const roles = require('../roles');
+
 module.exports = {
   usage: 'add/remove [role]',
   description: 'Set or remove a role from yourself.',
   process: (bot, message) => {
-    // Error check so not in PM
+    // This command doesn't make sense in a DM
     if (message.channel.type !== 'text') {
-      message.reply('sorry... I can\'t set roles inside private messages.');
+      message.reply('sorry... I can\'t set roles within a DM.');
       return;
     }
 
-    let msg = message.content.split(' ');
+    let msg = message.content;
 
-    let toggle = msg[1].replace('[','').replace(']','').toLowerCase();
+    // Some users mis-read the usage text and assume that they need to
+    // surround the operator with square brackets. Let's just tolerate their
+    // ignorance. (replace '[' or ']' with '')
+    msg = msg.replace(/\[|\]/g, '');
 
-    // Check for operator, add or remove
-    if (toggle !== 'add' && toggle !== 'set' && toggle !== 'remove' && toggle !== 'unset') {
-      message.reply('sorry... I don\'t understand what you want me to do with that role :sob:');
+    // Split the message into command arguments on spaces
+    msg = msg.split(' ');
+
+    // Remove the first element, as it will be '!role'
+    msg.shift();
+
+    let operator = msg.shift().toLowerCase();
+
+    // Some users mis-read the usage text and assume that they need to
+    // surround the operator with square brackets. Let's just tolerate their
+    // ignorance. :(
+    operator = operator.replace('[', '').replace(']', '');
+
+    // Check that operator is a valid option
+    if (operator !== 'add' && operator !== 'set' && operator !== 'remove'
+        && operator !== 'unset') {
+      message.reply('Sorry... I don\'t understand what you want me to do ' +
+          'with that role :sob:');
       return;
     }
 
-    let roleName = '';
+    // Collapse parameters into a space-delimited string
+    let roleName = msg.join(' ').toProperCase();
 
-    // Concat roles with spaces
-    for (let i = 2; i < msg.length; i++) {
-      if (roleName.length > 1) roleName += ' ';
+    // More ignorance tolerance regarding help text
+    roleName = roleName.replace('[', '').replace(']', '');
 
-      roleName += msg[i].replace('[','').replace(']','').toProperCase();
-    }
-
-    // Direct people trying to change 18+ status to !set18
-    if (roleName.toProperCase() === '18+') {
-      message.reply('Manage your 18+ status with `!set18`/`!unset18` ' +
-          'instead :wink:');
-      return;
-    }
-
-    // Check for restricted roles
-    if (roleName.match(/^(admin|moderator|bots|bot developer|restricted|bot restricted|bot commander|no links\/files|Under 18|dj|erisbot|discobot|mee6|event manager|trial moderator)$/gi)) {
-      if (toggle === 'add' || toggle === 'set') {
-        message.reply('naughty naughty... :wink: You can\'t ' + toggle + ' the ' + roleName + ' role to yourself.');
-      } else {
-        message.reply('sorry... I can\'t ' + toggle + ' the role ' + roleName + ' from you :frowning:');
-      }
-      return;
-    }
-
-    // Check if role exists
-    if (message.guild.roles.find('name', roleName)) {
-      let role = message.guild.roles.find('name', roleName);
-      let member = message.guild.member(message.author);
-      let currentRoles = [];
-
-      for (var [id, currentRole] of member.roles) {
-
-        // If role we're adding/removing is equal to the current iterated role
-        if (currentRole === role) {
-          // If adding, check if role already set on member
-          if (toggle === 'add' || toggle === 'set') {
-            message.reply('you already have the ' + role.name + ' role.');
-            return;
-          }
+    // I could use a simple array 'includes' check to see if roleName is within
+    // RESTRICTED_ROLES, but that doesn't give me a chance to normalize the
+    // contents of RESTRICTED_ROLES. This might waste more CPU time, but it's
+    // more reliable than making sure all additions to RESTRICTED_ROLES are
+    // normalized correctly.
+    const restrictRolesLen = roles.RESTRICTED_ROLES.length;
+    for (let i = 0;i < restrictRolesLen;i++) {
+      if (roles.RESTRICTED_ROLES[i].toProperCase() === roleName) {
+        if (operator === 'add' || operator === 'set') {
+          message.reply('naughty naughty... :wink: You can\'t ' + operator +
+              ' the ' + roleName + ' role to yourself.');
         } else {
-          currentRoles.push(currentRole);
+          message.reply('sorry... I can\'t ' + operator + ' the role ' +
+              roleName + ' from you :frowning:');
         }
-      }
-
-      // If adding, add the new role into the array
-      if (toggle === 'add' || toggle === 'set') {
-        currentRoles.push(role);
-      }
-
-      // Reapply the roles!
-      member.setRoles(currentRoles);
-
-      // Add role
-      if (toggle === 'add' || toggle === 'set') {
-        message.reply('I\'ve given you the ' + roleName + ' role. :smile:');
-        return;
-      } else { // Remove role
-        message.reply('I\'ve removed you from the ' + roleName + ' role. :smile:');
         return;
       }
-    } else { // Role doesn't exist
-      message.reply('sorry... There isn\'t a role called ' + roleName + ' :sob:');
+    }
+
+    // Make sure regions aren't touched by this command
+    if (roles.REGION_ROLES.includes(roleName)) {
+      message.reply('You can change your region using the !setregion ' +
+          'command! :wink:');
       return;
+    }
+
+    // Make sure the role actually exists
+    if (!message.guild.roles.find('name', roleName)) {
+      message.reply('sorry... There isn\'t a role called ' + roleName +
+          ' :sob:');
+      return;
+    }
+
+    let targetRole = message.guild.roles.find('name', roleName);
+    let member = message.guild.member(message.author);
+    let newRoles = [];
+
+    // TODO: If we're removing a role and the user doesn't have the role, let
+    // them know that what they're doing doesn't make sense.
+
+    // Rebuild the user's role list into newRoles
+    for (var [id, role] of member.roles) {
+      if (targetRole === role) {
+        if (operator === 'add' || operator === 'set') {
+          message.reply('You already have the ' + role.name +
+              ' role? :confounded:');
+          return;
+        } else {
+          // We're removing this role, and we'll just leave it out
+        }
+      } else {
+        newRoles.push(role);
+      }
+    }
+
+    // If adding a new role, add it on to the new roles list
+    if (operator === 'add' || operator === 'set') {
+      newRoles.push(targetRole);
+    }
+
+    // ...and apply!
+    member.setRoles(newRoles);
+
+    // Give the user the appropriate feedback message
+    if (operator === 'add' || operator === 'set') {
+      message.reply('I\'ve given you the ' + targetRole.name +
+          ' role. :smile:');
+    } else {
+      message.reply('I\'ve removed you from the ' + targetRole.name +
+          ' role. :smile:');
     }
   }
 };

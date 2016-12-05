@@ -29,6 +29,7 @@ module.exports = {
     '18+',
     'Push-to-talk',
     'Bot Commander',
-    'Mee6'
+    'Mee6',
+    'Member'
   ]
 }

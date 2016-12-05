@@ -71,7 +71,6 @@ let adminCommands = {};
 
 // Import admin commands
 adminCommands.timeout = require('./admin-commands/timeout');
-adminCommands.memberall = require('./admin-commands/memberall');
 
 // Export commands for use in other modules (help)
 module.exports.commands = commands;

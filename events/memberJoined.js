@@ -21,7 +21,9 @@ module.exports = {
       console.error('Channel #welcome-room doesn\'t exist!');
     } else {
       welcomeChannel.sendMessage('Welcome to Gaymers, ' + member + '! ' +
-          'Please introduce yourself, and check your DMs for more info!');
+          'Please introduce yourself, and check your DMs for more info! ' +
+          'You will have access to other channels once you introduce ' +
+          'yourself :smile:');
     }
 
     // DM the user more onboarding information
@@ -34,7 +36,9 @@ module.exports = {
       'We have region-based tags to help you find local gaming friends, and ' +
       'some special tags for members who like Overwatch, Battlefield, ' +
       'League of Legends and more. We are happy to add them to your ' +
-      'profile so you have an easier time finding folks to play with!'
+      'profile so you have an easier time finding folks to play with!\n\n' +
+      'You will be given access to the other channels after you introduce ' +
+      'yourself.'
     );
   }
 };

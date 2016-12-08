@@ -206,13 +206,13 @@ bot.on('guildBanRemove', (guild, member) => {
 });
 
 // Member update (Added/removed role, changed nickname)
-//bot.on('guildMemberUpdate', (guild, oldMember, newMember) => {
-//  try {
-//    events.memberUpdated.process(bot, guild, oldMember, newMember);
-//  } catch (e) {
-//    console.error(e.stack);
-//  }
-//});
+bot.on('guildMemberUpdate', (guild, oldMember, newMember) => {
+  try {
+    events.memberUpdated.process(bot, guild, oldMember, newMember);
+  } catch (e) {
+    console.error(e.stack);
+  }
+});
 
 // Message deleted
 bot.on('messageDelete', (message) => {

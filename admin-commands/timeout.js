@@ -16,6 +16,11 @@ module.exports = {
     // Updates to be pushed to firebase
     let updates = {};
 
+    if (!message.mentions.users.first()) {
+      message.reply('Usage: !timeout ' + module.exports.usage);
+      return;
+    }
+
     for (var [id, user] of message.mentions.users) {
 
       let member = message.guild.member(user);

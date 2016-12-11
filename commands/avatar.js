@@ -1,6 +1,7 @@
 module.exports = {
   usage: '[@user]',
   description: 'See someone\'s avatar.',
+  allowDM: true,
   process: (bot, message) => {
     for (var [id, user] of message.mentions.users) {
       if (user.avatarURL) {

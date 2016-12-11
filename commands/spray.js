@@ -1,6 +1,7 @@
 module.exports = {
   usage: '[@user]',
   description: 'Spray someone thirsty...',
+  allowDM: true,
   process: (bot, message) => {
 
     const sprayReplies = [

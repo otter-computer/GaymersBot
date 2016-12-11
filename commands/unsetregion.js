@@ -1,13 +1,8 @@
 module.exports = {
   usage: '',
   description: 'Remove your region, remain mysterious.',
+  allowDM: false,
   process: (bot, message) => {
-    // Error check so not in PM
-    if (message.channel.type !== 'text') {
-      message.reply('sorry... I can\'t remove your region inside private messages.');
-      return;
-    }
-
     let member = message.guild.member(message.author);
     let currentRoles = [];
 

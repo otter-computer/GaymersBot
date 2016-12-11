@@ -3,6 +3,7 @@ const commands = require('../index');
 module.exports = {
   usage: '',
   description: 'See what commands I can run!',
+  allowDM: true,
   process: (bot, message, permission) => {
     let firstMessage = 'Available Commands';
     let commandString = '```';

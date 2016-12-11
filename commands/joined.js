@@ -4,6 +4,7 @@ const format = require('../momentFormat');
 module.exports = {
   usage: '[@user]',
   description: 'See when someone joined the server.',
+  allowDM: false,
   process: (bot, message) => {
     for (var [id, user] of message.mentions.users) {
 

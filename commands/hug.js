@@ -1,6 +1,7 @@
 module.exports = {
   usage: '[@user]',
   description: 'Give someone a hug :blush:',
+  allowDM: true,
   process: (bot, message) => {
 
     const hugReplies = [

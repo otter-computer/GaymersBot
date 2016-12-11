@@ -1,6 +1,7 @@
 module.exports = {
   usage: '[@user]',
   description: 'Slap someone that deserves it.',
+  allowDM: true,
   process: (bot, message) => {
 
     const slapReplies = [

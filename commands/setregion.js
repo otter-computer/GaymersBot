@@ -3,13 +3,8 @@ const REGIONS = require('../roles').REGION_ROLES;
 module.exports = {
   usage: '[your region]',
   description: 'Set your region, get pretty color.',
+  allowDM: false,
   process: (bot, message) => {
-    // This command doesn't make sense in a DM
-    if (message.channel.type !== 'text') {
-      message.reply('Sorry... I can\'t set your region in a DM.');
-      return;
-    }
-
     let msg = message.content.split(' ');
 
     // Remove the first element, as it will be '!setregion'

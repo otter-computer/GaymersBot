@@ -3,6 +3,7 @@ const firebase = require('firebase');
 module.exports = {
   usage: '[service (optional)]',
   description: 'Delete a gamertag/username, or all your saved data.',
+  allowDM: true,
   process: (bot, message) => {
     let msg = message.content.split(' ');
 

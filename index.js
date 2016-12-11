@@ -121,6 +121,13 @@ function messageHandler(message) {
   let permission = false;
   let adminCommand = false;
 
+  // If a command isn't allowed in a DM (or doesn't have allowDM defined),
+  // make sure we're in a guild.
+  if (command && !command.allowDM && !message.guild) {
+    message.reply('Sorry, I can only do that on a server. :frowning2:');
+    return;
+  }
+
   // If we're in a guild, check for admin/mod. If not (ie DM), assume
   // they're a normal user. This allows some commands to be run outside of
   // a guild context.

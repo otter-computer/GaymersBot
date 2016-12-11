@@ -31,5 +31,17 @@ module.exports = {
     'Bot Commander',
     'Mee6',
     'Member'
+  ],
+
+  // A user must have one of these roles to use the bot (unless in a DM)
+  REQUIRED_TO_USE_BOT: [
+    'Member'
+  ],
+
+  // A user with any of these roles will have their messages ignored by the bot
+  // (unless in a DM). This ban supersedes the REQUIRED_TO_USE_BOT check.
+  BANNED_FROM_BOT: [
+    'Bot Restricted',
+    'Restricted'
   ]
 }

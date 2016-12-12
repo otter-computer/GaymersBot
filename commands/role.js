@@ -52,47 +52,56 @@ module.exports = {
       return;
     }
 
+    const targetRole = message.guild.roles.find('name', roleName);
+
     // Make sure the role actually exists
-    if (!message.guild.roles.find('name', roleName)) {
+    if (!targetRole) {
       message.reply('Sorry... That\'s not a role :sob:');
       return;
     }
 
-    const targetRole = message.guild.roles.find('name', roleName);
-    const member = message.guild.member(message.author);
-    const newRoles = [];
-
-    // TODO: If we're removing a role and the user doesn't have the role, let
-    // them know that what they're doing doesn't make sense.
-
-    // Rebuild the user's role list into newRoles
-    for (let [id, role] of member.roles) {
-      if (targetRole === role) {
-        if (operator === 'add' || operator === 'set') {
-          message.reply('You already have the ' + role.name +
-              ' role? :confounded:');
-          return;
-        } else {
-          // We're removing this role, and we'll just leave it out
-        }
-      } else {
-        newRoles.push(role);
+    if (operator === 'add' || operator === 'set') {
+      // Check if they already have the role
+      if (message.member.roles.findKey('id', targetRole.id)) {
+        message.reply('You already have that role? :confused:');
+        return;
       }
-    }
 
-    // If adding a new role, add it on to the new roles list
-    if (operator === 'add' || operator === 'set') {
-      newRoles.push(targetRole);
-    }
+      // Add the new role
+      message.member.addRole(targetRole)
+        .then(
+          () => {
+            message.reply('I\'ve added your new role! :ok_hand:');
+          },
+          (rejectReason) => {
+            // TODO: Reject handler
+            console.error(rejectReason);
+          })
+        .catch((e) => {
+          // TODO: Error handler
+          console.error(e.stack);
+        });
+    } else if (operator === 'remove' || operator === 'unset') {
+      // Check if they have the role in the first place
+      if (!message.member.roles.findKey('id', targetRole.id)) {
+        message.reply('You don\'t have that role? :confused:');
+        return;
+      }
 
-    // ...and apply!
-    member.setRoles(newRoles);
-
-    // Give the user the appropriate feedback message
-    if (operator === 'add' || operator === 'set') {
-      message.reply('I\'ve added your new role! :ok_hand:');
-    } else {
-      message.reply('I\'ve removed that role from you! :ok_hand:');
+      // Remove the role
+      message.member.removeRole(targetRole)
+        .then(
+          () => {
+            message.reply('I\'ve removed that role from you! :ok_hand:');
+          },
+          (rejectReason) => {
+            // TODO: Reject handler
+            console.error(rejectReason);
+          })
+        .catch((e) => {
+          // TODO: Error handler
+          console.error(e.stack);
+        });
     }
   }
 };

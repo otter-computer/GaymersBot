@@ -3,22 +3,24 @@ module.exports = {
   description: 'Removes the 18+ role.',
   allowDM: false,
   process: (bot, message) => {
-    let member = message.guild.member(message.author);
-    let role = message.guild.roles.find('name', '18+');
-    let currentRoles = [];
-
-    for (var [id, currentRole] of member.roles) {
-
-      // Check for region roles and ignore
-      if (currentRole !== role) {
-        currentRoles.push(currentRole);
-      }
+    if (!message.member.roles.findKey('name', '18+')) {
+      message.reply('You\'re not set as 18+? :confused:');
+      return;
     }
 
-    // Reapply the roles!
-    member.setRoles(currentRoles);
-
-    message.reply('I\'ve removed you from 18+ channels :smile:');
-
+    message.member.removeRole(message.guild.roles.findKey('name', '18+'))
+      .then(
+        () => {
+          message.reply('I\'ve removed your 18+ status' +
+          ':no_entry_sign::eggplant::peach:');
+        },
+        (rejectReason) => {
+          // TODO: Reject handler
+          console.error(rejectReason);
+        })
+      .catch((e) => {
+        // TODO: Error handler
+        console.error(e.stack);
+      });
   }
 };

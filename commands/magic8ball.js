@@ -1,6 +1,7 @@
 module.exports = {
   usage: '[question]',
   description: 'See the future, have DiscoBot read your fortune.',
+  allowDM: true,
   process: (bot, message) => {
 
     const responses = [

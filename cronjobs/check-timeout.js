@@ -1,6 +1,6 @@
 const firebase = require('firebase');
 const moment = require('moment');
-const format = require('../../momentFormat');
+const format = require('../momentFormat');
 
 module.exports = {
   process: (bot) => {

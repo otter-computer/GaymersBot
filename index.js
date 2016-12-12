@@ -1,8 +1,10 @@
+const cron = require('node-cron');
 const Discord = require('discord.js');
 const firebase = require('firebase');
 const moment = require('moment');
+
 const format = require('./momentFormat');
-const cron = require('node-cron');
+const roles = require('./roles');
 
 require('./utils');
 
@@ -42,7 +44,7 @@ const config = {
 firebase.initializeApp(config);
 
 // Commands
-let commands = {};
+const commands = {};
 
 // Import commands
 commands.avatar = require('./commands/avatar');
@@ -65,19 +67,13 @@ commands.spray = require('./commands/spray');
 commands.unset18 = require('./commands/unset18');
 commands.unsetinfo = require('./commands/unsetinfo');
 commands.unsetregion = require('./commands/unsetregion');
-
-// Admin commands
-let adminCommands = {};
-
-// Import admin commands
-adminCommands.timeout = require('./admin-commands/timeout');
+commands.timeout = require('./commands/timeout');
 
 // Export commands for use in other modules (help)
 module.exports.commands = commands;
-module.exports.adminCommands = adminCommands;
 
 // Events
-let events = {};
+const events = {};
 
 // Import events
 events.memberBanned = require('./events/memberBanned');
@@ -89,10 +85,10 @@ events.messageDeleted = require('./events/messageDeleted');
 events.messageUpdated = require('./events/messageUpdated');
 
 // Cron
-let cronJobs = {};
+const cronJobs = {};
 
 // Import cron tasks
-cronJobs.timeout = require('./admin-commands/utilities/check-timeout');
+cronJobs.timeout = require('./cronjobs/check-timeout');
 
 // Cron
 cron.schedule('*/5 * * * *', function() {
@@ -107,57 +103,88 @@ bot.on('ready', () => {
 });
 
 function messageHandler(message) {
-  if (message.author.bot) // Ignore bot messages
+  // Ignore bot messages
+  if (message.author.bot) {
     return;
+  }
 
-  if (message.content[0] !== '!') // Commands start with '!'
+  // Commands start with '!'
+  if (message.content[0] !== '!') {
     return;
+  }
 
-  let commandText = message.content.split(' ')[0].substring(1);
+  const commandText = message.content.split(' ')[0].substring(1).toLowerCase();
+  const command = commands[commandText];
 
-  let command = commands[commandText.toLowerCase()];
+  // Check that the command exists
+  if (!command) {
+    return;
+  }
 
-  // Admin/Mod check
-  let permission = false;
-  let adminCommand = false;
+  // If a command isn't allowed in a DM (or doesn't have allowDM defined),
+  // make sure we're in a guild.
+  if (!command.allowDM && !message.guild) {
+    message.reply('Sorry, I can only do that on a server. :frowning2:');
+    return;
+  }
 
-  // If we're in a guild, check for admin/mod. If not (ie DM), assume
-  // they're a normal user. This allows some commands to be run outside of
-  // a guild context.
-  //
-  // TODO: There's a hacky way round this but I'm not sure if I want to?
+  // Check that the user is allowed to use the bot (not necessary
+  // outside of a guild)
   if (message.guild) {
-    const adminRole = message.guild.roles.find('name', 'Admin');
-    const moderatorRole = message.guild.roles.find('name', 'Moderator');
-    let author = message.guild.member(message.author);
+    let shouldIgnoreMessage = true;
 
-    for (let [id, currentRole] of author.roles) {
-      if (currentRole === adminRole || currentRole === moderatorRole ||
-          message.author.id === '120897878347481088') {
-        permission = true;
+    // Check that the bot has any required roles at all
+    if (roles.REQUIRED_TO_USE_BOT.length > 0) {
+      // Try to find a common role between the required list and the
+      // user's roles
+      roles.REQUIRED_TO_USE_BOT.forEach((requiredRole) => {
+        if (message.member.roles.findKey('name', requiredRole)) {
+          shouldIgnoreMessage = false;
+        }
+      });
+    } else {
+      shouldIgnoreMessage = false;
+    }
+
+    // Check that the user is not part of a role that is banned from bot usage
+    roles.BANNED_FROM_BOT.forEach((bannedRole) => {
+      if (message.member.roles.findKey('name', bannedRole)) {
+        shouldIgnoreMessage = true;
       }
+    });
+
+    if (shouldIgnoreMessage) {
+      return;
     }
   }
 
-  // If command is not a regular command, check if it's an admin command
-  if (!command && permission) {
-    command = adminCommands[commandText.toLowerCase()];
-    if (adminCommands[commandText.toLowerCase()])
-      adminCommand = true;
+  // If the command requires roles, check that the user has one of them
+  if (command.requireRoles) {
+    // A command can't require roles and support DMs.
+    // This is a programmer error.
+    if (!message.guild) {
+      // TODO: Programmer error
+      return;
+    }
+
+    let satisfiesRoles = false;
+
+    // Loop through the roles needed by the command and see if the user
+    // has any of them.
+    command.requireRoles.forEach((role) => {
+      if (message.member.roles.findKey('name', role)) {
+        satisfiesRoles = true;
+      }
+    });
+
+    if (!satisfiesRoles) {
+      message.channel.sendMessage('I\'m sorry ' + message.author + ', I\'m ' +
+        'afraid I can\'t do that.');
+      return;
+    }
   }
 
-  // Admin only command but no permission
-  if (adminCommand && !permission) {
-    message.reply('naughty naughty... :wink: Only Admins and Moderators ' +
-        'can use the `!' + commandText + '` command.');
-    return;
-  }
-
-  // If we couldn't find any command, cut out
-  if (!command)
-    return;
-
-  command.process(bot, message, permission);
+  command.process(bot, message);
 }
 
 // Handle messages

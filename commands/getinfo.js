@@ -3,6 +3,7 @@ const firebase = require('firebase');
 module.exports = {
   usage: '[service (optional)] [@user (optional)]',
   description: 'Gets user\'s saved info from the database',
+  allowDM: true,
   process: (bot, message) => {
 
     let user;

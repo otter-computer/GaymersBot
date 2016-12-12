@@ -5,6 +5,8 @@ const format = require('../momentFormat');
 module.exports = {
   usage: '[@user]',
   description: 'ADMIN ONLY: Give a user the \'Restricted\' role for 30 minutes. Will also remove the \'18+\' role.',
+  allowDM: false,
+  requireRoles: ['Admin', 'Moderator'],
   process: (bot, message) => {
     let timeoutEnd = Date.now() + 1800000;
 

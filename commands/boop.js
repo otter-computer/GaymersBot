@@ -1,6 +1,7 @@
 module.exports = {
   usage: '[@user]',
   description: 'BOOP',
+  allowDM: true,
   process: (bot, message) => {
 
     const boopReplies = [

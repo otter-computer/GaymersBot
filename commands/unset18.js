@@ -1,13 +1,8 @@
 module.exports = {
   usage: '',
   description: 'Removes the 18+ role.',
+  allowDM: false,
   process: (bot, message) => {
-    // Error check so not in PM
-    if (message.channel.type !== 'text') {
-      message.reply('sorry... I can\'t remove 18+ inside private messages.');
-      return;
-    }
-
     let member = message.guild.member(message.author);
     let role = message.guild.roles.find('name', '18+');
     let currentRoles = [];

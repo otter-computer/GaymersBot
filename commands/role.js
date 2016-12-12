@@ -3,13 +3,8 @@ const roles = require('../roles');
 module.exports = {
   usage: 'add/remove [role]',
   description: 'Set or remove a role from yourself.',
+  allowDM: false,
   process: (bot, message) => {
-    // This command doesn't make sense in a DM
-    if (message.channel.type !== 'text') {
-      message.reply('Sorry... I can\'t set roles within a DM.');
-      return;
-    }
-
     let msg = message.content;
 
     // Some users mis-read the usage text and assume that they need to

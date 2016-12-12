@@ -1,13 +1,8 @@
 module.exports = {
   usage: '',
   description: 'Gives you the 18+ role, allows access to #over-18 and #over-18-text.',
+  allowDM: false,
   process: (bot, message) => {
-    // Error check so not in PM
-    if (message.channel.type !== 'text') {
-      message.reply('sorry... I can\'t set 18+ inside private messages.');
-      return;
-    }
-
     let role = message.guild.roles.find('name', '18+');
     let under18 = message.guild.roles.find('name', 'Under 18');
     let member = message.guild.member(message.author);
@@ -20,7 +15,7 @@ module.exports = {
         message.reply('you\'ve already been set to ' + role.name);
         return;
       }
-      
+
       // Check if member has under18 role.
       if (currentRole === under18){
       	message.reply('You are under 18 years of age. I cannot add the 18+ role. :frowning: ');

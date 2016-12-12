@@ -1,8 +1,9 @@
-const splitargs = require("splitargs");
+const splitargs = require('splitargs');
 
 module.exports = {
   usage: '[Option 1] [Option 2] [etc]',
   description: 'Let DiscoBot choose for you.',
+  allowDM: true,
   process: (bot, message) => {
 
     const responses = [

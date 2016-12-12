@@ -3,6 +3,7 @@ const request = require('request');
 module.exports = {
   usage: '',
   description: 'Gets a random cat picture.',
+  allowDM: true,
   process: (bot, message) => {
     // http://random.cat/meow
     request('http://random.cat/meow', (error, response, body) => {

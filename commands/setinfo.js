@@ -4,6 +4,7 @@ module.exports = {
   usage: '[service] [username]',
   description: 'Save your gamertag/username for any gaming service to ' +
     'the database.',
+  allowDM: true,
   process: (bot, message) => {
     let msg = message.content;
 

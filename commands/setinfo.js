@@ -1,23 +1,17 @@
 const firebase = require('firebase');
 
+// Valid service name is ASCII alphanumeric only
+const VALID_SERVICE_NAME = /^(?:[a-z]|[A-Z]|[0-9])+$/;
+// Valid username is all ASCII characters from ' ' to '~' except '`'
+const VALID_USERNAME = /^(?:[ -_]|[a-~])+$/;
+
 module.exports = {
   usage: '[service] [username]',
   description: 'Save your gamertag/username for any gaming service to ' +
     'the database.',
   process: (bot, message) => {
-    let msg = message.content;
-
-    // Remove backticks because they can be injected to break the !getinfo
-    // output.
-    msg = msg.replace(/`/g, '');
-
-    // Some users mis-read the usage text and assume that they need to
-    // surround the names with square brackets. Let's just tolerate their
-    // ignorance. (replace '[' or ']' with '')
-    msg = msg.replace(/\[|\]/g, '');
-
     // Split into command arguments
-    msg = msg.split(' ');
+    const msg = message.content.split(' ');
 
     // The first entry will be '!setinfo'
     msg.shift();
@@ -30,16 +24,25 @@ module.exports = {
       return;
     }
 
-    let service = msg[0];
+    const service = msg[0];
 
-    // Remove characters from service that are invalid as a Firebase key
-    service = service.replace(/\[|\]|\$|\.|\#|\//g, '');
+    // Check that service only contains the valid characters
+    if (!VALID_SERVICE_NAME.test(service)) {
+      message.reply('Sorry, the service name must be alphanumeric :frowning2:');
+      return;
+    }
 
     // Remove service name from msg, leaving only username
     msg.shift();
 
     // Re-join the rest of the parameters back with spaces
     const username = msg.join(' ');
+
+    if (!VALID_USERNAME.test(username)) {
+      message.reply('Sorry, your username can only include alphanumeric ' +
+        'characters and basic symbols. :frowning2:');
+      return;
+    }
 
     if (service.length === 0 || username.length === 0) {
       message.reply('You need to include both a service and a username ' +
@@ -48,7 +51,7 @@ module.exports = {
       return;
     }
 
-    var updates = {};
+    let updates = {};
 
     updates['/users/info/' + message.author.id + '/' + service] = username;
 

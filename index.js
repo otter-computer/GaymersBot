@@ -60,12 +60,10 @@ commands.penguin = require('./commands/penguin');
 commands.regions = require('./commands/regions');
 commands.role = require('./commands/role');
 commands.set18 = require('./commands/set18');
-commands.setinfo = require('./commands/setinfo');
 commands.setregion = require('./commands/setregion');
 commands.slap = require('./commands/slap');
 commands.spray = require('./commands/spray');
 commands.unset18 = require('./commands/unset18');
-commands.unsetinfo = require('./commands/unsetinfo');
 commands.unsetregion = require('./commands/unsetregion');
 commands.timeout = require('./commands/timeout');
 

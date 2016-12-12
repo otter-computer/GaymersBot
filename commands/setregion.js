@@ -16,8 +16,9 @@ module.exports = {
     // Some users mis-read the usage text and assume that they need to
     // surround the name with square brackets. Let's just tolerate their
     // ignorance. :(
-    regionName = regionName.replace('[', '').replace(']', '');
+    regionName = regionName.replace(/\[|\]/g, '');
 
+    // If the user supplied a bad region name, give them the list
     if (!REGIONS.includes(regionName)) {
       message.reply('To set your region, type `!setregion ' +
           module.exports.usage + '`\nHere\'s the regions I can give you: ' +
@@ -25,40 +26,49 @@ module.exports = {
       return;
     }
 
-    if (!message.guild.roles.find('name', regionName)) {
+    const newRegionRole = message.guild.roles.findKey('name', regionName);
+    if (!newRegionRole) {
       // TODO: This means that the bot knows about a region that Discord
       // doesn't. :confused: The bot should call an admin if this happens.
       message.reply('Sorry, I had an issue setting your region. :confounded:');
       return;
     }
 
-    let region = message.guild.roles.find('name', regionName);
-    let member = message.guild.member(message.author);
-    let newRoles = [];
-
-    // Rebuild the user's role list into newRoles
-    for (var [id, role] of member.roles) {
-      // The user already has the 'new' role
-      if (role === region) {
-        message.reply('You\'ve already set your region to ' + region.name +
-            '? :confused:');
-        return;
-      }
-
-      // Exclude any region roles
-      if (REGIONS.includes(role.name)) {
-        continue;
-      }
-
-      newRoles.push(role);
+    // It's useless to set your region to its current value?
+    if (message.member.roles.findKey('name', regionName)) {
+      message.reply('You\'ve already set your region to that? :confused:');
+      return;
     }
 
-    // Add the new role
-    newRoles.push(region);
+    // Remove any current region roles
+    const rolesToRemove = [];
+    REGIONS.forEach((region) => {
+      const roleId = message.guild.roles.findKey('name', region);
+      if (roleId) {
+        rolesToRemove.push(roleId);
+      } else {
+        // FIXME: Warn about invalid region in list
+      }
+    });
+    message.member.removeRoles(rolesToRemove)
+      .catch((e) => {
+        // TODO: Error handler
+        console.error(e.stack);
+      });
 
-    // ...and apply!
-    member.setRoles(newRoles);
-
-    message.reply('I\'ve set your region to ' + region.name + ' :smile:');
+    // ...and give them the new one!
+    message.member.addRole(newRegionRole)
+      .then(
+        () => {
+          message.reply('I\'ve set your region! :white_check_mark::map:');
+        },
+        (rejectReason) => {
+          // TODO: Reject handler
+          console.error(rejectReason);
+        })
+      .catch((e) => {
+        // TODO: Error handler
+        console.error(e.stack);
+      });
   }
 };

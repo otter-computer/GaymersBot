@@ -30,6 +30,8 @@ module.exports = {
     'Push-to-talk',
     'Bot Commander',
     'Mee6',
+    'Keyboard Warrior',
+    'Keyboard GOD!',
     'Member'
   ],
 

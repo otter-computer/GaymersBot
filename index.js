@@ -51,7 +51,6 @@ commands.avatar = require('./commands/avatar');
 commands.boop = require('./commands/boop');
 commands.cat = require('./commands/cat');
 commands.choose = require('./commands/choose');
-commands.getinfo = require('./commands/getinfo');
 commands.help = require('./commands/help');
 commands.hug = require('./commands/hug');
 commands.joined = require('./commands/joined');

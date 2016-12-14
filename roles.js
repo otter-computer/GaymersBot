@@ -7,30 +7,32 @@ module.exports = {
     'Asia',
     'Europe',
     'Middle East',
-    'Oceania',
     'North America',
+    'Oceania',
     'South America'
   ],
 
   // Roles that cannot be managed with !role
   RESTRICTED_ROLES: [
+    '18+',
     'Admin',
-    'Moderator',
-    'Bots',
+    'Bot Commander',
     'Bot Developer',
-    'Restricted',
     'Bot Restricted',
-    'No links/files',
-    'Under 18',
+    'Bots',
     'DJ',
+    'DiscoBot',
     'ErisBot',
     'Event Manager',
-    'DiscoBot',
-    '18+',
-    'Push-to-talk',
-    'Bot Commander',
+    'Keyboard GOD!',
+    'Keyboard Warrior',
     'Mee6',
-    'Member'
+    'Member',
+    'Moderator',
+    'No links/files',
+    'Push-to-talk',
+    'Restricted',
+    'Under 18'
   ],
 
   // A user must have one of these roles to use the bot (unless in a DM)

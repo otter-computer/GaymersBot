@@ -24,9 +24,9 @@ function usernameUpdate(bot, oldMember, newMember) {
   );
 }
 
-function memberRoleAdded(guild, newMember) {
-  const generalChannel = guild.channels.find('name', 'general');
-  const userLogsChannel = guild.channels.find('name', 'user-logs');
+function memberRoleAdded(newMember) {
+  const generalChannel = newMember.guild.channels.find('name', 'general');
+  const userLogsChannel = newMember.guild.channels.find('name', 'user-logs');
 
   // Publicly welcome the user
   if (!generalChannel) {
@@ -59,7 +59,7 @@ function memberRoleAdded(guild, newMember) {
 }
 
 module.exports = {
-  process: (bot, guild, oldMember, newMember) => {
+  process: (bot, oldMember, newMember) => {
     // Nickname change
     //if (oldMember.nickname !== newMember.nickname) {
     //  usernameUpdate(bot, oldMember, newMember);
@@ -68,7 +68,7 @@ module.exports = {
     // User became a member
     if (!oldMember.roles.findKey('name', 'Member') &&
           newMember.roles.findKey('name', 'Member')) {
-      memberRoleAdded(guild, newMember);
+      memberRoleAdded(newMember);
     }
   }
 };

@@ -194,18 +194,18 @@ bot.on('message', message => {
 });
 
 // Member joined
-bot.on('guildMemberAdd', (guild, member) => {
+bot.on('guildMemberAdd', (member) => {
   try {
-    events.memberJoined.process(bot, guild, member);
+    events.memberJoined.process(bot, member);
   } catch (e) {
     console.error(e.stack);
   }
 });
 
 // Member left
-bot.on('guildMemberRemove', (guild, member) => {
+bot.on('guildMemberRemove', (member) => {
   try {
-    events.memberLeft.process(bot, guild, member);
+    events.memberLeft.process(bot, member);
   } catch (e) {
     console.error(e.stack);
   }
@@ -230,9 +230,9 @@ bot.on('guildBanRemove', (guild, member) => {
 });
 
 // Member update (Added/removed role, changed nickname)
-bot.on('guildMemberUpdate', (guild, oldMember, newMember) => {
+bot.on('guildMemberUpdate', (oldMember, newMember) => {
   try {
-    events.memberUpdated.process(bot, guild, oldMember, newMember);
+    events.memberUpdated.process(bot, oldMember, newMember);
   } catch (e) {
     console.error(e.stack);
   }

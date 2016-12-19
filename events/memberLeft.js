@@ -3,9 +3,9 @@ const format = require('../momentFormat');
 
 module.exports = {
   // Logs a member leaving in #user-logs.
-  process: (bot, guild, member) => {
-    const userLogs = bot.channels.find('name', 'user-logs');
-    const welcomeRoom = bot.channels.find('name', 'welcome-room');
+  process: (bot, member) => {
+    const userLogs = member.guild.channels.find('name', 'user-logs');
+    const welcomeRoom = member.guild.channels.find('name', 'welcome-room');
 
     userLogs.sendMessage(
       member + ' left the server.' +
@@ -32,9 +32,6 @@ module.exports = {
             .catch(console.error);
         }
       })
-    },
-    (_) => {
-      // If this fails, it's no big deal.
     });
   }
 };

@@ -15,6 +15,12 @@ module.exports = {
     // Split the message into command arguments on spaces
     msg = msg.split(' ');
 
+    // Check that we have at least '!role' 'add|remove|(etc)' and a role
+    if (msg.length < 3) {
+      message.reply('Usage: `!role ' + module.exports.usage + '`');
+      return;
+    }
+
     // Remove the first element, as it will be '!role'
     msg.shift();
 

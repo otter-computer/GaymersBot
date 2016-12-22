@@ -62,7 +62,6 @@ commands.set18 = require('./commands/set18');
 commands.setregion = require('./commands/setregion');
 commands.slap = require('./commands/slap');
 commands.spray = require('./commands/spray');
-commands.status = require('./commands/status');
 commands.timeout = require('./commands/timeout');
 commands.unset18 = require('./commands/unset18');
 commands.unsetregion = require('./commands/unsetregion');

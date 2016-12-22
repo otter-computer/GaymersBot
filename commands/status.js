@@ -1,5 +1,5 @@
 module.exports = {
-  usage: '[@user]',
+  usage: '',
   description: 'BOT DEVELOPER ONLY: Shows the latest deploy from GitHub.',
   allowDM: false,
   requireRoles: ['Bot Developer'],

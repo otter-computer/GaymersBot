@@ -5,9 +5,9 @@ module.exports = {
   requireRoles: ['Bot Developer'],
   process: (bot, message) => {
     message.reply(
-      "Bot deployed at: " + process.env.HEROKU_RELEASE_CREATED_AT +
-      "https://github.com/gaymers-discord/DiscoBot/commit/" + process.env.HEROKU_SLUG_COMMIT + "\n" +
-      process.env.HEROKU_SLUG_DESCRIPTION + "\n"
+      'Bot deployed at: `' + process.env.HEROKU_RELEASE_CREATED_AT + '`\n' +
+      'https://github.com/gaymers-discord/DiscoBot/commit/' + process.env.HEROKU_SLUG_COMMIT + '\n' +
+      process.env.HEROKU_SLUG_DESCRIPTION
     );
   }
 };

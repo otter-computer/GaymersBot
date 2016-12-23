@@ -2,6 +2,7 @@ module.exports = {
   usage: '',
   description: 'Removes the 18+ role.',
   allowDM: false,
+  onlyIn: ['bot-room'],
   process: (bot, message) => {
     if (!message.member.roles.findKey('name', '18+')) {
       message.reply('You\'re not set as 18+? :confused:');

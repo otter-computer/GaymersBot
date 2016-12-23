@@ -4,6 +4,7 @@ module.exports = {
   usage: 'add/remove [role]',
   description: 'Set or remove a role from yourself.',
   allowDM: false,
+  onlyIn: ['bot-room'],
   process: (bot, message) => {
     let msg = message.content;
 

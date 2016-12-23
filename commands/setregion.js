@@ -4,6 +4,7 @@ module.exports = {
   usage: '[your region]',
   description: 'Set your region, get pretty color.',
   allowDM: false,
+  onlyIn: ['bot-room'],
   process: (bot, message) => {
     let msg = message.content.split(' ');
 

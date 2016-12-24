@@ -2,6 +2,7 @@ module.exports = {
   usage: '',
   description: 'Lists all available regions for use with the !setregion command.',
   allowDM: true,
+  onlyIn: ['bot-room'],
   process: (bot, message) => {
     message.reply(
       'To set your region type `!setregion [Your region]` in any channel. \n' +

@@ -178,14 +178,6 @@ function messageHandler(message) {
 
   // Checks that are only needed on a server
   if (message.guild) {
-    // If the command can only be used in certain channels, check that we're in
-    // one of those channels
-    if (command.onlyIn && command.onlyIn.length > 0) {
-      if (!commandValidInChannel(command, message)) {
-        return;
-      }
-    }
-
     // Check that the user is allowed to use the bot
     let shouldIgnoreMessage = true;
 
@@ -211,6 +203,14 @@ function messageHandler(message) {
 
     if (shouldIgnoreMessage) {
       return;
+    }
+
+    // If the command can only be used in certain channels, check that we're in
+    // one of those channels
+    if (command.onlyIn && command.onlyIn.length > 0) {
+      if (!commandValidInChannel(command, message)) {
+        return;
+      }
     }
   }
 

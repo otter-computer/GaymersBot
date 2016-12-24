@@ -4,6 +4,7 @@ module.exports = {
   usage: '',
   description: 'Remove your region, remain mysterious.',
   allowDM: false,
+  onlyIn: ['bot-room'],
   process: (bot, message) => {
     // Assemble a list of role IDs to give the removeRoles function, this
     // does all of the removal in one shot.

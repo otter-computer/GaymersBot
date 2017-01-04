@@ -65,8 +65,6 @@ commands.timeout = require('./commands/timeout');
 commands.unset18 = require('./commands/unset18');
 commands.unsetregion = require('./commands/unsetregion');
 
-commands.embed = require('./commands/embed');
-
 // Export commands for use in other modules (help)
 module.exports.commands = commands;
 
@@ -257,7 +255,7 @@ bot.on('message', message => {
 // Member joined
 bot.on('guildMemberAdd', (member) => {
   try {
-    events.memberJoined.process(bot, guild, member);
+    events.memberJoined.process(bot, member);
   } catch (e) {
     console.error(e.stack);
   }
@@ -266,7 +264,7 @@ bot.on('guildMemberAdd', (member) => {
 // Member left
 bot.on('guildMemberRemove', (member) => {
   try {
-    events.memberLeft.process(bot, guild, member);
+    events.memberLeft.process(bot, member);
   } catch (e) {
     console.error(e.stack);
   }

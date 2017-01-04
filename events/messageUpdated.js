@@ -21,6 +21,6 @@ module.exports = {
     let embedDate = new Date(Date.now());
     embed.setTimestamp(embedDate.toISOString());
 
-    messageLogsChannel.sendMessage('', { enbed: embed });
+    messageLogsChannel.sendMessage('', { embed: embed });
   }
 };

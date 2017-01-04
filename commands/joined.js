@@ -17,7 +17,7 @@ module.exports = {
         return;
       }
 
-      let joinDate = moment(message.guild.member(user).joinDate);
+      let joinDate = moment(message.guild.member(user).joinedAt);
 
       message.channel.sendMessage(user.toString() + ' joined ' + joinDate.fromNow() + ' (' + joinDate.format(format) + ')');
     }

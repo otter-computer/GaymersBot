@@ -14,6 +14,7 @@ module.exports = {
 
     const restrictedRole = message.guild.roles.find('name', 'Restricted');
     const over18Role = message.guild.roles.find('name', '18+');
+    const memberRole = message.guild.roles.find('name', 'Member');
 
     // Updates to be pushed to firebase
     let updates = {};
@@ -33,6 +34,12 @@ module.exports = {
 
         // Check for 18+ role
         if (currentRole === over18Role) {
+          continue;
+        }
+
+        // Leave out the Member role since this makes the restriction to
+        // #appeals not work.
+        if (currentRole === memberRole) {
           continue;
         }
 

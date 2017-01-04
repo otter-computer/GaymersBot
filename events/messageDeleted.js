@@ -6,8 +6,7 @@ module.exports = {
   // Logs a deleted message in #user-logs.
   process: (bot, message) => {
     // Don't repeat bot messages
-    if (message.author.id === bot.user.id ||
-      message.author.id === '120897878347481088') return;
+    if (message.author.id === bot.user.id) return;
 
     // Block Erisbot shite
     if (message.content.startsWith('.music') ||
@@ -29,15 +28,18 @@ module.exports = {
     }
 
     // Attachments
-    if (message.attachments) {
+    let attachmentArray = message.attachments.array();
+    if (attachmentArray.length > 0) {
+
       // Check the first attachment for an image.
       // If it has a height, set it as the embed image
-      if (message.attachments[0].height) {
-        embed.setImage(message.attachments[0]);
+      let first = message.attachments.first();
+      if (first.height) {
+        embed.setImage(first.url);
       }
 
       // Loop over all, if there's multiple
-      if (message.attachments.length > 1) {
+      if (attachmentArray.length > 1) {
         let attachments;
 
         for (let [id, attachment] of message.attachments) {

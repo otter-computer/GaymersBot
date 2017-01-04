@@ -1,5 +1,4 @@
-const moment = require('moment');
-const format = require('../momentFormat');
+const Discord = require('discord.js');
 
 module.exports = {
   process: (bot, member) => {
@@ -10,10 +9,16 @@ module.exports = {
     if (!userLogsChannel) {
       console.error('Channel #user-logs doesn\'t exist!');
     } else {
-      userLogsChannel.sendMessage(
-        member + ' joined the server. ' +
-        '(' + moment(Date.now()).format(format) + ')'
-      );
+      let embed = new Discord.RichEmbed();
+
+      embed.setColor(0x3398DB);
+      embed.setTitle('User Joined');
+      embed.addField('User', member);
+
+      let embedDate = new Date(Date.now());
+      embed.setTimestamp(embedDate.toISOString());
+
+      userLogsChannel.sendMessage('', { embed: embed });
     }
 
     // Add a little message to #welcome-room to grab the user's attention

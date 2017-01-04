@@ -1,5 +1,4 @@
-const moment = require('moment');
-const format = require('../momentFormat');
+const Discord = require('discord.js');
 
 module.exports = {
   // Logs a message edit in #user-logs.
@@ -7,20 +6,21 @@ module.exports = {
     // Don't tag bot message updates
     if (oldMessage.author === bot || newMessage.author === bot) return;
 
-    let channel = bot.channels.find('name', 'message-logs');
+    let messageLogsChannel = bot.channels.find('name', 'message-logs');
 
-    channel.sendMessage(
-      newMessage.author +
-      ' edited a message in ' +
-      newMessage.channel + '. ' +
-      '(' + moment(Date.now()).format(format) + ') ' +
-      '```' +
-      oldMessage.content +
-      '```' +
-      // 'to' +
-      '```' +
-      newMessage.content +
-      '```'
-    );
+    let embed = new Discord.RichEmbed();
+
+    embed.setColor(0xE67E21);
+    embed.setTitle('Message Edited');
+    embed.addField('User', newMessage.author, true);
+    embed.addField('Channel', newMessage.channel, true);
+
+    embed.addField('Old Message', oldMessage.content);
+    embed.addField('New Message', newMessage.content);
+
+    let embedDate = new Date(Date.now());
+    embed.setTimestamp(embedDate.toISOString());
+
+    messageLogsChannel.sendMessage('', { embed: embed });
   }
 };

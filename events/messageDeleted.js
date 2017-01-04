@@ -1,37 +1,53 @@
-const moment = require('moment');
-const format = require('../momentFormat');
+const Discord = require('discord.js');
 
 module.exports = {
   // Logs a deleted message in #user-logs.
   process: (bot, message) => {
     // Don't repeat bot messages
-    if (message.author.id === bot.user.id || message.author.id === '120897878347481088') return;
+    if (message.author.id === bot.user.id) return;
 
     // Block Erisbot shite
-    if (message.content.startsWith('.music') || message.content.startsWith('.m ')) return;
+    if (message.content.startsWith('.music') ||
+      message.content.startsWith('.m ')) return;
 
-    let channel = bot.channels.find('name', 'message-logs');
+    let messageLogsChannel = bot.channels.find('name', 'message-logs');
 
-    let logMessage = '**Message Deleted**\n' +
-      'Author: ' + message.author + '\n' +
-      'Channel: ' + message.channel + '\n' +
-      'Time: ' + moment(Date.now()).format(format) + '\n';
+    let embed = new Discord.RichEmbed();
+
+    embed.setColor(0xE74C3C);
+    embed.setTitle('Message Deleted');
+    embed.addField('User', message.author, true);
+    embed.addField('Channel', message.channel, true);
+    embed.setTimestamp(message.createdAt);
 
     // Message content
     if (message.content) {
-      logMessage += 'Content:\n\n' + message.content;
+      embed.addField('Content', message.content);
     }
 
     // Attachments
-    if (message.attachments) {
-      if (message.content) {
-        logMessage += '\n\n';
+    let attachmentArray = message.attachments.array();
+    if (attachmentArray.length > 0) {
+
+      // Check the first attachment for an image.
+      // If it has a height, set it as the embed image
+      let first = message.attachments.first();
+      if (first.height) {
+        embed.setImage(first.url);
       }
-      for (let [id, attachment] of message.attachments) {
-        logMessage += 'Attachments:\n\n' + attachment.url;
+
+      // Loop over all, if there's multiple
+      if (attachmentArray.length > 1) {
+        let attachments;
+
+        for (let [id, attachment] of message.attachments) {
+          attachments += attachment.url + '\n';
+        }
+
+        embed.addField('Attachments', attachments);
       }
     }
 
-    channel.sendMessage(logMessage);
+    messageLogsChannel.sendMessage('', { embed: embed });
   }
 };

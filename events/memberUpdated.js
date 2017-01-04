@@ -1,32 +1,59 @@
-const moment = require('moment');
-const format = require('../momentFormat');
+const Discord = require('discord.js');
 
 function usernameUpdate(bot, oldMember, newMember) {
-  let channel = bot.channels.find('name', 'user-logs');
+  let userLogsChannel = bot.channels.find('name', 'user-logs');
 
   let oldMemberName, newMemberName;
 
   if (!oldMember.nickname) {
-    oldMemberName = '**' + oldMember.user.username + '**#' + oldMember.user.discriminator;
+    oldMemberName = oldMember.user.username;
   } else {
-    oldMemberName = '**' + oldMember.nickname + '**#' + oldMember.user.discriminator;
+    oldMemberName = oldMember.nickname;
   }
 
   if (!newMember.nickname) {
-    newMemberName = '**' + newMember.user.username + '**#' + newMember.user.discriminator;
+    newMemberName = newMember.user.username;
   } else {
-    newMemberName = '**' + newMember.nickname + '**#' + newMember.user.discriminator;
+    newMemberName = newMember.nickname;
   }
 
-  channel.sendMessage(
-    oldMemberName + ' is now ' + newMemberName + ' ' +
-    '(' + moment(Date.now()).format(format) + ')'
-  );
+  let embed = new Discord.RichEmbed();
+
+  embed.setColor(0xF1C40E);
+  embed.setTitle('User Changed Nickname');
+  embed.addField('User', newMember);
+  embed.addField('Old Name', oldMemberName, true);
+  embed.addField('New Name', newMemberName, true);
+
+  let embedDate = new Date(Date.now());
+  embed.setTimestamp(embedDate.toISOString());
+
+  userLogsChannel.sendMessage('', { embed: embed });
 }
 
-function memberRoleAdded(guild, newMember) {
-  const generalChannel = guild.channels.find('name', 'general');
-  const userLogsChannel = guild.channels.find('name', 'user-logs');
+function memberRestricted(member) {
+  // Remove the 'Member' role if someone gains the 'Restricted' role.
+  // This is needed because in Discord an 'ALLOW' permission takes precedence
+  // over a 'DENY' permission, which results in the 'ALLOW's from 'Member'
+  // keeping 'Restricted' from working.
+  const memberRole = member.guild.roles.find('name', 'Member');
+  member.removeRole(memberRole)
+    .then(
+        () => {},
+        reason => {
+          // TODO Rejection handler
+          console.error(reason);
+        }
+    )
+    .catch(e => {
+      // TODO Error handler
+      console.error(e);
+    });
+}
+
+function memberRoleAdded(newMember) {
+  const generalChannel = newMember.guild.channels.find('name', 'general');
+  const userLogsChannel = newMember.guild.channels.find('name', 'user-logs');
 
   // Publicly welcome the user
   if (!generalChannel) {
@@ -39,10 +66,17 @@ function memberRoleAdded(guild, newMember) {
   if (!userLogsChannel) {
     console.error('Channel #user-logs doesn\'t exist!');
   } else {
-    userLogsChannel.sendMessage(
-      newMember + ' was granted membership. ' +
-      '(' + moment(Date.now()).format(format) + ')'
-    );
+
+    let embed = new Discord.RichEmbed();
+
+    embed.setColor(0x2ECC71);
+    embed.setTitle('User Granted Membership');
+    embed.addField('User', newMember);
+
+    let embedDate = new Date(Date.now());
+    embed.setTimestamp(embedDate.toISOString());
+
+    userLogsChannel.sendMessage('', { embed: embed });
   }
 
   // DM the user with our welcome message
@@ -59,16 +93,24 @@ function memberRoleAdded(guild, newMember) {
 }
 
 module.exports = {
-  process: (bot, guild, oldMember, newMember) => {
+  process: (bot, oldMember, newMember) => {
+
     // Nickname change
-    //if (oldMember.nickname !== newMember.nickname) {
-    //  usernameUpdate(bot, oldMember, newMember);
-    //}
+    if (oldMember.nickname !== newMember.nickname ||
+      oldMember.user.username !== newMember.user.username) {
+      usernameUpdate(bot, oldMember, newMember);
+    }
+
+    // User gained the 'Restricted' role
+    if (!oldMember.roles.findKey('name', 'Restricted') &&
+          newMember.roles.findKey('name', 'Restricted')) {
+      memberRestricted(newMember);
+    }
 
     // User became a member
     if (!oldMember.roles.findKey('name', 'Member') &&
           newMember.roles.findKey('name', 'Member')) {
-      memberRoleAdded(guild, newMember);
+      memberRoleAdded(newMember);
     }
   }
 };

@@ -1,22 +1,28 @@
-const moment = require('moment');
-const format = require('../momentFormat');
+const Discord = require('discord.js');
 
 module.exports = {
   // Logs a member leaving in #user-logs.
-  process: (bot, guild, member) => {
-    const userLogs = bot.channels.find('name', 'user-logs');
-    const welcomeRoom = bot.channels.find('name', 'welcome-room');
+  process: (bot, member) => {
 
-    userLogs.sendMessage(
-      member + ' left the server.' +
-      ' (' + moment(Date.now()).format(format) + ')'
-    );
+    const userLogsChannel = member.guild.channels.find('name', 'user-logs');
+    const welcomeRoomChannel = member.guild.channels.find('name', 'welcome-room');
+
+    let embed = new Discord.RichEmbed();
+
+    embed.setColor(0x607D8B);
+    embed.setTitle('User Left');
+    embed.addField('User', member);
+
+    let embedDate = new Date(Date.now());
+    embed.setTimestamp(embedDate.toISOString());
+
+    userLogsChannel.sendMessage('', { embed: embed });
 
     // Attempt to find a welcome message for this user in the #welcome-room
     // If one is found within the last 100 messages, delete it. This will also
     // delete any other messages the bot made that mention this user, but
     // that's probably not that big of a concern.
-    welcomeRoom.fetchMessages({limit: 100}).then((messages) => {
+    welcomeRoomChannel.fetchMessages({limit: 100}).then((messages) => {
       messages.forEach((message) => {
         if (message.author.id !== bot.user.id) {
           return;
@@ -32,9 +38,6 @@ module.exports = {
             .catch(console.error);
         }
       })
-    },
-    (_) => {
-      // If this fails, it's no big deal.
     });
   }
 };

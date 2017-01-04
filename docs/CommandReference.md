@@ -53,13 +53,13 @@ This defines if the command can be used in a DM. If this is set to `true` the
 command is processed in DMs. Be wise when allowing use in DMs since you won't
 have a server context and no concept of permissions.
 
-### `.requireRoles` (list of strings)
+### `.requireRoles` (Array of strings)
 If this is defined, the user running the command must have a role in the list
 in order to use the command. An example is to set `requireRoles: ['Admin']`
 for an Admin-only command. A user will get a failure message if they try to
 run a command without any of the needed roles.
 
-### `.onlyIn` (list of strings)
+### `.onlyIn` (Array of strings)
 If this is defined, the command can only be used in the channel names listed
 here. If a user uses the command elsewhere, their message will deleted and they
 will be sent a DM letting them know where they *are* allowed to use the command.

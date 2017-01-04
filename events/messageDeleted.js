@@ -17,7 +17,7 @@ module.exports = {
 
     let embed = new Discord.RichEmbed();
 
-    embed.setColor(0xE67E21);
+    embed.setColor(0xE74C3C);
     embed.setTitle('Message Deleted');
     embed.addField('User', message.author, true);
     embed.addField('Channel', message.channel, true);

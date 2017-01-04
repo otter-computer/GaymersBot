@@ -11,7 +11,7 @@ module.exports = {
     } else {
       let embed = new Discord.RichEmbed();
 
-      embed.setColor(0x2ECC71);
+      embed.setColor(0x3398DB);
       embed.setTitle('User Joined');
       embed.addField('User', member);
 

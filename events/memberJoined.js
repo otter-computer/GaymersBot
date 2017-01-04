@@ -1,9 +1,9 @@
 const Discord = require('discord.js');
 
 module.exports = {
-  process: (bot, guild, member) => {
-    const userLogsChannel = guild.channels.find('name', 'user-logs');
-    const welcomeChannel = guild.channels.find('name', 'welcome-room');
+  process: (bot, member) => {
+    const userLogsChannel = member.guild.channels.find('name', 'user-logs');
+    const welcomeChannel = member.guild.channels.find('name', 'welcome-room');
 
     // Log the user joining to #user-logs
     if (!userLogsChannel) {

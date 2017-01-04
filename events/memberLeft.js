@@ -2,9 +2,9 @@ const Discord = require('discord.js');
 
 module.exports = {
   // Logs a member leaving in #user-logs.
-  process: (bot, guild, member) => {
-    const userLogsChannel = bot.channels.find('name', 'user-logs');
-    const welcomeRoomChannel = bot.channels.find('name', 'welcome-room');
+  process: (bot, member) => {
+    const userLogsChannel = member.guild.channels.find('name', 'user-logs');
+    const welcomeRoomChannel = member.guild.channels.find('name', 'welcome-room');
 
     let embed = new Discord.RichEmbed();
 

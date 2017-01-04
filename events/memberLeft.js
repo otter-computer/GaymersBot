@@ -8,7 +8,7 @@ module.exports = {
 
     let embed = new Discord.RichEmbed();
 
-    embed.setColor(0x3398DB);
+    embed.setColor(0x607D8B);
     embed.setTitle('User Left');
     embed.addField('User', member);
 

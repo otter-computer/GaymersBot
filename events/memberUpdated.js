@@ -24,6 +24,26 @@ function usernameUpdate(bot, oldMember, newMember) {
   );
 }
 
+function memberRestricted(member) {
+  // Remove the 'Member' role if someone gains the 'Restricted' role.
+  // This is needed because in Discord an 'ALLOW' permission takes precedence
+  // over a 'DENY' permission, which results in the 'ALLOW's from 'Member'
+  // keeping 'Restricted' from working.
+  const memberRole = member.guild.roles.find('name', 'Member');
+  member.removeRole(memberRole)
+    .then(
+        () => {},
+        reason => {
+          // TODO Rejection handler
+          console.error(reason);
+        }
+    )
+    .catch(e => {
+      // TODO Error handler
+      console.error(e);
+    });
+}
+
 function memberRoleAdded(newMember) {
   const generalChannel = newMember.guild.channels.find('name', 'general');
   const userLogsChannel = newMember.guild.channels.find('name', 'user-logs');
@@ -64,6 +84,12 @@ module.exports = {
     //if (oldMember.nickname !== newMember.nickname) {
     //  usernameUpdate(bot, oldMember, newMember);
     //}
+
+    // User gained the 'Restricted' role
+    if (!oldMember.roles.findKey('name', 'Restricted') &&
+          newMember.roles.findKey('name', 'Restricted')) {
+      memberRestricted(newMember);
+    }
 
     // User became a member
     if (!oldMember.roles.findKey('name', 'Member') &&

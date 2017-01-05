@@ -1,7 +1,7 @@
 const splitargs = require('splitargs');
 
 module.exports = {
-  usage: '[Option 1] [Option 2] [etc]',
+  usage: '["Option 1"] ["Option 2"] etc',
   description: 'Let DiscoBot choose for you.',
   allowDM: true,
   process: (bot, message) => {
@@ -19,9 +19,9 @@ module.exports = {
     let choices = splitargs(message.content);
     choices.shift();
 
-    let choice = choices[Math.floor(Math.random() * choices.length)];
+    let choice = choices.random();
 
-    let response = responses[Math.floor(Math.random() * responses.length)];
+    let response = responses.random();
 
     message.reply(response.replace('%', choice));
   }

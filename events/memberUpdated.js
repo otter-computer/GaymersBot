@@ -1,35 +1,50 @@
 const Discord = require('discord.js');
 
 function usernameUpdate(bot, oldMember, newMember) {
-  let userLogsChannel = bot.channels.find('name', 'user-logs');
+  const userLogsChannel = bot.channels.find('name', 'user-logs');
 
-  let oldMemberName, newMemberName;
-
-  if (!oldMember.nickname) {
-    oldMemberName = oldMember.user.username;
-  } else {
-    oldMemberName = oldMember.nickname;
-  }
-
-  if (!newMember.nickname) {
-    newMemberName = newMember.user.username;
-  } else {
-    newMemberName = newMember.nickname;
-  }
-
+  // Create the embed
   let embed = new Discord.RichEmbed();
-
   embed.setColor(0xF1C40E);
-  embed.setTitle('User Changed Nickname');
   embed.addField('User', newMember);
-  embed.addField('Old Name', oldMemberName, true);
-  embed.addField('New Name', newMemberName, true);
 
   let embedDate = new Date(Date.now());
   embed.setTimestamp(embedDate.toISOString());
 
+  // User adds a nicknameUser changed account username
+  if (oldMember.user.username !== newMember.user.username) {
+    embed.setTitle('User Changed Account Username');
+
+    embed.addField('Old Username', oldMember.user.username, true);
+    embed.addField('New Username', newMember.user.username, true);
+  }
+
+  // User adds a nickname
+  if (!oldMember.nickname && newMember.nickname) {
+    embed.setTitle('User Added Nickname');
+
+    embed.addField('New Nickname', newMember.nickname, true);
+  }
+
+  // User removes a nickname
+  if (oldMember.nickname && !newMember.nickname) {
+    embed.setTitle('User Removed Nickname');
+
+    embed.addField('Old Nickname', oldMember.nickname, true);
+  }
+
+  if (oldMember.nickname && newMember.nickname &&
+    oldMember.nickname != newMember.nickname) {
+    embed.setTitle('User Changed Nickname');
+
+    embed.addField('Old Nickname', oldMember.nickname, true);
+    embed.addField('New Nickname', newMember.nickname, true);
+  }
+
   userLogsChannel.sendMessage('', { embed: embed });
 }
+
+
 
 function memberRestricted(member) {
   // Remove the 'Member' role if someone gains the 'Restricted' role.
@@ -39,17 +54,19 @@ function memberRestricted(member) {
   const memberRole = member.guild.roles.find('name', 'Member');
   member.removeRole(memberRole)
     .then(
-        () => {},
-        reason => {
-          // TODO Rejection handler
-          console.error(reason);
-        }
+    () => { },
+    reason => {
+      // TODO Rejection handler
+      console.error(reason);
+    }
     )
     .catch(e => {
       // TODO Error handler
       console.error(e);
     });
 }
+
+
 
 function memberRoleAdded(newMember) {
   const generalChannel = newMember.guild.channels.find('name', 'general');
@@ -92,6 +109,8 @@ function memberRoleAdded(newMember) {
   );
 }
 
+
+
 module.exports = {
   process: (bot, oldMember, newMember) => {
 
@@ -103,13 +122,13 @@ module.exports = {
 
     // User gained the 'Restricted' role
     if (!oldMember.roles.findKey('name', 'Restricted') &&
-          newMember.roles.findKey('name', 'Restricted')) {
+      newMember.roles.findKey('name', 'Restricted')) {
       memberRestricted(newMember);
     }
 
     // User became a member
     if (!oldMember.roles.findKey('name', 'Member') &&
-          newMember.roles.findKey('name', 'Member')) {
+      newMember.roles.findKey('name', 'Member')) {
       memberRoleAdded(newMember);
     }
   }

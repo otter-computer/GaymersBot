@@ -84,7 +84,7 @@ events.messageUpdated = require('./events/messageUpdated');
 const cronJobs = {};
 
 // Import cron tasks
-cronJobs.timeout = require('./cronjobs/check-timeout');
+cronJobs.timeout = require('./cronjobs/checkTimeout');
 
 // Cron
 cron.schedule('*/5 * * * *', function() {

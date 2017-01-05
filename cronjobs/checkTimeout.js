@@ -1,11 +1,10 @@
+const Discord = require('discord.js');
 const firebase = require('firebase');
-const moment = require('moment');
-const format = require('../momentFormat');
 
 module.exports = {
   process: (bot) => {
     const guild = bot.guilds.array()[0];
-    const userLogs = guild.channels.find('name', 'user-logs');
+    const userLogsChannel = guild.channels.find('name', 'user-logs');
 
     let getData = firebase.database().ref('/admin/timeout/');
 
@@ -23,6 +22,7 @@ module.exports = {
           if (expires < Date.now() && member) {
             let currentRoles = [];
             let restrictedRole = guild.roles.find('name', 'Restricted');
+            let memberRole = guild.roles.find('name', 'Member');
 
             // Iterate roles
             for (let [id, currentRole] of member.roles) {
@@ -35,6 +35,9 @@ module.exports = {
               currentRoles.push(currentRole);
             }
 
+            // Give them back the member role
+            currentRoles.push(memberRole);
+
             // Reapply the roles!
             member.setRoles(currentRoles);
 
@@ -42,7 +45,16 @@ module.exports = {
             updates['/admin/timeout/' + user] = null;
 
             // Log removal in user-logs
-            userLogs.sendMessage(member + ' has been removed from timeout. (' + moment(Date.now()).format(format) + ')');
+            let embed = new Discord.RichEmbed();
+
+            embed.setColor(0xE67E21);
+            embed.setTitle('User Removed From Timeout');
+            embed.addField('User', member, true);
+
+            let embedDate = new Date(Date.now());
+            embed.setTimestamp(embedDate.toISOString());
+
+            userLogsChannel.sendMessage('', { embed: embed });
           }
         }
 

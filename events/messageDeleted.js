@@ -12,7 +12,7 @@ module.exports = {
 
     let messageLogsChannel = bot.channels.find('name', 'message-logs');
 
-    let embed = new Discord.RichEmbed();
+    const embed = new Discord.RichEmbed();
 
     embed.setColor(0xE74C3C);
     embed.setTitle('Message Deleted');

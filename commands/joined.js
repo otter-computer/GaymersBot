@@ -21,7 +21,7 @@ module.exports = {
         joined = REYNBOW.joinedAt;
       }
 
-      let embed = new Discord.RichEmbed();
+      const embed = new Discord.RichEmbed();
 
       embed.setColor(0x3398DB);
       embed.setTitle(member.displayName + ' joined ' + moment(joined).fromNow());

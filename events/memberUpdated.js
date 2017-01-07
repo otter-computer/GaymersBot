@@ -4,14 +4,14 @@ function usernameUpdate(bot, oldMember, newMember) {
   const userLogsChannel = bot.channels.find('name', 'user-logs');
 
   // Create the embed
-  let embed = new Discord.RichEmbed();
+  const embed = new Discord.RichEmbed();
   embed.setColor(0xF1C40E);
   embed.addField('User', newMember);
 
-  let embedDate = new Date(Date.now());
-  embed.setTimestamp(embedDate.toISOString());
+  const embedDate = new Date(Date.now()).toISOString();
+  embed.setTimestamp(embedDate);
 
-  // User adds a nicknameUser changed account username
+  // User changed account username
   if (oldMember.user.username !== newMember.user.username) {
     embed.setTitle('User Changed Account Username');
 
@@ -54,11 +54,11 @@ function memberRestricted(member) {
   const memberRole = member.guild.roles.find('name', 'Member');
   member.removeRole(memberRole)
     .then(
-    () => { },
-    reason => {
-      // TODO Rejection handler
-      console.error(reason);
-    }
+      () => { },
+      reason => {
+        // TODO Rejection handler
+        console.error(reason);
+      }
     )
     .catch(e => {
       // TODO Error handler
@@ -84,14 +84,14 @@ function memberRoleAdded(newMember) {
     console.error('Channel #user-logs doesn\'t exist!');
   } else {
 
-    let embed = new Discord.RichEmbed();
+    const embed = new Discord.RichEmbed();
 
     embed.setColor(0x2ECC71);
     embed.setTitle('User Granted Membership');
     embed.addField('User', newMember);
 
-    let embedDate = new Date(Date.now());
-    embed.setTimestamp(embedDate.toISOString());
+    const embedDate = new Date(Date.now()).toISOString();
+    embed.setTimestamp(embedDate);
 
     userLogsChannel.sendMessage('', { embed: embed });
   }

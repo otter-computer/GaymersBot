@@ -21,8 +21,8 @@ module.exports = {
           // If timeout has expired
           if (expires < Date.now() && member) {
             let currentRoles = [];
-            let restrictedRole = guild.roles.find('name', 'Restricted');
-            let memberRole = guild.roles.find('name', 'Member');
+            const restrictedRole = guild.roles.find('name', 'Restricted');
+            const memberRole = guild.roles.find('name', 'Member');
 
             // Iterate roles
             for (let [id, currentRole] of member.roles) {
@@ -45,14 +45,14 @@ module.exports = {
             updates['/admin/timeout/' + user] = null;
 
             // Log removal in user-logs
-            let embed = new Discord.RichEmbed();
+            const embed = new Discord.RichEmbed();
 
             embed.setColor(0xE67E21);
             embed.setTitle('User Removed From Timeout');
             embed.addField('User', member, true);
 
-            let embedDate = new Date(Date.now());
-            embed.setTimestamp(embedDate.toISOString());
+            const embedDate = new Date(Date.now()).toISOString();
+            embed.setTimestamp(embedDate);
 
             userLogsChannel.sendMessage('', { embed: embed });
           }

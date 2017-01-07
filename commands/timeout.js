@@ -19,12 +19,14 @@ module.exports = {
     const timeoutStart = Date.now();
 
     // Let's grab just the time...
-    let timeoutLengthArray = splitargs(message.content);
+    const timeoutLengthArray = splitargs(message.content);
     timeoutLengthArray.shift();
     timeoutLengthArray.shift();
     let timeoutLength = timeoutLengthArray[0];
 
-    if (!timeoutLength) timeoutLength = '30m';
+    if (!timeoutLength) {
+      timeoutLength = '30m';
+    }
 
     const timeoutEnd = timeoutStart + juration.parse(timeoutLength) * 1000;
 
@@ -36,7 +38,7 @@ module.exports = {
       return;
     }
 
-    let user = message.guild.member(message.mentions.users.first());
+    const user = message.guild.member(message.mentions.users.first());
     let currentRoles = [];
 
     // Iterate roles to remove 18+ and Member
@@ -69,7 +71,7 @@ module.exports = {
     firebase.database().ref().update(updates);
 
     // Send a confirmation message to #user-logs
-    let embed = new Discord.RichEmbed();
+    const embed = new Discord.RichEmbed();
 
     embed.setColor(0xE67E21);
     embed.setTitle('User Given Timeout');
@@ -79,8 +81,8 @@ module.exports = {
 
     embed.setFooter('Timeout End');
 
-    let embedDate = new Date(timeoutEnd);
-    embed.setTimestamp(embedDate.toISOString());
+    const embedDate = new Date(timeoutEnd).toISOString();
+    embed.setTimestamp(embedDate);
 
     userLogsChannel.sendMessage('', { embed: embed });
   }

@@ -7,14 +7,14 @@ module.exports = {
     const userLogsChannel = member.guild.channels.find('name', 'user-logs');
     const welcomeRoomChannel = member.guild.channels.find('name', 'welcome-room');
 
-    let embed = new Discord.RichEmbed();
+    const embed = new Discord.RichEmbed();
 
     embed.setColor(0x607D8B);
     embed.setTitle('User Left');
     embed.addField('User', member);
 
-    let embedDate = new Date(Date.now());
-    embed.setTimestamp(embedDate.toISOString());
+    const embedDate = new Date(Date.now()).toISOString();
+    embed.setTimestamp(embedDate);
 
     userLogsChannel.sendMessage('', { embed: embed });
 

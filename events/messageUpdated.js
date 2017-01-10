@@ -8,7 +8,7 @@ module.exports = {
 
     let messageLogsChannel = bot.channels.find('name', 'message-logs');
 
-    let embed = new Discord.RichEmbed();
+    const embed = new Discord.RichEmbed();
 
     embed.setColor(0xE67E21);
     embed.setTitle('Message Edited');
@@ -18,8 +18,8 @@ module.exports = {
     embed.addField('Old Message', oldMessage.content);
     embed.addField('New Message', newMessage.content);
 
-    let embedDate = new Date(Date.now());
-    embed.setTimestamp(embedDate.toISOString());
+    const embedDate = new Date(Date.now()).toISOString();
+    embed.setTimestamp(embedDate);
 
     messageLogsChannel.sendMessage('', { embed: embed });
   }

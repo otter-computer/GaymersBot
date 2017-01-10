@@ -12,7 +12,7 @@ module.exports = {
 
     let messageLogsChannel = bot.channels.find('name', 'message-logs');
 
-    let embed = new Discord.RichEmbed();
+    const embed = new Discord.RichEmbed();
 
     embed.setColor(0xE74C3C);
     embed.setTitle('Message Deleted');
@@ -33,7 +33,7 @@ module.exports = {
       // If it has a height, set it as the embed image
       let first = message.attachments.first();
       if (first.height) {
-        embed.setImage(first.url);
+        embed.setImage(first.proxyURL);
       }
 
       // Loop over all, if there's multiple
@@ -41,7 +41,7 @@ module.exports = {
         let attachments;
 
         for (let [id, attachment] of message.attachments) {
-          attachments += attachment.url + '\n';
+          attachments += attachment.proxyURL + '\n';
         }
 
         embed.addField('Attachments', attachments);

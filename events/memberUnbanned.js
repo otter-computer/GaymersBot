@@ -5,14 +5,14 @@ module.exports = {
   process: (bot, guild, member) => {
     let userLogsChannel = bot.channels.find('name', 'user-logs');
 
-    let embed = new Discord.RichEmbed();
+    const embed = new Discord.RichEmbed();
 
     embed.setColor(0x9B59B6);
     embed.setTitle('User Unbanned');
     embed.addField('User', member);
 
-    let embedDate = new Date(Date.now());
-    embed.setTimestamp(embedDate.toISOString());
+    const embedDate = new Date(Date.now()).toISOString();
+    embed.setTimestamp(embedDate);
 
     userLogsChannel.sendMessage('', { embed: embed });
   }

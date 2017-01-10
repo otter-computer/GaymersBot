@@ -1,13 +1,12 @@
+const Discord = require('discord.js');
 const moment = require('moment');
 const format = require('../momentFormat');
 
 // For the special little snowflake...
 const REYNBOW = {
   'id': '123395731548536832',
-  'joinedAt': moment('2015-12-27T01:00:00Z'),
-  'message': '{{USER}} BOUNCED IN HERE LIKE A FEISTY \'ROO ABOUT ' +
-      '{{DURATION}} ({{TIMESTAMP}}), MATE.'
-}
+  'joinedAt': '2015-12-27T01:00:00Z'
+};
 
 module.exports = {
   usage: '[@user]',
@@ -15,19 +14,29 @@ module.exports = {
   allowDM: false,
   process: (bot, message) => {
     message.mentions.users.forEach(user => {
-      // Handle the snowflake case
+      const member = message.guild.member(user);
+      let joined = moment(member.joinedAt);
+
       if (user.id === REYNBOW.id) {
-        let reply = REYNBOW.message
-          .replace('{{USER}}', user)
-          .replace('{{DURATION}}', REYNBOW.joinedAt.fromNow())
-          .replace('{{TIMESTAMP}}', REYNBOW.joinedAt.format(format));
-        message.channel.sendMessage(reply.toUpperCase());
-        return;
+        joined = REYNBOW.joinedAt;
       }
 
-      const joined = moment(message.guild.member(user).joinedAt);
-      message.channel.sendMessage(user + ' joined ' + joined.fromNow() +
-          ' (' + joined.format(format) + ')');
+      const embed = new Discord.RichEmbed();
+
+      embed.setColor(0x3398DB);
+      embed.setTitle(member.displayName + ' joined ' + moment(joined).fromNow());
+
+      if (user.id === REYNBOW.id) {
+        embed.setTitle(member.displayName.toUpperCase() +
+          ' BOUNCED IN HERE LIKE A FEISTY \'ROO ABOUT ' +
+          moment(joined).fromNow().toUpperCase() + ', MATE.');
+      }
+
+      embed.addField('User', member);
+
+      embed.setTimestamp(joined);
+
+      message.channel.sendMessage('', { embed: embed });
     });
   }
 };

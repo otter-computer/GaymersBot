@@ -9,14 +9,14 @@ module.exports = {
     if (!userLogsChannel) {
       console.error('Channel #user-logs doesn\'t exist!');
     } else {
-      let embed = new Discord.RichEmbed();
+      const embed = new Discord.RichEmbed();
 
       embed.setColor(0x3398DB);
       embed.setTitle('User Joined');
       embed.addField('User', member);
 
-      let embedDate = new Date(Date.now());
-      embed.setTimestamp(embedDate.toISOString());
+      const embedDate = new Date(Date.now()).toISOString();
+      embed.setTimestamp(embedDate);
 
       userLogsChannel.sendMessage('', { embed: embed });
     }

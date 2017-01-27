@@ -75,6 +75,7 @@ const events = {};
 events.memberBanned = require('./events/memberBanned');
 events.memberJoined = require('./events/memberJoined');
 events.memberLeft = require('./events/memberLeft');
+events.memberStats = require('./events/memberStats');
 events.memberUnbanned = require('./events/memberUnbanned');
 events.memberUpdated = require('./events/memberUpdated');
 events.messageDeleted = require('./events/messageDeleted');
@@ -301,6 +302,14 @@ bot.on('guildMemberUpdate', (oldMember, newMember) => {
 bot.on('messageDelete', (message) => {
   try {
     events.messageDeleted.process(bot, message);
+  } catch (e) {
+    console.error(e.stack);
+  }
+});
+
+bot.on('presenceUpdate', (oldMember, newMember) => {
+  try {
+    events.memberStats.process(bot, oldMember, newMember);
   } catch (e) {
     console.error(e.stack);
   }

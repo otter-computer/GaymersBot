@@ -12,13 +12,17 @@ module.exports = {
       const embed = new Discord.RichEmbed();
 
       embed.setColor(0x3398DB);
-      embed.setTitle('User Joined');
-      embed.addField('User', member);
+
+      embed.setAuthor(
+        member.displayName,
+        member.avatarURL, '');
 
       const embedDate = new Date(Date.now()).toISOString();
       embed.setTimestamp(embedDate);
 
-      userLogsChannel.sendMessage('', { embed: embed });
+      let response = member + ' joined.';
+
+      userLogsChannel.sendMessage(response, { embed: embed });
     }
 
     // Add a little message to #welcome-room to grab the user's attention

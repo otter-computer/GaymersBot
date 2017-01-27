@@ -8,12 +8,16 @@ module.exports = {
     const embed = new Discord.RichEmbed();
 
     embed.setColor(0x9B59B6);
-    embed.setTitle('User Unbanned');
-    embed.addField('User', member);
+
+    embed.setAuthor(
+      member.username,
+      member.avatarURL, '');
 
     const embedDate = new Date(Date.now()).toISOString();
     embed.setTimestamp(embedDate);
 
-    userLogsChannel.sendMessage('', { embed: embed });
+    let response = member + ' unbanned.';
+
+    userLogsChannel.sendMessage(response, { embed: embed });
   }
 };

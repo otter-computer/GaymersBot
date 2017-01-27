@@ -8,12 +8,16 @@ module.exports = {
     const embed = new Discord.RichEmbed();
 
     embed.setColor(0xE74C3C);
-    embed.setTitle('User Banned');
-    embed.addField('User', member);
+
+    embed.setAuthor(
+      member.username,
+      member.avatarURL, '');
 
     const embedDate = new Date(Date.now()).toISOString();
     embed.setTimestamp(embedDate);
 
-    userLogsChannel.sendMessage('', { embed: embed });
+    let response = member + ' banned.';
+
+    userLogsChannel.sendMessage(response, { embed: embed });
   }
 };

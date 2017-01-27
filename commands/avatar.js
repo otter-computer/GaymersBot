@@ -3,12 +3,22 @@ module.exports = {
   description: 'See someone\'s avatar.',
   allowDM: true,
   process: (bot, message) => {
-    for (var [id, user] of message.mentions.users) {
-      if (user.avatarURL) {
-        message.channel.sendMessage(user + '\'s avatar: ' + user.avatarURL);
+    if (!message.mentions.users.first() ||
+        message.mentions.users.first() === message.author) {
+      if (message.author.avatarURL) {
+        message.channel.sendMessage('Your avatar: ' +
+          message.author.avatarURL);
       } else {
-        message.channel.sendMessage(user + ' doesn\'t have an avatar :sob:');
+        message.reply('You don\'t have an avatar :sob:');
       }
+      return;
+    }
+
+    const user = message.mentions.users.first();
+    if (user.avatarURL) {
+      message.channel.sendMessage(user + '\'s avatar: ' + user.avatarURL);
+    } else {
+      message.channel.sendMessage(user + ' doesn\'t have an avatar :sob:');
     }
   }
 };

@@ -1,11 +1,11 @@
 const Discord = require('discord.js');
 const firebase = require('firebase');
 const splitargs = require('splitargs');
-const juration = require('juration');
+const Duration = require('duration-js');
 
 module.exports = {
   usage: '[@user] [30m]',
-  description: 'ADMIN ONLY: Give a user the \'Restricted\' role for 30 minutes. Will also remove the \'18+\' role.',
+  description: 'ADMIN ONLY: Give a user the \'Restricted\' role  (default: 30 minutes). Will also remove the \'18+\' and \'Member\' role.',
   allowDM: false,
   requireRoles: ['Admin', 'Moderator'],
   process: (bot, message) => {
@@ -22,13 +22,19 @@ module.exports = {
     const timeoutLengthArray = splitargs(message.content);
     timeoutLengthArray.shift();
     timeoutLengthArray.shift();
-    let timeoutLength = timeoutLengthArray[0];
+    let timeoutLength;
 
-    if (!timeoutLength) {
-      timeoutLength = '30m';
+    if (!timeoutLengthArray[0]) {
+      timeoutLength = new Duration('30m');
+    } else {
+      try {
+        timeoutLength = new Duration(timeoutLengthArray[0]);
+      } catch (error) {
+        timeoutLength = new Duration('30m');
+      }
     }
 
-    const timeoutEnd = timeoutStart + juration.parse(timeoutLength) * 1000;
+    const timeoutEnd = timeoutStart + timeoutLength;
 
     // Updates to be pushed to firebase
     let updates = {};
@@ -76,8 +82,7 @@ module.exports = {
     embed.setColor(0xE67E21);
     embed.setTitle('User Given Timeout');
     embed.addField('User', user, true);
-    embed.addField('Timeout Length',
-      juration.stringify(juration.parse(timeoutLength)), true);
+    embed.addField('Timeout Length', timeoutLength.toString(), true);
 
     embed.setFooter('Timeout End');
 

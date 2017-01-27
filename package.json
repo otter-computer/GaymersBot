@@ -12,9 +12,9 @@
   "license": "GPL-2.0",
   "dependencies": {
     "discord.js": "^11.0.0",
+    "duration-js": "^3.9.2",
     "erlpack": "github:hammerandchisel/erlpack",
     "firebase": "^3.3.0",
-    "juration": "0.0.1",
     "moment": "^2.13.0",
     "moment-timezone": "^0.5.4",
     "node-cron": "^1.1.2",

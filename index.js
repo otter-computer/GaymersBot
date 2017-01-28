@@ -75,11 +75,11 @@ const events = {};
 events.memberBanned = require('./events/memberBanned');
 events.memberJoined = require('./events/memberJoined');
 events.memberLeft = require('./events/memberLeft');
-events.memberStats = require('./events/memberStats');
 events.memberUnbanned = require('./events/memberUnbanned');
 events.memberUpdated = require('./events/memberUpdated');
 events.messageDeleted = require('./events/messageDeleted');
 events.messageUpdated = require('./events/messageUpdated');
+events.presenceUpdate = require('./events/presenceUpdate');
 
 // Cron
 const cronJobs = {};
@@ -309,7 +309,7 @@ bot.on('messageDelete', (message) => {
 
 bot.on('presenceUpdate', (oldMember, newMember) => {
   try {
-    events.memberStats.process(bot, oldMember, newMember);
+    events.presenceUpdate.process(bot, oldMember, newMember);
   } catch (e) {
     console.error(e.stack);
   }

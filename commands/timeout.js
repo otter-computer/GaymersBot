@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const firebase = require('firebase');
+const AWS = require('aws-sdk');
 const splitargs = require('splitargs');
 const Duration = require('duration-js');
 
@@ -36,9 +36,6 @@ module.exports = {
 
     const timeoutEnd = timeoutStart + timeoutLength;
 
-    // Updates to be pushed to firebase
-    let updates = {};
-
     if (!message.mentions.users.first()) {
       message.reply('Usage: !timeout ' + module.exports.usage);
       return;
@@ -70,11 +67,26 @@ module.exports = {
     // Reapply the roles!
     user.setRoles(currentRoles);
 
-    // Set timeout release time to now + 30 mins in ms
-    updates['/admin/timeout/' + user.id] = timeoutEnd;
+    // AWS DynamoDB connection
+    const dbClient = new AWS.DynamoDB.DocumentClient();
 
-    // Push updates to firebase
-    firebase.database().ref().update(updates);
+    // Updates to be pushed to AWS DynamoDB
+    const updates = {
+      TableName: 'discobot',
+
+      Item: {
+        'id': user.id,
+        'timeoutStart': timeoutStart,
+        'timeoutEnd': timeoutEnd
+      }
+    };
+
+    // Push updates to AWS DynamoDB
+    dbClient.put(updates, (error, data) => {
+      if (error) {
+        console.log('Error adding data', JSON.stringify(error, null, 2));
+      }
+    });
 
     // Send a confirmation message to #user-logs
     const embed = new Discord.RichEmbed();

@@ -1,22 +1,27 @@
 const Discord = require('discord.js');
-const firebase = require('firebase');
+const AWS = require('aws-sdk');
 
 module.exports = {
   process: (bot) => {
     const guild = bot.guilds.array()[0];
     const userLogsChannel = guild.channels.find('name', 'user-logs');
 
-    let getData = firebase.database().ref('/admin/timeout/');
+    // AWS DynamoDB connection
+    const dbClient = new AWS.DynamoDB.DocumentClient();
 
-    getData.on('value', (snapshot) => {
-      if (snapshot.val()) {
-        let data = snapshot.val();
+    // Scan table for all data
+    const params = {
+      TableName: 'discobot'
+    };
 
-        let updates = {};
+    dbClient.scan(params, (error, data) => {
+      if (error) {
+        console.log('Error scanning table', JSON.stringify(error, null, 2));
+      } else {
 
-        for (let user in data) {
-          let member = guild.member(user);
-          let expires = data[user];
+        for (let user in data.Items) {
+          let member = guild.member(data.Items[user].id);
+          let expires = data.Items[user].timeoutEnd;
 
           // If timeout has expired
           if (expires < Date.now() && member) {
@@ -41,25 +46,37 @@ module.exports = {
             // Reapply the roles!
             member.setRoles(currentRoles);
 
-            // Remove from firebase
-            updates['/admin/timeout/' + user] = null;
+            let updates = {
+              TableName: 'discobot',
+
+              Key: {
+                'id': data.Items[user].id
+              }
+            };
+
+            // Delete record from AWS DynamoDB
+            dbClient.delete(updates, (error, data) => {
+              if (error) {
+                console.log('Error deleting item', JSON.stringify(error, null, 2));
+              } else {
+                console.log('Delete successful', JSON.stringify(data, null, 2));
+              }
+            });
 
             // Log removal in user-logs
             const embed = new Discord.RichEmbed();
 
             embed.setColor(0xE67E21);
-            embed.setTitle('User Removed From Timeout');
             embed.addField('User', member, true);
 
             const embedDate = new Date(Date.now()).toISOString();
             embed.setTimestamp(embedDate);
 
-            userLogsChannel.sendMessage('', { embed: embed });
+            const response = member + 'removed from timeout';
+
+            userLogsChannel.sendMessage(response, { embed: embed });
           }
         }
-
-        // Push updates to firebase
-        firebase.database().ref().update(updates);
       }
     });
   }

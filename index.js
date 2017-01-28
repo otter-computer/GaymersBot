@@ -1,6 +1,6 @@
 const cron = require('node-cron');
 const Discord = require('discord.js');
-const firebase = require('firebase');
+const AWS = require('aws-sdk');
 const moment = require('moment');
 
 const format = require('./momentFormat');
@@ -33,15 +33,11 @@ function cleanup() {
 process.on('SIGINT', cleanup);
 process.on('SIGTERM', cleanup);
 
-// Firebase
-const config = {
-  apiKey: process.env.FIREBASE_API,
-  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
-  databaseURL: process.env.FIREBASE_DATABASE_URL,
-  storageBucket: process.env.FIREBASE_STORAGE_BUCKET
-};
-
-firebase.initializeApp(config);
+// AWS SDK
+AWS.config.update({
+  region: 'eu-west-1',
+  endpoint: 'dynamodb.eu-west-1.amazonaws.com'
+});
 
 // Commands
 const commands = {};

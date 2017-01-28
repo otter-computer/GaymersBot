@@ -1,81 +1,106 @@
-const firebase = require('firebase');
-const moment = require('moment');
-const format = require('../momentFormat');
+const Discord = require('discord.js');
+const AWS = require('aws-sdk');
+const splitargs = require('splitargs');
+const Duration = require('duration-js');
 
 module.exports = {
-  usage: '[@user]',
-  description: 'ADMIN ONLY: Give a user the \'Restricted\' role for 30 minutes. Will also remove the \'18+\' role.',
+  usage: '[@user] [30m]',
+  description: 'ADMIN ONLY: Give a user the \'Restricted\' role  (default: 30 minutes). Will also remove the \'18+\' and \'Member\' role.',
   allowDM: false,
   requireRoles: ['Admin', 'Moderator'],
   process: (bot, message) => {
-    let timeoutEnd = Date.now() + 1800000;
-
-    const userLogs = bot.channels.find('name', 'user-logs');
+    const userLogsChannel = bot.channels.find('name', 'user-logs');
 
     const restrictedRole = message.guild.roles.find('name', 'Restricted');
     const over18Role = message.guild.roles.find('name', '18+');
     const memberRole = message.guild.roles.find('name', 'Member');
 
-    // Updates to be pushed to firebase
-    let updates = {};
+    // Calculate the end time
+    const timeoutStart = Date.now();
+
+    // Let's grab just the time...
+    const timeoutLengthArray = splitargs(message.content);
+    timeoutLengthArray.shift();
+    timeoutLengthArray.shift();
+    let timeoutLength;
+
+    if (!timeoutLengthArray[0]) {
+      timeoutLength = new Duration('30m');
+    } else {
+      try {
+        timeoutLength = new Duration(timeoutLengthArray[0]);
+      } catch (error) {
+        timeoutLength = new Duration('30m');
+      }
+    }
+
+    const timeoutEnd = timeoutStart + timeoutLength;
 
     if (!message.mentions.users.first()) {
       message.reply('Usage: !timeout ' + module.exports.usage);
       return;
     }
 
-    for (var [id, user] of message.mentions.users) {
+    const user = message.guild.member(message.mentions.users.first());
+    let currentRoles = [];
 
-      let member = message.guild.member(user);
-      let currentRoles = [];
+    // Iterate roles to remove 18+ and Member
+    for (let [id, currentRole] of user.roles) {
 
-      // Iterate roles
-      for (let [id, currentRole] of member.roles) {
-
-        // Check for 18+ role
-        if (currentRole === over18Role) {
-          continue;
-        }
-
-        // Leave out the Member role since this makes the restriction to
-        // #appeals not work.
-        if (currentRole === memberRole) {
-          continue;
-        }
-
-        currentRoles.push(currentRole);
+      // Check for 18+ role
+      if (currentRole === over18Role) {
+        continue;
       }
 
-      // Add restricted role
-      currentRoles.push(restrictedRole);
-
-      // Reapply the roles!
-      member.setRoles(currentRoles);
-
-      // Set timeout release time to now + 30 mins in ms
-      updates['/admin/timeout/' + user.id] = timeoutEnd;
-    }
-
-    // Push updates to firebase
-    firebase.database().ref().update(updates);
-
-    // Confirmation response
-    let response = '';
-
-    let mentions = message.mentions.users.array();
-
-    if (mentions.length === 1) {
-      response += mentions[0] + ' is';
-    } else {
-      for (let i = 0; i < mentions.length; i++) {
-        response += mentions[i] + ' ';
+      // Leave out the Member role since this makes the restriction to
+      // #appeals not work.
+      if (currentRole === memberRole) {
+        continue;
       }
-      response += 'are';
+
+      currentRoles.push(currentRole);
     }
 
-    response += ' on a timeout for 30 minutes.';
-    message.reply(response);
+    // Add restricted role
+    currentRoles.push(restrictedRole);
 
-    userLogs.sendMessage(response + ' (' + moment(Date.now()).format(format) + ') until (' + moment(timeoutEnd).format(format) + ')');
+    // Reapply the roles!
+    user.setRoles(currentRoles);
+
+    // AWS DynamoDB connection
+    const dbClient = new AWS.DynamoDB.DocumentClient();
+
+    // Updates to be pushed to AWS DynamoDB
+    const updates = {
+      TableName: 'discobot',
+
+      Item: {
+        'id': user.id,
+        'timeoutStart': timeoutStart,
+        'timeoutEnd': timeoutEnd
+      }
+    };
+
+    // Push updates to AWS DynamoDB
+    dbClient.put(updates, (error, data) => {
+      if (error) {
+        console.log('Error adding data', JSON.stringify(error, null, 2));
+      }
+    });
+
+    // Send a confirmation message to #user-logs
+    const embed = new Discord.RichEmbed();
+
+    embed.setColor(0xE67E21);
+    embed.setTitle('User Given Timeout');
+    embed.addField('User', user, true);
+    embed.addField('Timeout Length', timeoutLength.toString(), true);
+
+    embed.setFooter('Timeout End');
+
+    const embedDate = new Date(timeoutEnd).toISOString();
+    embed.setTimestamp(embedDate);
+
+    userLogsChannel.sendMessage('', { embed: embed });
   }
 };

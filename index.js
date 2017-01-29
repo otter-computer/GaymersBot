@@ -86,11 +86,17 @@ const cronJobs = {};
 
 // Import cron tasks
 cronJobs.timeout = require('./cronjobs/check-timeout');
+cronJobs.gameStats = require('./cronjobs/gameStats');
 
-// Cron
+// Timeout cron
 cron.schedule('*/5 * * * *', function() {
   if (debug) console.log('Checking for expired timeouts');
   cronJobs.timeout.process(bot);
+}, true);
+
+// Game stats cron
+cron.schedule('*/5 * * * *', function() {
+  cronJobs.gameStats.process(bot);
 }, true);
 
 // Init bot
@@ -302,14 +308,6 @@ bot.on('guildMemberUpdate', (oldMember, newMember) => {
 bot.on('messageDelete', (message) => {
   try {
     events.messageDeleted.process(bot, message);
-  } catch (e) {
-    console.error(e.stack);
-  }
-});
-
-bot.on('presenceUpdate', (oldMember, newMember) => {
-  try {
-    events.presenceUpdate.process(bot, oldMember, newMember);
   } catch (e) {
     console.error(e.stack);
   }

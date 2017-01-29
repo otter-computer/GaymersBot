@@ -20,9 +20,7 @@ module.exports = {
       const embedDate = new Date(Date.now()).toISOString();
       embed.setTimestamp(embedDate);
 
-      let response = member + ' joined.';
-
-      userLogsChannel.sendMessage(response, { embed: embed });
+      userLogsChannel.sendMessage(member + ' joined.', { embed: embed });
     }
 
     // Add a little message to #welcome-room to grab the user's attention

@@ -48,8 +48,9 @@ module.exports = {
       }
     }
 
-    let response = message.author + '\'s message deleted from ' + message.channel + '.';
-
-    messageLogsChannel.sendMessage(response, { embed: embed });
+    messageLogsChannel.sendMessage(
+      message.author + '\'s message deleted from ' + message.channel + '.',
+      { embed: embed }
+    );
   }
 };

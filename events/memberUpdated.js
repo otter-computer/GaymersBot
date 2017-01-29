@@ -87,13 +87,14 @@ function memberRoleAdded(newMember) {
     const embed = new Discord.RichEmbed();
 
     embed.setColor(0x2ECC71);
-    embed.setTitle('User Granted Membership');
-    embed.addField('User', newMember);
+    embed.setAuthor(
+        newMember.displayName,
+        newMember.avatarURL, '');
 
     const embedDate = new Date(Date.now()).toISOString();
     embed.setTimestamp(embedDate);
 
-    userLogsChannel.sendMessage('', { embed: embed });
+    userLogsChannel.sendMessage(newMember + ' granted membership.', { embed: embed });
   }
 
   // DM the user with our welcome message

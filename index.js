@@ -79,7 +79,6 @@ events.memberUnbanned = require('./events/memberUnbanned');
 events.memberUpdated = require('./events/memberUpdated');
 events.messageDeleted = require('./events/messageDeleted');
 events.messageUpdated = require('./events/messageUpdated');
-events.presenceUpdate = require('./events/presenceUpdate');
 
 // Cron
 const cronJobs = {};

@@ -7,18 +7,7 @@ function postData(gameData) {
     method: 'POST'
   };
 
-  let responseBody = [];
-
-  const request = https.request(options, (response) => {
-    response.on('data', (chunk) => {
-      responseBody.push(chunk);
-    });
-
-    response.on('end', () => {
-      responseBody = Buffer.concat(responseBody).toString();
-      console.log(responseBody);
-    });
-  });
+  const request = https.request(options);
 
   request.write(JSON.stringify(gameData));
   request.end();

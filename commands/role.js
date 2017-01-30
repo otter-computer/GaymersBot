@@ -18,7 +18,8 @@ module.exports = {
 
     // Check that we have at least '!role' 'add|remove|(etc)' and a role
     if (msg.length < 3) {
-      message.reply('Usage: `!role ' + module.exports.usage + '`');
+      message.reply('Usage: `!role ' + module.exports.usage + '`' +
+        ' For a list of available roles use `!roles`');
       return;
     }
 

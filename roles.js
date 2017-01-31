@@ -32,6 +32,7 @@ module.exports = {
     'No links/files',
     'Push-to-talk',
     'Restricted',
+    'Trial Moderator',
     'Under 18'
   ],
 

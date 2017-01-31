@@ -6,43 +6,28 @@ module.exports = {
   allowDM: false,
   onlyIn: ['bot-room'],
   process: (bot, message) => {
-    const guild = bot.guilds.first();
-    const serverRoles = guild.roles;
+    const availableRoles = [];
 
-    let availableRoles = [];
-
-    ServerRoleLoop:
-    for (let [id, role] of serverRoles) {
-      // Filter restricted roles
-      for (let restrictedRole of roles.RESTRICTED_ROLES) {
-        if (role.name == restrictedRole) {
-          continue ServerRoleLoop;
-        }
+    message.guild.roles.forEach(role => {
+      // Exclude restricted roles
+      if (roles.RESTRICTED_ROLES.includes(role.name)) {
+        return;
       }
 
-      // Filter region roles
-      for (let restrictedRole of roles.REGION_ROLES) {
-        if (role.name == restrictedRole) {
-          continue ServerRoleLoop;
-        }
+      // Exclude region roles
+      if (roles.REGION_ROLES.includes(role.name)) {
+        return;
       }
 
-      // Filter @everyone
+      // Exclude @everyone
       if (role.name === '@everyone') {
-        continue ServerRoleLoop;
+        return;
       }
 
-      availableRoles.push(role);
-    }
+      availableRoles.push(role.name);
+    });
 
-    let response = 'Here\'s the roles you can add:\n```';
-
-    for (let role of availableRoles) {
-      response += role.name + '\n';
-    }
-
-    response += '```';
-
-    message.reply(response);
+    message.reply('Here\'s the roles you can add:\n```' +
+        availableRoles.join('\n') + '```');
   }
 };

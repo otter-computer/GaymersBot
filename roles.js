@@ -46,4 +46,4 @@ module.exports = {
     'Bot Restricted',
     'Restricted'
   ]
-}
+};

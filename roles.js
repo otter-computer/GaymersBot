@@ -22,7 +22,6 @@ module.exports = {
     'Bots',
     'DJ',
     'DiscoBot',
-    'ErisBot',
     'Event Manager',
     'Keyboard GOD!',
     'Keyboard Warrior',

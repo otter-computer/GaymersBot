@@ -22,7 +22,6 @@ module.exports = {
     'Bots',
     'DJ',
     'DiscoBot',
-    'ErisBot',
     'Event Manager',
     'Keyboard GOD!',
     'Keyboard Warrior',
@@ -32,6 +31,7 @@ module.exports = {
     'No links/files',
     'Push-to-talk',
     'Restricted',
+    'Trial Moderator',
     'Under 18'
   ],
 

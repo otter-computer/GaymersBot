@@ -1,6 +1,5 @@
 const Discord = require('discord.js');
 const moment = require('moment');
-const format = require('../momentFormat');
 
 // For the special little snowflake...
 const REYNBOW = {

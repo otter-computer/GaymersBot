@@ -12,30 +12,26 @@ module.exports = {
   description: 'See when someone joined the server.',
   allowDM: false,
   process: (bot, message) => {
-    message.mentions.users.forEach(user => {
-      const member = message.guild.member(user);
-      let joined = moment(member.joinedAt);
+    let target = message.guild.member(message.mentions.users.first());
+    if (!target) {
+      target = message.member;
+    }
 
-      if (user.id === REYNBOW.id) {
-        joined = REYNBOW.joinedAt;
-      }
+    const embed = new Discord.RichEmbed();
+    embed.setColor(0x3398DB);
+    embed.addField('User', target);
 
-      const embed = new Discord.RichEmbed();
+    if (target.id === REYNBOW.id) {
+      embed.setTitle(target.displayName.toUpperCase() +
+        ' BOUNCED IN HERE LIKE A FEISTY \'ROO ABOUT ' +
+        moment(REYNBOW.joinedAt).fromNow().toUpperCase() + ', MATE.');
+      embed.setTimestamp(REYNBOW.joinedAt);
+    } else {
+      embed.setTitle(target.displayName + ' joined ' +
+        moment(target.joinedAt).fromNow());
+      embed.setTimestamp(target.joinedAt);
+    }
 
-      embed.setColor(0x3398DB);
-      embed.setTitle(member.displayName + ' joined ' + moment(joined).fromNow());
-
-      if (user.id === REYNBOW.id) {
-        embed.setTitle(member.displayName.toUpperCase() +
-          ' BOUNCED IN HERE LIKE A FEISTY \'ROO ABOUT ' +
-          moment(joined).fromNow().toUpperCase() + ', MATE.');
-      }
-
-      embed.addField('User', member);
-
-      embed.setTimestamp(joined);
-
-      message.channel.sendMessage('', { embed: embed });
-    });
+    message.channel.sendMessage('', { embed: embed });
   }
 };

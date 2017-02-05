@@ -10,13 +10,14 @@ module.exports = {
     const embed = new Discord.RichEmbed();
 
     embed.setColor(0x607D8B);
-    embed.setTitle('User Left');
-    embed.addField('User', member);
+    embed.setAuthor(
+      member.displayName,
+      member.avatarURL, '');
 
     const embedDate = new Date(Date.now()).toISOString();
     embed.setTimestamp(embedDate);
 
-    userLogsChannel.sendMessage('', { embed: embed });
+    userLogsChannel.sendMessage(member + ' left.', { embed: embed });
 
     // Attempt to find a welcome message for this user in the #welcome-room
     // If one is found within the last 100 messages, delete it. This will also
@@ -37,7 +38,7 @@ module.exports = {
           message.delete()
             .catch(console.error);
         }
-      })
+      });
     });
   }
 };

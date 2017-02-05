@@ -15,9 +15,9 @@ module.exports = {
     const embed = new Discord.RichEmbed();
 
     embed.setColor(0xE74C3C);
-    embed.setTitle('Message Deleted');
-    embed.addField('User', message.author, true);
-    embed.addField('Channel', message.channel, true);
+    embed.setAuthor(
+      message.guild.member(message.author).displayName,
+      message.author.avatarURL, '');
     embed.setTimestamp(message.createdAt);
 
     // Message content
@@ -48,6 +48,9 @@ module.exports = {
       }
     }
 
-    messageLogsChannel.sendMessage('', { embed: embed });
+    messageLogsChannel.sendMessage(
+      message.author + '\'s message deleted from ' + message.channel + '.',
+      { embed: embed }
+    );
   }
 };

@@ -101,7 +101,7 @@ cron.schedule('*/5 * * * *', function() {
 }, true);
 
 // Member info cron
-cron.schedule('*/10 * * * *', function() {
+cron.schedule('* */1 * * *', function() {
   cronJobs.memberInfo.process(bot);
 }, true);
 

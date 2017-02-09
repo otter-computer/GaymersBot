@@ -1,36 +1,36 @@
 const https = require('https');
 
-function postData(gameData) {
+function postData(users) {
   const options = {
     host: 'api.gaymers.gg',
     path: '/userdata',
     method: 'POST',
     headers: {
-      'x-api-key': process.env.APIGW_discobot_x-api-key
+      'x-api-key': process.env.APIGW_DISCOBOT_X_API_KEY
     }
   };
 
   const request = https.request(options);
 
-  request.write(JSON.stringify(gameData));
+  request.write(JSON.stringify(users));
   request.end();
 }
 
 module.exports = {
   process: (bot) => {
+    console.log('Running memberInfo cron');
     const guild = bot.guilds.first();
     const members = guild.members;
 
     let updates = [];
 
-    MemberLoop:
-    for (let [id, user] of members) {    
+    for (let [id, member] of members) {
       updates.push({
         userid: id,
-        username: user.username,
-        discriminator: user.discriminator,
-        avatar: user.avatar,
-        member: 0
+        username: member.user.username,
+        discriminator: member.user.discriminator,
+        avatar: member.user.avatar,
+        member: member.roles.exists('name', 'Member') ? 1 : 0
       });
     }
 

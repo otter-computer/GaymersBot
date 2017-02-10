@@ -90,18 +90,18 @@ cronJobs.gameStats = require('./cronjobs/gameStats');
 cronJobs.memberInfo = require('./cronjobs/memberInfo');
 
 // Timeout cron
-cron.schedule('* */5 * * * *', function() {
+cron.schedule('0 */5 * * * *', function() {
   if (debug) console.log('Checking for expired timeouts');
   cronJobs.timeout.process(bot);
 }, true);
 
 // Game stats cron
-cron.schedule('* */5 * * * *', function() {
+cron.schedule('0 */5 * * * *', function() {
   cronJobs.gameStats.process(bot);
 }, true);
 
 // Member info cron
-cron.schedule('* * */1 * * *', function() {
+cron.schedule('0 0 */1 * * *', function() {
   cronJobs.memberInfo.process(bot);
 }, true);
 

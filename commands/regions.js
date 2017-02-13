@@ -5,7 +5,7 @@ module.exports = {
   onlyIn: ['bot-room'],
   process: (bot, message) => {
     message.reply(
-      'To set your region type `!setregion [Your region]` in any channel. \n' +
+      'To set your region type `!setregion [Your region]` in #bot-room. \n' +
       'Here is the list of available regions: \n```\n' +
       'Europe\n' +
       'North America\n' +

@@ -1,4 +1,4 @@
-FROM node:7.1
+FROM node:6
 MAINTAINER John Marion <john@lmsn.net>
 
 # https://serverfault.com/questions/96416/-/96420#96420

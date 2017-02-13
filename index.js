@@ -35,17 +35,13 @@ if (!token) {
 }
 
 // Debug mode
-let debug = false;
-if (process.env.APP_DEBUG === 'true') debug = true;
-
-// Time
-const startTime = Date.now();
+const debug = process.env.APP_DEBUG === 'true';
 
 // Handle graceful shutdowns
 function cleanup() {
   if (bot)
     bot.destroy();
-  console.log('Bot shutting down.');
+  console.log('Bot shut down: ', moment(Date.now()).format(format));
   process.exit();
 }
 
@@ -127,7 +123,7 @@ cron.schedule('0 0 */1 * * *', function() {
 // Init bot
 const bot = new Discord.Client();
 bot.on('ready', () => {
-  console.log('Bot ready!');
+  console.log('Bot connected to Discord: ', moment(Date.now()).format(format));
 });
 
 /**
@@ -347,10 +343,6 @@ bot.on('messageDelete', (message) => {
 //  }
 //});
 
-// Login
-if (debug) {
-  console.log('Token: ', token);
-  console.log('Start time: ', moment(startTime).format(format));
-}
+console.log('Bot started: ', moment(Date.now()).format(format));
 
 bot.login(token);

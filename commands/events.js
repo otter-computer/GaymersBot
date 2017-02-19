@@ -18,23 +18,32 @@
  * */
 
 const Discord = require('discord.js');
-const request = require('request');
+const https = require('https');
 
 module.exports = {
   usage: '',
   description: 'List upcoming server events.',
   allowDM: false,
   process: (bot, message) => {
-    request('https://api.gaymers.gg/events', (error, response, body) => {
-      if (!error && response.statusCode == 200) {
-        buildEmbeds(JSON.parse(body), message);
-      }
+    const options = {
+      host: 'api.gaymers.gg',
+      path: '/events',
+      method: 'GET'
+    };
 
-      if (error || response.statusCode != 200) {
-        console.log('Error', error);
-        // TODO: Reply with error :'(
-      }
+    const request = https.get(options, (response) => {
+      let data = '';
+
+      response.on('data', (chunk) => {
+        data += chunk;
+      });
+
+      response.on('end', () => {
+        buildEmbeds(JSON.parse(data), message);
+      });
     });
+
+    request.end();
   }
 };
 

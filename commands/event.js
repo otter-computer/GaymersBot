@@ -19,7 +19,6 @@
 
 const splitargs = require('splitargs');
 const https = require('https');
-const request = require('request');
 
 module.exports = {
   usage: '[join/leave] [event ID]',

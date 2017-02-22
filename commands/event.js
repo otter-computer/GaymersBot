@@ -71,10 +71,7 @@ function sendRequest(eventId, userId, modifier, callback, message) {
     }
   };
 
-  console.log('options', options);
-
   const request = https.request(options, (response) => {
-    console.log(response.statusCode);
 
     let data = '';
 
@@ -83,8 +80,6 @@ function sendRequest(eventId, userId, modifier, callback, message) {
     });
 
     response.on('end', () => {
-      console.log('Request ended', data);
-
       const parsedData = JSON.parse(data);
 
       let error;
@@ -100,7 +95,7 @@ function sendRequest(eventId, userId, modifier, callback, message) {
   });
 
   request.on('error', (e) => {
-    console.log('Error', e);
+    // console.log('Error', e);
   });
 
   request.write(JSON.stringify({ userid: userId }));

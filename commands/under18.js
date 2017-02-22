@@ -19,19 +19,19 @@
 
 module.exports = {
   usage: '[@user]',
-  description: 'ADMIN ONLY: Give a user the \'Member\' role.',
+  description: 'ADMIN ONLY: Give a user the \'Under 18\' role.',
   allowDM: false,
   requireRoles: ['Admin', 'Moderator'],
   process: (bot, message) => {
     if (!message.mentions.users.first()) {
-      message.reply('Usage: !member ' + module.exports.usage);
+      message.reply('Usage: !under18 ' + module.exports.usage);
       return;
     }
 
     const member = message.guild.member(message.mentions.users.first());
-    const memberRole = message.guild.roles.find('name', 'Member');
+    const under18Role = message.guild.roles.find('name', 'Under 18');
 
-    member.addRole(memberRole);
-    message.channel.sendMessage(member + ' has been given the `Member` role. :ok_hand:');
+    member.addRole(under18Role);
+    message.channel.sendMessage(member + ' has been given the `Under 18` role. :ok_hand:');
   }
 };

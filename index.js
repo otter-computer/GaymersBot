@@ -71,6 +71,7 @@ commands.help = require('./commands/help');
 commands.hug = require('./commands/hug');
 commands.joined = require('./commands/joined');
 commands.magic8ball = require('./commands/magic8ball');
+commands.member = require('./commands/member');
 commands.regions = require('./commands/regions');
 commands.role = require('./commands/role');
 commands.roles = require('./commands/roles');
@@ -80,6 +81,7 @@ commands.slap = require('./commands/slap');
 commands.spray = require('./commands/spray');
 commands.status = require('./commands/status');
 commands.timeout = require('./commands/timeout');
+commands.under18 = require('./commands/under18');
 commands.unset18 = require('./commands/unset18');
 commands.unsetregion = require('./commands/unsetregion');
 

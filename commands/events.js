@@ -48,6 +48,11 @@ module.exports = {
 };
 
 function buildEmbeds(events, message) {
+  if (events.length < 1) {
+    message.channel.sendMessage('Sorry, no events are scheduled right now. Check back later!');
+    return;
+  }
+
   message.reply('Here\'s the upcoming events:');
 
   for (let event of events) {

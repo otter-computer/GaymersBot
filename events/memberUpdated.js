@@ -83,6 +83,22 @@ function memberRestricted(member) {
       // TODO Error handler
       console.error(e);
     });
+
+  // If the member is in a voice chat, move them to AFK
+  if (member.voiceChannel) {
+    const afkVoiceChannel = member.guild.channels.filter(value => {
+      return value.type === 'voice' && value.name === 'AFK';
+    });
+    if (!afkVoiceChannel.first()) {
+      // There isn't an AFK channel!? Deaf/mute the user.
+      member.setMute(true);
+      member.setDeaf(true);
+      console.error('There isn\'t an AFK voice channel!');
+      // TODO Error handler
+      return;
+    }
+    member.setVoiceChannel(afkVoiceChannel.first());
+  }
 }
 
 

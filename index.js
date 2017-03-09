@@ -74,7 +74,6 @@ commands.magic8ball = require('./commands/magic8ball');
 commands.member = require('./commands/member');
 commands.regions = require('./commands/regions');
 commands.role = require('./commands/role');
-commands.roles = require('./commands/roles');
 commands.set18 = require('./commands/set18');
 commands.setregion = require('./commands/setregion');
 commands.slap = require('./commands/slap');

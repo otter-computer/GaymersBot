@@ -34,6 +34,33 @@ function findRole(guild, roleName) {
   }
 }
 
+function usage(message) {
+  const availableRoles = [];
+
+  message.guild.roles.forEach(role => {
+    // Exclude restricted roles
+    if (roles.RESTRICTED_ROLES.includes(role.name)) {
+      return;
+    }
+
+    // Exclude region roles
+    if (roles.REGION_ROLES.includes(role.name)) {
+      return;
+    }
+
+    // Exclude @everyone
+    if (role.name === '@everyone') {
+      return;
+    }
+
+    availableRoles.push(role.name);
+  });
+
+  message.reply('Usage: `!role ' + module.exports.usage + '`\n' +
+                'Here are the roles you can manage:\n```' +
+                availableRoles.join('\n') + '```');
+}
+
 module.exports = {
   usage: 'add/remove [role]',
   description: 'Set or remove a role from yourself.',
@@ -54,8 +81,7 @@ module.exports = {
     // valid operator, but we can also accept commands with no operators, more
     // on that later)
     if (msg.length < 2) {
-      message.reply('Usage: `!role ' + module.exports.usage + '`' +
-        ' For a list of available roles use `!roles`');
+      usage(message);
       return;
     }
 
@@ -83,7 +109,7 @@ module.exports = {
           operator = 'set';
         }
       } else {
-        // TODO make a generic usage function
+        usage(message);
         return;
       }
     }
@@ -117,6 +143,7 @@ module.exports = {
     // Make sure the role actually exists
     if (!targetRole) {
       message.reply('Sorry... That\'s not a role :sob:');
+      usage(message);
       return;
     }
 

@@ -19,6 +19,21 @@
 
 const roles = require('../roles');
 
+/**
+ * Tries to case-insensitively find a role matching the input string.
+ *
+ * @param {any} guild The guild object to look for roles in
+ * @param {any} roleName The suspected role name
+ * @returns If a valid role, the role object.
+ */
+function findRole(guild, roleName) {
+  for (const role of guild.roles.array()) {
+    if (role.name.toLowerCase() === roleName.toLowerCase()) {
+      return role;
+    }
+  }
+}
+
 module.exports = {
   usage: 'add/remove [role]',
   description: 'Set or remove a role from yourself.',
@@ -35,8 +50,10 @@ module.exports = {
     // Split the message into command arguments on spaces
     msg = msg.split(' ');
 
-    // Check that we have at least '!role' 'add|remove|(etc)' and a role
-    if (msg.length < 3) {
+    // Check that we have at least '!role' and something else (hopefully a 
+    // valid operator, but we can also accept commands with no operators, more
+    // on that later)
+    if (msg.length < 2) {
       message.reply('Usage: `!role ' + module.exports.usage + '`' +
         ' For a list of available roles use `!roles`');
       return;
@@ -47,12 +64,28 @@ module.exports = {
 
     let operator = msg.shift().toLowerCase();
 
-    // Check that operator is a valid option
+    // If the user doesn't use add/remove/etc, check to see if they just
+    // supplied a role name. If so, toggle that role on them.
     if (operator !== 'add' && operator !== 'set' && operator !== 'remove'
         && operator !== 'unset') {
-      message.reply('Sorry... I don\'t understand what you want me to do ' +
-          'with that role :sob:');
-      return;
+      // Undo shifting the first element out
+      msg.unshift(operator);
+
+      // Attempt to re-interpret the whole thing as a role
+      const possibleRole = findRole(message.guild, msg.join(' '));
+      if (possibleRole) {
+        // This is a role! Do they have it?
+        if (message.member.roles.has(possibleRole.id)) {
+          // Rewrite their command to be an 'unset'
+          operator = 'unset';
+        } else {
+          // Rewrite their command to be a 'set'
+          operator = 'set';
+        }
+      } else {
+        // TODO make a generic usage function
+        return;
+      }
     }
 
     // Collapse parameters into a space-delimited string

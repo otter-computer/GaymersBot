@@ -17,7 +17,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * */
 
-const cron = require('node-cron');
+// const cron = require('node-cron');
 const Discord = require('discord.js');
 const firebase = require('firebase');
 const moment = require('moment');
@@ -79,7 +79,7 @@ commands.setregion = require('./commands/setregion');
 commands.slap = require('./commands/slap');
 commands.spray = require('./commands/spray');
 commands.status = require('./commands/status');
-commands.timeout = require('./commands/timeout');
+// commands.timeout = require('./commands/timeout');
 commands.under18 = require('./commands/under18');
 commands.unset18 = require('./commands/unset18');
 commands.unsetregion = require('./commands/unsetregion');
@@ -100,28 +100,28 @@ events.messageDeleted = require('./events/messageDeleted');
 events.messageUpdated = require('./events/messageUpdated');
 
 // Cron
-const cronJobs = {};
+// const cronJobs = {};
 
 // Import cron tasks
-cronJobs.timeout = require('./cronjobs/check-timeout');
-cronJobs.gameStats = require('./cronjobs/gameStats');
-cronJobs.memberInfo = require('./cronjobs/memberInfo');
+// cronJobs.timeout = require('./cronjobs/check-timeout');
+// cronJobs.gameStats = require('./cronjobs/gameStats');
+// cronJobs.memberInfo = require('./cronjobs/memberInfo');
 
 // Timeout cron
-cron.schedule('0 */5 * * * *', function() {
-  if (debug) console.log('Checking for expired timeouts');
-  cronJobs.timeout.process(bot);
-}, true);
+// cron.schedule('0 */5 * * * *', function() {
+//   if (debug) console.log('Checking for expired timeouts');
+//   cronJobs.timeout.process(bot);
+// }, true);
 
 // Game stats cron
-cron.schedule('0 */5 * * * *', function() {
-  cronJobs.gameStats.process(bot);
-}, true);
+// cron.schedule('0 */5 * * * *', function() {
+//   cronJobs.gameStats.process(bot);
+// }, true);
 
 // Member info cron
-cron.schedule('0 0 */1 * * *', function() {
-  cronJobs.memberInfo.process(bot);
-}, true);
+// cron.schedule('0 0 */1 * * *', function() {
+//   cronJobs.memberInfo.process(bot);
+// }, true);
 
 // Init bot
 const bot = new Discord.Client();

@@ -42,6 +42,7 @@ module.exports = {
     'DJ',
     'DiscoBot',
     'Event Manager',
+    'Invulnerable',
     'Keyboard GOD!',
     'Keyboard Warrior',
     'Mee6',

@@ -35,11 +35,18 @@ module.exports = {
 
     embed.setColor(0xE74C3C);
 
-    if (message.guild.member(message.author).displayName) {
+    if (message.guild.member(message.author)) {
+      // Member is still on the server
       embed.setAuthor(
         message.guild.member(message.author).displayName,
         message.author.avatarURL, '');
+    } else {
+      // Member left, so fallback to just their username/discriminator
+      embed.setAuthor(
+        message.author.username + '#' + message.author.discriminator,
+        message.author.avatarURL, '');
     }
+
     embed.setTimestamp(message.createdAt);
 
     // Message content

@@ -29,19 +29,22 @@ module.exports = {
     if (message.content.startsWith('.music') ||
       message.content.startsWith('.m ')) return;
 
-    let messageLogsChannel = bot.channels.find('name', 'message-logs');
+    const messageLogsChannel = bot.channels.find('name', 'message-logs');
 
     const embed = new Discord.RichEmbed();
 
     embed.setColor(0xE74C3C);
-    embed.setAuthor(
-      message.guild.member(message.author).displayName,
-      message.author.avatarURL, '');
+
+    if (message.guild.member(message.author).displayName) {
+      embed.setAuthor(
+        message.guild.member(message.author).displayName,
+        message.author.avatarURL, '');
+    }
     embed.setTimestamp(message.createdAt);
 
     // Message content
     if (message.content) {
-      embed.addField('Content', message.content);
+      embed.setDescription(message.content);
     }
 
     // Attachments

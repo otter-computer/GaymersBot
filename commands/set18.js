@@ -37,7 +37,8 @@ module.exports = {
     message.member.addRole(message.guild.roles.findKey('name', '18+'))
       .then(
         () => {
-          message.reply('I\'ve set you to 18+ :eggplant::peach:');
+          message.reply('I\'ve set you to 18+ :eggplant::peach: ' +
+            'Check out `!roles` to see what else you can add!');
         },
         (rejectReason) => {
           // TODO: Reject handler

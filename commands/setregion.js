@@ -78,7 +78,8 @@ module.exports = {
     message.member.setRoles(modifiedRoleList)
       .then(
         () => {
-          message.reply('I\'ve set your region! :white_check_mark::map:');
+          message.reply('I\'ve set your region! :white_check_mark::map: ' +
+            'Check out `!roles` for other roles you can add!');
         },
         (rejectReason) => {
           // TODO: Reject handler

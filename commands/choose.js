@@ -38,6 +38,11 @@ module.exports = {
     let choices = splitargs(message.content);
     choices.shift();
 
+    if (choices.length === 0) {
+      message.reply('Usage: `!choose ' + module.exports.usage + '`');
+      return;
+    }
+
     let choice = choices[Math.floor(Math.random() * choices.length)];
 
     let response = responses[Math.floor(Math.random() * responses.length)];

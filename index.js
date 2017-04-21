@@ -63,6 +63,7 @@ const commands = {};
 
 // Import commands
 commands.avatar = require('./commands/avatar');
+commands.binnysux = require('./commands/binnysux');
 commands.boop = require('./commands/boop');
 commands.choose = require('./commands/choose');
 commands.event = require('./commands/event');

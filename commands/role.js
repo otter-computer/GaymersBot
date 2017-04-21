@@ -115,7 +115,7 @@ module.exports = {
     }
 
     // Collapse parameters into a space-delimited string
-    let roleName = msg.join(' ').toProperCase();
+    let roleName = msg.join(' ');
 
     // I could use a simple array 'includes' check to see if roleName is within
     // RESTRICTED_ROLES, but that doesn't give me a chance to normalize the
@@ -124,7 +124,7 @@ module.exports = {
     // normalized correctly.
     const restrictRolesLen = roles.RESTRICTED_ROLES.length;
     for (let i = 0;i < restrictRolesLen;i++) {
-      if (roles.RESTRICTED_ROLES[i].toProperCase() === roleName) {
+      if (roles.RESTRICTED_ROLES[i].toLowerCase() === roleName.toLowerCase()) {
         message.reply('Naughty naughty... :wink: You can\'t ' + operator +
             ' that role!');
         return;
@@ -132,13 +132,18 @@ module.exports = {
     }
 
     // Make sure regions aren't touched by this command
-    if (roles.REGION_ROLES.includes(roleName)) {
-      message.reply('You can change your region using the `!setregion` ' +
-          'command! :wink:');
-      return;
+    // (Same story as above with normalization)
+    const regionRolesLen = roles.REGION_ROLES.length;
+    for (let i = 0;i < regionRolesLen;i++) {
+      if (roles.REGION_ROLES[i].toLowerCase() === roleName.toLowerCase()) {
+        message.reply('You can change your region using the `!setregion` ' +
+            'command! :wink:');
+        return;
+      }
     }
 
-    const targetRole = message.guild.roles.find('name', roleName);
+    // Perform a case-insensitive search for the role
+    const targetRole = findRole(message.guild, roleName);
 
     // Make sure the role actually exists
     if (!targetRole) {

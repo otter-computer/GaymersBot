@@ -38,7 +38,7 @@ module.exports = {
       .then(
         () => {
           message.reply('I\'ve set you to 18+ :eggplant::peach: ' +
-            'Check out `!roles` to see what else you can add!');
+            'Check out `!role` to see what else you can add!');
         },
         (rejectReason) => {
           // TODO: Reject handler

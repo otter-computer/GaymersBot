@@ -18,7 +18,8 @@
     "moment-timezone": "^0.5.4",
     "node-cron": "^1.1.2",
     "node-opus": "^0.2.4",
-    "splitargs": "^0.0.7"
+    "splitargs": "^0.0.7",
+    "sqs-consumer": "^3.6.0"
   },
   "engines": {
     "node": "^6.4.0"

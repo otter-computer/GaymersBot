@@ -18,35 +18,20 @@
  * */
 
 module.exports = {
-  usage: '',
-  description: 'Gives you the 18+ role, allows access to #over-18 ' +
-  'and #over-18-text.',
+  usage: '[@user]',
+  description: 'ADMIN ONLY: Give a user the \'Under 18\' role.',
   allowDM: false,
-  onlyIn: ['bot-room'],
+  requireRoles: ['Admin', 'Moderator'],
   process: (bot, message) => {
-    if (message.member.roles.findKey('name', 'Under 18')) {
-      message.reply('You\'re under 18. I can\'t add the 18+ role. :frowning: ');
+    if (!message.mentions.users.first()) {
+      message.reply('Usage: !under18 ' + module.exports.usage);
       return;
     }
 
-    if (message.member.roles.findKey('name', '18+')) {
-      message.reply('You already have 18+ set? :confused:');
-      return;
-    }
+    const member = message.guild.member(message.mentions.users.first());
+    const under18Role = message.guild.roles.find('name', 'Under 18');
 
-    message.member.addRole(message.guild.roles.findKey('name', '18+'))
-      .then(
-        () => {
-          message.reply('I\'ve set you to 18+ :eggplant::peach: ' +
-            'Check out `!role` to see what else you can add!');
-        },
-        (rejectReason) => {
-          // TODO: Reject handler
-          console.error(rejectReason);
-        })
-      .catch((e) => {
-        // TODO: Error handler
-        console.error(e.stack);
-      });
+    member.addRole(under18Role);
+    message.channel.sendMessage(member + ' has been given the `Under 18` role. :ok_hand:');
   }
 };

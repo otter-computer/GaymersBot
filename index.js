@@ -1,10 +1,38 @@
-const cron = require('node-cron');
+/* *
+ * DiscoBot - Gaymers Discord Bot
+ * Copyright (C) 2015 - 2017 DiscoBot Authors
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ * */
+
+// const cron = require('node-cron');
 const Discord = require('discord.js');
 const firebase = require('firebase');
 const moment = require('moment');
 
 const format = require('./momentFormat');
 const roles = require('./roles');
+
+const Consumer = require('sqs-consumer');
+const AWS = require('aws-sdk');
+
+AWS.config.update({
+  region: 'eu-west-1',
+  accessKeyId: process.env.SQS_ACCESS_KEY,
+  secretAccessKey: process.env.SQS_SECRET_KEY
+});
 
 require('./utils');
 
@@ -16,17 +44,13 @@ if (!token) {
 }
 
 // Debug mode
-let debug = false;
-if (process.env.APP_DEBUG === 'true') debug = true;
-
-// Time
-const startTime = Date.now();
+const debug = process.env.APP_DEBUG === 'true';
 
 // Handle graceful shutdowns
 function cleanup() {
   if (bot)
     bot.destroy();
-  console.log('Bot shutting down.');
+  console.log('Bot shut down: ', moment(Date.now()).format(format));
   process.exit();
 }
 
@@ -50,19 +74,22 @@ const commands = {};
 commands.avatar = require('./commands/avatar');
 commands.boop = require('./commands/boop');
 commands.choose = require('./commands/choose');
+commands.event = require('./commands/event');
+commands.events = require('./commands/events');
 commands.help = require('./commands/help');
 commands.hug = require('./commands/hug');
 commands.joined = require('./commands/joined');
 commands.magic8ball = require('./commands/magic8ball');
+commands.member = require('./commands/member');
 commands.regions = require('./commands/regions');
 commands.role = require('./commands/role');
-commands.roles = require('./commands/roles');
 commands.set18 = require('./commands/set18');
 commands.setregion = require('./commands/setregion');
 commands.slap = require('./commands/slap');
 commands.spray = require('./commands/spray');
 commands.status = require('./commands/status');
-commands.timeout = require('./commands/timeout');
+// commands.timeout = require('./commands/timeout');
+commands.under18 = require('./commands/under18');
 commands.unset18 = require('./commands/unset18');
 commands.unsetregion = require('./commands/unsetregion');
 
@@ -81,35 +108,65 @@ events.memberUpdated = require('./events/memberUpdated');
 events.messageDeleted = require('./events/messageDeleted');
 events.messageUpdated = require('./events/messageUpdated');
 
+// Events
+const msgq = {};
+
+// Import events
+msgq.messageReceived = require('./msgq/messageReceived');
+
 // Cron
-const cronJobs = {};
+// const cronJobs = {};
 
 // Import cron tasks
-cronJobs.timeout = require('./cronjobs/check-timeout');
-cronJobs.gameStats = require('./cronjobs/gameStats');
-cronJobs.memberInfo = require('./cronjobs/memberInfo');
+// cronJobs.timeout = require('./cronjobs/check-timeout');
+// cronJobs.gameStats = require('./cronjobs/gameStats');
+// cronJobs.memberInfo = require('./cronjobs/memberInfo');
 
 // Timeout cron
-cron.schedule('*/5 * * * *', function() {
-  if (debug) console.log('Checking for expired timeouts');
-  cronJobs.timeout.process(bot);
-}, true);
+// cron.schedule('0 */5 * * * *', function() {
+//   if (debug) console.log('Checking for expired timeouts');
+//   cronJobs.timeout.process(bot);
+// }, true);
 
 // Game stats cron
-cron.schedule('*/5 * * * *', function() {
-  cronJobs.gameStats.process(bot);
-}, true);
+// cron.schedule('0 */5 * * * *', function() {
+//   cronJobs.gameStats.process(bot);
+// }, true);
 
 // Member info cron
-cron.schedule('*/10 * * * *', function() {
-  cronJobs.memberInfo.process(bot);
-}, true);
+// cron.schedule('0 0 */1 * * *', function() {
+//   cronJobs.memberInfo.process(bot);
+// }, true);
 
 // Init bot
 const bot = new Discord.Client();
 bot.on('ready', () => {
-  console.log('Bot ready!');
+  console.log('Bot connected to Discord: ', moment(Date.now()).format(format));
+
+const sqsStreamers = Consumer.create({
+  queueUrl: process.env.SQS_STREAM_QUEUE,
+  handleMessage: (message, done) => {
+    try {
+      msgq.messageReceived.process(bot, message);
+      done();
+    } catch (e) {
+      console.error(e.stack);
+    }
+    
+  },
+  sqs: new AWS.SQS()
 });
+
+sqsStreamers.on('error', (err) => {
+  console.log(err.message);
+});
+
+sqsStreamers.start();
+
+});
+
+
+
 
 /**
  * Return `true` if the command is allowed in this channel, `false` if not.
@@ -328,10 +385,6 @@ bot.on('messageDelete', (message) => {
 //  }
 //});
 
-// Login
-if (debug) {
-  console.log('Token: ', token);
-  console.log('Start time: ', moment(startTime).format(format));
-}
+console.log('Bot started: ', moment(Date.now()).format(format));
 
 bot.login(token);

@@ -1,3 +1,22 @@
+/* *
+ * DiscoBot - Gaymers Discord Bot
+ * Copyright (C) 2015 - 2017 DiscoBot Authors
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ * */
+
 const Discord = require('discord.js');
 
 module.exports = {
@@ -10,19 +29,29 @@ module.exports = {
     if (message.content.startsWith('.music') ||
       message.content.startsWith('.m ')) return;
 
-    let messageLogsChannel = bot.channels.find('name', 'message-logs');
+    const messageLogsChannel = bot.channels.find('name', 'message-logs');
 
     const embed = new Discord.RichEmbed();
 
     embed.setColor(0xE74C3C);
-    embed.setAuthor(
-      message.guild.member(message.author).displayName,
-      message.author.avatarURL, '');
+
+    if (message.guild.member(message.author)) {
+      // Member is still on the server
+      embed.setAuthor(
+        message.guild.member(message.author).displayName,
+        message.author.avatarURL, '');
+    } else {
+      // Member left, so fallback to just their username/discriminator
+      embed.setAuthor(
+        message.author.username + '#' + message.author.discriminator,
+        message.author.avatarURL, '');
+    }
+
     embed.setTimestamp(message.createdAt);
 
     // Message content
     if (message.content) {
-      embed.addField('Content', message.content);
+      embed.setDescription(message.content);
     }
 
     // Attachments

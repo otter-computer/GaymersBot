@@ -17,4 +17,21 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * */
 
-module.exports = 'dddd, MMMM Do YYYY, HH:mm Z';
+const Discord = require('discord.js');
+
+module.exports = {
+  process: (bot, message) => {
+    const streamGuild = process.env.STREAM_GUILD;
+    const streamChannel = process.env.STREAM_CHANNEL;
+    const guildObj = bot.guilds.find('name',streamGuild);
+    const notificationChannel = guildObj.channels.find('name', streamChannel);
+
+    // Log the user joining to #user-logs
+    if (!notificationChannel) {
+      console.error('Channel #general doesn\'t exist!');
+    } else {
+      notificationChannel.sendMessage(message.Body);
+    }
+
+  }
+};

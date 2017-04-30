@@ -1,4 +1,65 @@
+/* *
+ * DiscoBot - Gaymers Discord Bot
+ * Copyright (C) 2015 - 2017 DiscoBot Authors
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ * */
+
 const roles = require('../roles');
+
+/**
+ * Tries to case-insensitively find a role matching the input string.
+ *
+ * @param {any} guild The guild object to look for roles in
+ * @param {any} roleName The suspected role name
+ * @returns If a valid role, the role object.
+ */
+function findRole(guild, roleName) {
+  for (const role of guild.roles.array()) {
+    if (role.name.toLowerCase() === roleName.toLowerCase()) {
+      return role;
+    }
+  }
+}
+
+function usage(message) {
+  const availableRoles = [];
+
+  message.guild.roles.forEach(role => {
+    // Exclude restricted roles
+    if (roles.RESTRICTED_ROLES.includes(role.name)) {
+      return;
+    }
+
+    // Exclude region roles
+    if (roles.REGION_ROLES.includes(role.name)) {
+      return;
+    }
+
+    // Exclude @everyone
+    if (role.name === '@everyone') {
+      return;
+    }
+
+    availableRoles.push(role.name);
+  });
+
+  message.reply('Usage: `!role ' + module.exports.usage + '`\n' +
+                'Here are the roles you can manage:\n```' +
+                availableRoles.join('\n') + '```');
+}
 
 module.exports = {
   usage: 'add/remove [role]',
@@ -16,10 +77,11 @@ module.exports = {
     // Split the message into command arguments on spaces
     msg = msg.split(' ');
 
-    // Check that we have at least '!role' 'add|remove|(etc)' and a role
-    if (msg.length < 3) {
-      message.reply('Usage: `!role ' + module.exports.usage + '`' +
-        ' For a list of available roles use `!roles`');
+    // Check that we have at least '!role' and something else (hopefully a 
+    // valid operator, but we can also accept commands with no operators, more
+    // on that later)
+    if (msg.length < 2) {
+      usage(message);
       return;
     }
 
@@ -28,16 +90,32 @@ module.exports = {
 
     let operator = msg.shift().toLowerCase();
 
-    // Check that operator is a valid option
+    // If the user doesn't use add/remove/etc, check to see if they just
+    // supplied a role name. If so, toggle that role on them.
     if (operator !== 'add' && operator !== 'set' && operator !== 'remove'
         && operator !== 'unset') {
-      message.reply('Sorry... I don\'t understand what you want me to do ' +
-          'with that role :sob:');
-      return;
+      // Undo shifting the first element out
+      msg.unshift(operator);
+
+      // Attempt to re-interpret the whole thing as a role
+      const possibleRole = findRole(message.guild, msg.join(' '));
+      if (possibleRole) {
+        // This is a role! Do they have it?
+        if (message.member.roles.has(possibleRole.id)) {
+          // Rewrite their command to be an 'unset'
+          operator = 'unset';
+        } else {
+          // Rewrite their command to be a 'set'
+          operator = 'set';
+        }
+      } else {
+        usage(message);
+        return;
+      }
     }
 
     // Collapse parameters into a space-delimited string
-    let roleName = msg.join(' ').toProperCase();
+    let roleName = msg.join(' ');
 
     // I could use a simple array 'includes' check to see if roleName is within
     // RESTRICTED_ROLES, but that doesn't give me a chance to normalize the
@@ -46,7 +124,7 @@ module.exports = {
     // normalized correctly.
     const restrictRolesLen = roles.RESTRICTED_ROLES.length;
     for (let i = 0;i < restrictRolesLen;i++) {
-      if (roles.RESTRICTED_ROLES[i].toProperCase() === roleName) {
+      if (roles.RESTRICTED_ROLES[i].toLowerCase() === roleName.toLowerCase()) {
         message.reply('Naughty naughty... :wink: You can\'t ' + operator +
             ' that role!');
         return;
@@ -54,17 +132,23 @@ module.exports = {
     }
 
     // Make sure regions aren't touched by this command
-    if (roles.REGION_ROLES.includes(roleName)) {
-      message.reply('You can change your region using the `!setregion` ' +
-          'command! :wink:');
-      return;
+    // (Same story as above with normalization)
+    const regionRolesLen = roles.REGION_ROLES.length;
+    for (let i = 0;i < regionRolesLen;i++) {
+      if (roles.REGION_ROLES[i].toLowerCase() === roleName.toLowerCase()) {
+        message.reply('You can change your region using the `!setregion` ' +
+            'command! :wink:');
+        return;
+      }
     }
 
-    const targetRole = message.guild.roles.find('name', roleName);
+    // Perform a case-insensitive search for the role
+    const targetRole = findRole(message.guild, roleName);
 
     // Make sure the role actually exists
     if (!targetRole) {
       message.reply('Sorry... That\'s not a role :sob:');
+      usage(message);
       return;
     }
 

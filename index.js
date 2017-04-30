@@ -143,8 +143,8 @@ const bot = new Discord.Client();
 bot.on('ready', () => {
   console.log('Bot connected to Discord: ', moment(Date.now()).format(format));
 
-const sqsApp = Consumer.create({
-  queueUrl: process.env.SQS_QUEUE,
+const sqsStreamers = Consumer.create({
+  queueUrl: process.env.SQS_STREAM_QUEUE,
   handleMessage: (message, done) => {
     try {
       msgq.messageReceived.process(bot, message);
@@ -157,11 +157,11 @@ const sqsApp = Consumer.create({
   sqs: new AWS.SQS()
 });
 
-sqsApp.on('error', (err) => {
+sqsStreamers.on('error', (err) => {
   console.log(err.message);
 });
 
-sqsApp.start();
+sqsStreamers.start();
 
 });
 

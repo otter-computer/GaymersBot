@@ -21,14 +21,16 @@ const Discord = require('discord.js');
 
 module.exports = {
   process: (bot, message) => {
-    const guildObj = bot.guilds.find('name','leap-test');
-    const notificationChannel = guildObj.channels.find('name', 'general');
+    const streamGuild = process.env.STREAM_GUILD;
+    const streamChannel = process.env.STREAM_CHANNEL;
+    const guildObj = bot.guilds.find('name',streamGuild);
+    const notificationChannel = guildObj.channels.find('name', streamChannel);
 
     // Log the user joining to #user-logs
     if (!notificationChannel) {
       console.error('Channel #general doesn\'t exist!');
     } else {
-      notificationChannel.sendMessage('A streamer just went live - '+message.Body);
+      notificationChannel.sendMessage(message.Body);
     }
 
   }

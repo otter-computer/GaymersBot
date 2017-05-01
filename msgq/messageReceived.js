@@ -23,12 +23,12 @@ module.exports = {
   process: (bot, message) => {
     const streamGuild = process.env.STREAM_GUILD;
     const streamChannel = process.env.STREAM_CHANNEL;
-    const guildObj = bot.guilds.find('name',streamGuild);
+    const guildObj = bot.guilds.find('name', streamGuild);
     const notificationChannel = guildObj.channels.find('name', streamChannel);
 
-    // Log the user joining to #user-logs
+    // Will forward the message to the Guild and channel specified by ENV variables.
     if (!notificationChannel) {
-      console.error('Channel #general doesn\'t exist!');
+      console.error('Channel #'+streamChannel+' doesn\'t exist!');
     } else {
       notificationChannel.sendMessage(message.Body);
     }

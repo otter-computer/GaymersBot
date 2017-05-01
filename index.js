@@ -143,25 +143,25 @@ const bot = new Discord.Client();
 bot.on('ready', () => {
   console.log('Bot connected to Discord: ', moment(Date.now()).format(format));
 
-const sqsStreamers = Consumer.create({
-  queueUrl: process.env.SQS_STREAM_QUEUE,
-  handleMessage: (message, done) => {
-    try {
-      msgq.messageReceived.process(bot, message);
-      done();
-    } catch (e) {
-      console.error(e.stack);
-    }
-    
-  },
-  sqs: new AWS.SQS()
-});
+  const sqsStreamers = Consumer.create({
+    queueUrl: process.env.SQS_STREAM_QUEUE,
+    handleMessage: (message, done) => {
+      try {
+        msgq.messageReceived.process(bot, message);
+        done();
+      } catch (e) {
+        console.error(e.stack);
+      }
+      
+    },
+    sqs: new AWS.SQS()
+  });
 
-sqsStreamers.on('error', (err) => {
-  console.log(err.message);
-});
+  sqsStreamers.on('error', (err) => {
+    console.log(err.message);
+  });
 
-sqsStreamers.start();
+  sqsStreamers.start();
 
 });
 

@@ -25,6 +25,15 @@ const moment = require('moment');
 const format = require('./momentFormat');
 const roles = require('./roles');
 
+const Consumer = require('sqs-consumer');
+const AWS = require('aws-sdk');
+
+AWS.config.update({
+  region: 'eu-west-1',
+  accessKeyId: process.env.SQS_ACCESS_KEY,
+  secretAccessKey: process.env.SQS_SECRET_KEY
+});
+
 require('./utils');
 
 // Auth token
@@ -99,6 +108,12 @@ events.memberUpdated = require('./events/memberUpdated');
 events.messageDeleted = require('./events/messageDeleted');
 events.messageUpdated = require('./events/messageUpdated');
 
+// Events
+const msgq = {};
+
+// Import events
+msgq.messageReceived = require('./msgq/messageReceived');
+
 // Cron
 // const cronJobs = {};
 
@@ -127,7 +142,31 @@ events.messageUpdated = require('./events/messageUpdated');
 const bot = new Discord.Client();
 bot.on('ready', () => {
   console.log('Bot connected to Discord: ', moment(Date.now()).format(format));
+
+  const sqsStreamers = Consumer.create({
+    queueUrl: process.env.SQS_STREAM_QUEUE,
+    handleMessage: (message, done) => {
+      try {
+        msgq.messageReceived.process(bot, message);
+        done();
+      } catch (e) {
+        console.error(e.stack);
+      }
+      
+    },
+    sqs: new AWS.SQS()
+  });
+
+  sqsStreamers.on('error', (err) => {
+    console.log(err.message);
+  });
+
+  sqsStreamers.start();
+
 });
+
+
+
 
 /**
  * Return `true` if the command is allowed in this channel, `false` if not.

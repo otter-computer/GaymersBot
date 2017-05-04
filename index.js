@@ -81,6 +81,7 @@ commands.hug = require('./commands/hug');
 commands.joined = require('./commands/joined');
 commands.magic8ball = require('./commands/magic8ball');
 commands.member = require('./commands/member');
+commands.quote = require('./commands/quote');
 commands.regions = require('./commands/regions');
 commands.role = require('./commands/role');
 commands.set18 = require('./commands/set18');

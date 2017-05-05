@@ -48,14 +48,18 @@ module.exports = {
 };
 
 function buildEmbeds(events, message) {
+  let embeds = [];
+
   if (events.length < 1) {
-    message.channel.sendMessage('Sorry, no events are scheduled right now. Check back later!');
+    noEvents(message);
     return;
   }
 
-  message.reply('Here\'s the upcoming events:');
-
   for (let event of events) {
+    if (Date.parse(event.start) < Date.now()) {
+      continue;
+    }
+
     const embed = new Discord.RichEmbed();
 
     embed.setTitle(event.title);
@@ -73,6 +77,21 @@ function buildEmbeds(events, message) {
       true
     );
 
+    embeds.push(embed);
+  }
+
+  if (embeds.length < 1) {
+    noEvents(message);
+    return;
+  }
+
+  message.reply('Here\'s the upcoming events:');
+
+  for (let embed of embeds) {
     message.channel.sendEmbed(embed);
   }
+}
+
+function noEvents(message) {
+  message.reply('Sorry, no events are scheduled right now. Check back later!');
 }

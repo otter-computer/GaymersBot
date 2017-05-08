@@ -23,7 +23,6 @@ const messageActions = {};
 // Import actions
 messageActions.default = require('./default');
 messageActions.announceStream = require('./announceStream');
-messageActions.remindUser = require('./remindUser');
 
 module.exports = {
   process: (bot, message) => {

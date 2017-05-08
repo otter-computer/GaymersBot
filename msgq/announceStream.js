@@ -17,30 +17,11 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * */
 
-// Message actions
-const messageActions = {};
-
-// Import actions
-messageActions.default = require('./default');
-messageActions.announceStream = require('./announceStream');
-messageActions.remindUser = require('./remindUser');
-
 module.exports = {
   process: (bot, message) => {
     const guild = bot.guilds.first();
+    const streamChannel = guild.channels.find('name', 'testing-room');
 
-    const args = JSON.parse(message.Body);
-
-    switch (args.action) {
-      case 'ANNOUNCE_STREAM':
-        messageActions.announceStream.process(bot, args.message);
-        break;
-
-      case 'DEFAULT':
-        messageActions.default.process(bot, args.message, args.channel);
-
-      default:
-        break;
-    }
+    streamChannel.send(message);
   }
 };

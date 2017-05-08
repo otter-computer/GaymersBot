@@ -17,29 +17,23 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * */
 
-const Discord = require('discord.js');
 const Producer = require('sqs-producer');
 
 module.exports = {
   process: (bot, message) => {
-		var producer = Producer.create({
-		  queueUrl: process.env.SQS_QUEUE,
-		  region: 'eu-west-1'
-		});
+    const producer = Producer.create({
+      queueUrl: process.env.SQS_QUEUE,
+      region: 'eu-west-1'
+    });
 
-    if (message.delay) {
-    	delayTime = message.delay;
-    }
-    else {
-    	delayTime = 0;
-    }
+    let delayTime = message.delay ? message.delay : 0;
 
-		producer.send([{
-		  id: 'streamer',
-		  body: JSON.stringify(message),
-		  delaySeconds: delayTime
-		}], function(err) {
-		  if (err) console.log(err);
-		});
-	}
-}
+    producer.send([{
+      id: 'streamer',
+      body: JSON.stringify(message),
+      delaySeconds: delayTime
+    }], function(err) {
+      if (err) console.log(err);
+    });
+  }
+};

@@ -17,6 +17,22 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * */
 
+const userConfig = require('./config.json');
+
+if (!userConfig) {
+  console.log('config.json not found - will attempt to use environment variables.\n');
+  let envConfig = {};
+  envConfig.AUTH_TOKEN = process.env.AUTH_TOKEN;
+  envConfig.SQS_ACCESS_KEY = process.env.SQS_ACCESS_KEY;
+  envConfig.SQS_SECRET_KEY = process.env.SQS_SECRET_KEY;
+  envConfig.APIGW_DISCOBOT_X_API_KEY = process.env.APIGW_DISCOBOT_X_API_KEY;
+  envConfig.SQS_QUEUE = process.env.SQS_QUEUE;
+  let appConfig = envConfig;
+}
+else {
+  let appConfig = userConfig;
+}
+
 // const cron = require('node-cron');
 const Discord = require('discord.js');
 const roles = require('./roles');
@@ -27,14 +43,14 @@ const AWS = require('aws-sdk');
 
 AWS.config.update({
   region: 'eu-west-1',
-  accessKeyId: process.env.SQS_ACCESS_KEY,
-  secretAccessKey: process.env.SQS_SECRET_KEY
+  accessKeyId: appConfig.SQS_ACCESS_KEY,
+  secretAccessKey: appConfig.SQS_SECRET_KEY
 });
 
 require('./utils');
 
 // Auth token
-const token = process.env.AUTH_TOKEN;
+const token = appConfig.AUTH_TOKEN;
 if (!token) {
   console.log('No auth token found, please set the AUTH_TOKEN environment variable.\n');
   process.exit();
@@ -127,7 +143,7 @@ bot.on('ready', () => {
   console.log('Bot connected');
 
   const sqsStreamers = Consumer.create({
-    queueUrl: process.env.SQS_QUEUE,
+    queueUrl: appConfig.SQS_QUEUE,
     handleMessage: (message, done) => {
       try {
         msgq.messageReceived.process(bot, message);

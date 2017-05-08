@@ -22,7 +22,7 @@ const Producer = require('sqs-producer');
 module.exports = {
   process: (bot, message) => {
     const producer = Producer.create({
-      queueUrl: process.env.SQS_QUEUE,
+      queueUrl: appConfig.SQS_QUEUE,
       region: 'eu-west-1'
     });
 

@@ -1,0 +1,7 @@
+{
+    "AUTH_TOKEN": "",
+    "SQS_ACCESS_KEY": "",
+    "SQS_SECRET_KEY": "",
+    "APIGW_DISCOBOT_X_API_KEY": "",
+    "SQS_QUEUE": "",
+}

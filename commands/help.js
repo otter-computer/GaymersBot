@@ -28,16 +28,31 @@ module.exports = {
     let commandString = '```';
     let commandArray = [];
 
+/*    let authorRoles = [];
+    for (let role in message.author.roles){
+     authorRoles.push(role.get('name'));
+    }
+    console.log(authorRoles);*/
+
     // TODO: Display commands based on requireRoles
     for (let command in commands.commands) {
       let cmd = commands.commands[command];
       let info = '!' + command;
 
       // Skip commands that require roles for now
-      if (cmd.requireRoles) {
-        continue;
-      }
+      if (cmd.requireRoles){
+        let member = bot.guilds.first().members.get(message.author.id);
+        console.log('command requires roles');
+        console.log('user has Admin: '+member.roles.exists('name','Admin')+ ' and is '+member.roles.exists('name','Admin'));
+        console.log('user has Moderator: '+member.roles.exists('name','Moderator')+ ' and is '+member.roles.exists('name','Moderator'));
+        if (cmd.requireRoles.includes('Admin') && !member.roles.exists('name','Admin')) {
+          continue;
+        }
 
+        if (cmd.requireRoles.includes("Moderator") && !member.roles.exists('name','Moderator')) {
+          continue;
+        }
+      }
       if (cmd.usage) {
         info += ' ' + cmd.usage;
       }

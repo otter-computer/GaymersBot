@@ -16,21 +16,18 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * */
-
-const userConfig = require('./config.json');
-
-if (!userConfig) {
-  console.log('config.json not found - will attempt to use environment variables.\n');
-  let envConfig = {};
-  envConfig.AUTH_TOKEN = process.env.AUTH_TOKEN;
-  envConfig.SQS_ACCESS_KEY = process.env.SQS_ACCESS_KEY;
-  envConfig.SQS_SECRET_KEY = process.env.SQS_SECRET_KEY;
-  envConfig.APIGW_DISCOBOT_X_API_KEY = process.env.APIGW_DISCOBOT_X_API_KEY;
-  envConfig.SQS_QUEUE = process.env.SQS_QUEUE;
-  let appConfig = envConfig;
+var appConfig = {};
+try {
+  var userConfig = require('./config');
+  appConfig = userConfig;
 }
-else {
-  let appConfig = userConfig;
+catch (e) {
+  console.log('config.json not found - will attempt to use environment variables.\n');
+  appConfig.AUTH_TOKEN = process.env.AUTH_TOKEN;
+  appConfig.SQS_ACCESS_KEY = process.env.SQS_ACCESS_KEY;
+  appConfig.SQS_SECRET_KEY = process.env.SQS_SECRET_KEY;
+  appConfig.APIGW_DISCOBOT_X_API_KEY = process.env.APIGW_DISCOBOT_X_API_KEY;
+  appConfig.SQS_QUEUE = process.env.SQS_QUEUE;
 }
 
 // const cron = require('node-cron');

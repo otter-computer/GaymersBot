@@ -21,17 +21,27 @@ const Discord = require('discord.js');
 
 module.exports = {
   process: (bot, message) => {
-    const streamGuild = process.env.STREAM_GUILD;
-    const streamChannel = process.env.STREAM_CHANNEL;
-    const guildObj = bot.guilds.find('name', streamGuild);
-    const notificationChannel = guildObj.channels.find('name', streamChannel);
+    const targetGuild = process.env.TARGET_GUILD;
+    const guildObj = bot.guilds.find('name', targetGuild);
 
-    // Will forward the message to the Guild and channel specified by ENV variables.
-    if (!notificationChannel) {
-      console.error('Channel #'+streamChannel+' doesn\'t exist!');
-    } else {
-      notificationChannel.sendMessage(message.Body);
+    const args = JSON.parse(message.Body);
+
+    if (args.channel &&  args.message){
+
+      if (args.action == "NOTIFY"){
+        const notificationChannel = guildObj.channels.find('name', args.channel);
+
+        if (!notificationChannel) {
+          console.error('Channel #'+args.channel+' doesn\'t exist!');
+        } else {
+          notificationChannel.sendMessage(args.message);
+        }
+      }
+
+      
     }
+    
+
 
   }
 };

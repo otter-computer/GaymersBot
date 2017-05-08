@@ -18,18 +18,36 @@
  * */
 
 const createEvent = require('../msgq/messageCreate');
+const moment = require('moment');
 
 module.exports = {
-  usage: '',
+  usage: 'remindme in XX minutes/hours/days [message]',
   description: 'Sets a reminder, bot will DM you',
   allowDM: false,
   process: (bot, message) => {
+
+    time = message.match(/(\d+days)?(\d+day)?(\d+hours)?(\d+hour)?(\d+minutes?)?(\d+minute?)?(\d+min?)?(\d+mins?)?/);
 
     messageObj = {};
 
     messageObj.action = 'NOTIFY';
     messageObj.channel = 'alt-test';
-    messageObj.delay = 0;
+    if (time){
+      if (time.match(/(\d+days)?(\d+day)?/)){
+        timeObj = moment(Date.now()).add(parseInt(time), 'days');
+      }
+      else if (time.match(/(\d+hours)?(\d+hour)?/)){
+        timeObj = moment(Date.now()).add(parseInt(time), 'hours');
+      }
+      else if (time.match(/(\d+minutes)?(\d+minute)?(\d+min?)?(\d+mins?)?/)){
+        timeObj = moment(Date.now()).add(parseInt(time), 'minutes');
+      }
+      msgDelay = timeObj;
+    }
+    else {
+      msgDelay = 0;
+    }
+    messageObj.delay = msgDelay;
     messageObj.message = 'test';
 
     createEvent.process(bot, messageObj);

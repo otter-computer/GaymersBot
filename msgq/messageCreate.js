@@ -17,30 +17,23 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * */
 
-// Message actions
-const messageActions = {};
-
-// Import actions
-messageActions.default = require('./default');
-messageActions.announceStream = require('./announceStream');
-messageActions.remindUser = require('./remindUser');
+const Producer = require('sqs-producer');
 
 module.exports = {
   process: (bot, message) => {
-    const guild = bot.guilds.first();
+    const producer = Producer.create({
+      queueUrl: process.env.SQS_QUEUE,
+      region: 'eu-west-1'
+    });
 
-    const args = JSON.parse(message.Body);
+    let delayTime = message.delay ? message.delay : 0;
 
-    switch (args.action) {
-      case 'ANNOUNCE_STREAM':
-        messageActions.announceStream.process(bot, args.message);
-        break;
-
-      case 'DEFAULT':
-        messageActions.default.process(bot, args.message, args.channel);
-
-      default:
-        break;
-    }
+    producer.send([{
+      id: 'streamer',
+      body: JSON.stringify(message),
+      delaySeconds: delayTime
+    }], function(err) {
+      if (err) console.log(err);
+    });
   }
 };

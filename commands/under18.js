@@ -32,6 +32,6 @@ module.exports = {
     const under18Role = message.guild.roles.find('name', 'Under 18');
 
     member.addRole(under18Role);
-    message.channel.sendMessage(member + ' has been given the `Under 18` role. :ok_hand:');
+    message.channel.send(member + ' has been given the `Under 18` role. :ok_hand:');
   }
 };

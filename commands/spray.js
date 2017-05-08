@@ -38,9 +38,9 @@ module.exports = {
     }
 
     if (Math.floor(Math.random() * 50) + 1 === 50) {
-      message.channel.sendMessage(spraySpecial.replace('$USER', user));
+      message.channel.send(spraySpecial.replace('$USER', user));
     } else {
-      message.channel.sendMessage(sprayReplies.random().replace('$USER', user));
+      message.channel.send(sprayReplies.random().replace('$USER', user));
     }
   }
 };

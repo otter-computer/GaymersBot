@@ -192,7 +192,7 @@ function commandValidInChannel(command, message) {
 
     // If the user can't read messages in that channel, leave it out
     if (!channel.permissionsFor(message.member)
-        .hasPermission('READ_MESSAGES')) {
+        .has('READ_MESSAGES')) {
       return;
     }
 
@@ -200,13 +200,13 @@ function commandValidInChannel(command, message) {
   });
 
   if (validChannels.length === 0) {
-    message.member.sendMessage('Sorry, that command can\'t be used in ' +
+    message.member.send('Sorry, that command can\'t be used in ' +
       'that channel.');
   } else if (validChannels.length === 1) {
-    message.member.sendMessage('Sorry, that command can only be used ' +
+    message.member.send('Sorry, that command can only be used ' +
       'in ' + validChannels[0] + '.');
   } else {
-    message.member.sendMessage('Sorry, that command can only be used in ' +
+    message.member.send('Sorry, that command can only be used in ' +
       'the following channels: ' + validChannels.join(', ') + '.');
   }
 
@@ -304,7 +304,7 @@ function messageHandler(message) {
     });
 
     if (!satisfiesRoles) {
-      message.channel.sendMessage('I\'m sorry ' + message.author + ', I\'m ' +
+      message.channel.send('I\'m sorry ' + message.author + ', I\'m ' +
         'afraid I can\'t do that.');
       return;
     }

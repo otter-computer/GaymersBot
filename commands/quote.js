@@ -107,6 +107,6 @@ module.exports = {
       }
     }
 
-    message.channel.sendMessage('', { embed: embed });
+    message.channel.send('', { embed: embed });
   }
 };

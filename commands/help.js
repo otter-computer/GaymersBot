@@ -58,10 +58,10 @@ module.exports = {
     commandString += '```';
     commandArray.push(commandString);
 
-    message.author.sendMessage(firstMessage);
+    message.author.send(firstMessage);
 
     for (let i = 0; i < commandArray.length; i++) {
-      message.author.sendMessage(commandArray[i]);
+      message.author.send(commandArray[i]);
     }
 
     // If !help was run in a public channel, send a message to that channel too

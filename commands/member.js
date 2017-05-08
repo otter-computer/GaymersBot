@@ -32,6 +32,6 @@ module.exports = {
     const memberRole = message.guild.roles.find('name', 'Member');
 
     member.addRole(memberRole);
-    message.channel.sendMessage(member + ' has been given the `Member` role. :ok_hand:');
+    message.channel.send(member + ' has been given the `Member` role. :ok_hand:');
   }
 };

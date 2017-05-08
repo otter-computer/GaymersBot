@@ -95,6 +95,6 @@ module.exports = {
     response += ' on a timeout for 30 minutes.';
     message.reply(response);
 
-    userLogs.sendMessage(response + ' (' + moment(Date.now()).format(format) + ') until (' + moment(timeoutEnd).format(format) + ')');
+    userLogs.send(response + ' (' + moment(Date.now()).format(format) + ') until (' + moment(timeoutEnd).format(format) + ')');
   }
 };

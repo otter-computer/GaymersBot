@@ -40,6 +40,6 @@ module.exports = {
     const embedDate = new Date(Date.now()).toISOString();
     embed.setTimestamp(embedDate);
 
-    messageLogsChannel.sendMessage('', { embed: embed });
+    messageLogsChannel.send('', { embed: embed });
   }
 };

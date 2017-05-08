@@ -62,4 +62,6 @@ The bot makes use of Amazon's Simple Queue Service to run certain tasks. In orde
 
 From there you need to create a new user in AWS IAM. You need to assign that user Read and Write permissions to SQS. Then you can generate an access key to fill the `SQS_ACCESS_KEY` environment variable, and a secret key to fill `SQS_SECRET_KEY`.
 
+*SQS is currently work in progress and will eventually be made an optional component. The bot will mostly continue to function without SQS included.*
+
 After adding these, run `npm start` to run the bot.

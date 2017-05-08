@@ -26,17 +26,15 @@ module.exports = {
   requireRoles: ['Admin', 'Moderator'],
   process: (bot, message) => {
 
-    let status = splitargs(message.content);
+    const status = splitargs(message.content);
     status.shift();
 
-    let statusMessage = status.join(' ');
+    const statusMessage = status.join(' ');
 
-    if (status.length > 0){
+    if (status.length > 0) {
       bot.user.setGame(statusMessage);
-    }
-    else {
+    } else {
       bot.user.setGame(null);
     }
-
   }
 };

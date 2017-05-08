@@ -32,7 +32,7 @@ module.exports = {
     let statusMessage = status.join(' ');
 
     if (status.length > 0){
-        bot.user.setGame(statusMessage,'https://twitch.tv/?');
+        bot.user.setGame(statusMessage,'https://www.twitch.tv/gaymersdiscord');
     }
     else {
       bot.user.setGame(null);

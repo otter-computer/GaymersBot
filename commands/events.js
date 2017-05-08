@@ -88,7 +88,7 @@ function buildEmbeds(events, message) {
   message.reply('Here\'s the upcoming events:');
 
   for (let embed of embeds) {
-    message.channel.send(embed);
+    message.channel.send({embed: embed});
   }
 }
 

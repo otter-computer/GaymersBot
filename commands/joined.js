@@ -51,6 +51,6 @@ module.exports = {
       embed.setTimestamp(target.joinedAt);
     }
 
-    message.channel.send('', { embed: embed });
+    message.channel.send({ embed: embed });
   }
 };

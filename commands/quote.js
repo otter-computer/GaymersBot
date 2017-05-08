@@ -44,6 +44,10 @@ module.exports = {
     // discord.js's local message cache. We might be able to go a step further
     // and ask discord.js to check message history from the API as well.
     message.guild.channels.forEach((channel) => {
+      // Voice channels don't have .messages, just skip them
+      if (!channel.messages) {
+        return;
+      }
       const possibleMessage = channel.messages.get(args[0]);
       if (possibleMessage) {
         targetMessage = possibleMessage;

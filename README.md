@@ -9,8 +9,10 @@ Features
 
 ### Commands
 - avatar: See someone's avatar.
-- boop: BOOP
+- boop: BOOP!
 - choose: Let DiscoBot choose for you.
+- event: Sign up to a server event!
+- events: List upcoming server events.
 - help: See what commands I can run!
 - hug: Give someone a hug :blush:
 - joined: See when someone joined the server.
@@ -39,12 +41,14 @@ Requirements
 
 - node.js
 - Discord Bot Account
-- Firebase Database
+- [AWS](https://aws.amazon.com/) account
 
 Running
 -------
 
 Run `npm install` to install required dependencies.
+
+### Discord Auth Token
 
 You will need to set the `AUTH_TOKEN` environment variable in order to run the
 bot locally. You can create one of these
@@ -52,18 +56,12 @@ bot locally. You can create one of these
 be created as a 'Bot User' and invited to your test server following the
 instructions in the Discord docs.
 
-You will also need to set the following Firebase environment variables in
-order to test saving to the database.
-```
-  FIREBASE_API
-  FIREBASE_AUTH_DOMAIN
-  FIREBASE_DATABASE_URL
-  FIREBASE_STORAGE_BUCKET
-```
-These can be generated from the
-[Firebase console](https://console.firebase.google.com/).
+### AWS SQS
 
-Finally, you can set the `APP_DEBUG` environment variable to `'true'` to
-ensure you get a few extra logging messages to the console.
+The bot makes use of Amazon's Simple Queue Service to run certain tasks. In order to set this up you will need to create an SQS queue from the AWS developer console. You can then add the `SQS_QUEUE` environment variables with the URLs generated from AWS.
+
+From there you need to create a new user in AWS IAM. You need to assign that user Read and Write permissions to SQS. Then you can generate an access key to fill the `SQS_ACCESS_KEY` environment variable, and a secret key to fill `SQS_SECRET_KEY`.
+
+*SQS is currently work in progress and will eventually be made an optional component. The bot will mostly continue to function without SQS included.*
 
 After adding these, run `npm start` to run the bot.

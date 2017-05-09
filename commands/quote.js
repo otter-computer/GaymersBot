@@ -78,9 +78,9 @@ module.exports = {
     }
 
     embed.setTimestamp(targetMessage.createdAt);
-    embed.addField('Channel', message.channel.name);
+    embed.addField('Channel', targetMessage.channel.name);
 
-    if (message.cleanContent) {
+    if (targetMessage.cleanContent) {
       embed.addField('Message Content', targetMessage.cleanContent);
     }
 

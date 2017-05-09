@@ -16,56 +16,53 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * */
+var appConfig = {};
+try {
+  var userConfig = require('./config');
+  appConfig = userConfig;
+}
+catch (e) {
+  console.log('config.json not found - will attempt to use environment variables.\n');
+  appConfig.AUTH_TOKEN = process.env.AUTH_TOKEN;
+  appConfig.SQS_ACCESS_KEY = process.env.SQS_ACCESS_KEY;
+  appConfig.SQS_SECRET_KEY = process.env.SQS_SECRET_KEY;
+  appConfig.APIGW_DISCOBOT_X_API_KEY = process.env.APIGW_DISCOBOT_X_API_KEY;
+  appConfig.SQS_QUEUE = process.env.SQS_QUEUE;
+}
 
 // const cron = require('node-cron');
 const Discord = require('discord.js');
-const firebase = require('firebase');
-const moment = require('moment');
-
-const format = require('./momentFormat');
 const roles = require('./roles');
+require('log-timestamp');
 
 const Consumer = require('sqs-consumer');
 const AWS = require('aws-sdk');
 
 AWS.config.update({
   region: 'eu-west-1',
-  accessKeyId: process.env.SQS_ACCESS_KEY,
-  secretAccessKey: process.env.SQS_SECRET_KEY
+  accessKeyId: appConfig.SQS_ACCESS_KEY,
+  secretAccessKey: appConfig.SQS_SECRET_KEY
 });
 
 require('./utils');
 
 // Auth token
-const token = process.env.AUTH_TOKEN;
+const token = appConfig.AUTH_TOKEN;
 if (!token) {
   console.log('No auth token found, please set the AUTH_TOKEN environment variable.\n');
   process.exit();
 }
 
-// Debug mode
-const debug = process.env.APP_DEBUG === 'true';
-
 // Handle graceful shutdowns
 function cleanup() {
   if (bot)
     bot.destroy();
-  console.log('Bot shut down: ', moment(Date.now()).format(format));
+  console.log('Bot shut down');
   process.exit();
 }
 
 process.on('SIGINT', cleanup);
 process.on('SIGTERM', cleanup);
-
-// Firebase
-const config = {
-  apiKey: process.env.FIREBASE_API,
-  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
-  databaseURL: process.env.FIREBASE_DATABASE_URL,
-  storageBucket: process.env.FIREBASE_STORAGE_BUCKET
-};
-
-firebase.initializeApp(config);
 
 // Commands
 const commands = {};
@@ -88,6 +85,8 @@ commands.set18 = require('./commands/set18');
 commands.setregion = require('./commands/setregion');
 commands.slap = require('./commands/slap');
 commands.spray = require('./commands/spray');
+commands.status = require('./commands/status');
+commands.stream = require('./commands/stream');
 // commands.timeout = require('./commands/timeout');
 commands.under18 = require('./commands/under18');
 commands.unset18 = require('./commands/unset18');
@@ -124,7 +123,6 @@ msgq.messageReceived = require('./msgq/messageReceived');
 
 // Timeout cron
 // cron.schedule('0 */5 * * * *', function() {
-//   if (debug) console.log('Checking for expired timeouts');
 //   cronJobs.timeout.process(bot);
 // }, true);
 
@@ -141,10 +139,10 @@ msgq.messageReceived = require('./msgq/messageReceived');
 // Init bot
 const bot = new Discord.Client();
 bot.on('ready', () => {
-  console.log('Bot connected to Discord: ', moment(Date.now()).format(format));
+  console.log('Bot connected');
 
   const sqsStreamers = Consumer.create({
-    queueUrl: process.env.SQS_QUEUE,
+    queueUrl: appConfig.SQS_QUEUE,
     handleMessage: (message, done) => {
       try {
         msgq.messageReceived.process(bot, message);
@@ -164,9 +162,6 @@ bot.on('ready', () => {
   sqsStreamers.start();
 
 });
-
-
-
 
 /**
  * Return `true` if the command is allowed in this channel, `false` if not.
@@ -385,6 +380,6 @@ bot.on('messageDelete', (message) => {
 //  }
 //});
 
-console.log('Bot started: ', moment(Date.now()).format(format));
+console.log('Bot started');
 
 bot.login(token);

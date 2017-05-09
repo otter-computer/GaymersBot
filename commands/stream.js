@@ -17,19 +17,24 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * */
 
+const splitargs = require('splitargs');
+
 module.exports = {
-  usage: '[@user]',
-  description: 'Add the \'Under 18\' role.',
+  usage: 'Message to display as a stream.',
+  description: 'ADMIN ONLY: Set the stream status of the bot.',
   allowDM: false,
+  requireRoles: ['Admin', 'Moderator'],
   process: (bot, message) => {
 
-    const under18Role = message.guild.roles.find('name', 'Under 18');
+    const status = splitargs(message.content);
+    status.shift();
 
-    if (message.member.roles.exists('name', 'Under 18')) {
-      message.reply('You already have the Under 18 role. This can only be removed by an admin or moderator.');
-      return;
+    const statusMessage = status.join(' ');
+
+    if (status.length > 0){
+        bot.user.setGame(statusMessage, 'https://www.twitch.tv/gaymersdiscord');
+    } else {
+      bot.user.setGame(null);
     }
-    message.member.addRole(under18Role);
-    message.reply('You\'ve been given the `Under 18` role. :ok_hand:');
   }
 };

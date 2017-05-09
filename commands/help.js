@@ -24,44 +24,82 @@ module.exports = {
   description: 'See what commands I can run!',
   allowDM: true,
   process: (bot, message) => {
-    let firstMessage = 'Available Commands';
-    let commandString = '```';
-    let commandArray = [];
 
-    // TODO: Display commands based on requireRoles
-    for (let command in commands.commands) {
-      let cmd = commands.commands[command];
-      let info = '!' + command;
+    function generateCommandSet(role) {
 
-      // Skip commands that require roles for now
-      if (cmd.requireRoles) {
-        continue;
+      let title = role ? role : 'Available';
+      title += ' Commands';
+      let commandString = '```markdown' + '\n';
+
+      commandString +=  title + '\n';
+      commandString +=  Array(title.length + 1).join('=') + '\n';
+      let commandArray = [];
+
+      // TODO: Display commands based on requireRoles
+      for (let command in commands.commands) {
+        let cmd = commands.commands[command];
+        let info = '!' + command;
+
+        // Skip commands that require roles based on parameter
+        if (cmd.requireRoles && !role){
+          // Drops user commands
+          continue;
+        }
+        if (!cmd.requireRoles && role){
+          // Drops non role commands when generating role list
+          continue;
+        }
+
+        if (cmd.requireRoles && role){
+          if (!cmd.requireRoles.includes(role)){
+            // Drops commands not requiring the role parameter
+            continue;
+          }
+        }
+
+        if (cmd.usage) {
+          info += ' ' + cmd.usage;
+        }
+
+        if (cmd.description) {
+          info += ' - ' + cmd.description;
+        }
+
+        if ((commandString.length + info.length) < 1900) {
+          commandString += info + '\n';
+        } else {
+          commandString += '```';
+          commandArray.push(commandString);
+          commandString = '```'; // Reset
+          commandString += info + '\n';
+        }
       }
+      commandString += '```';
+      commandArray.push(commandString);
 
-      if (cmd.usage) {
-        info += ' ' + cmd.usage;
-      }
+      return commandArray;
+    }
 
-      if (cmd.description) {
-        info += ' - ' + cmd.description;
-      }
+    const userCommands = generateCommandSet(false);
+    const member = bot.guilds.first().members.get(message.author.id);
 
-      if ((commandString.length + info.length) < 1900) {
-        commandString += info + '\n';
-      } else {
-        commandString += '```';
-        commandArray.push(commandString);
-        commandString = '```'; // Reset
-        commandString += info + '\n';
+    for (let i = 0; i < userCommands.length; i++) {
+      message.author.send(userCommands[i]);
+    }
+
+    if (member.roles.exists('name','Moderator') && !member.roles.exists('name','Admin')) {
+
+      const modCommands = generateCommandSet('Moderator');
+      for (let i = 0; i < modCommands.length; i++) {
+        message.author.send(modCommands[i]);
       }
     }
-    commandString += '```';
-    commandArray.push(commandString);
 
-    message.author.send(firstMessage);
-
-    for (let i = 0; i < commandArray.length; i++) {
-      message.author.send(commandArray[i]);
+    if (member.roles.exists('name','Admin')) {
+      const adminCommands = generateCommandSet('Admin');
+      for (let i = 0; i < adminCommands.length; i++) {
+        message.author.send(adminCommands[i]);
+      }
     }
 
     // If !help was run in a public channel, send a message to that channel too

@@ -27,7 +27,12 @@ module.exports = {
 
     function generateCommandSet(role) {
 
-      let commandString = '```';
+      let title = role ? role : 'Available';
+      title += ' Commands';
+      let commandString = '```markdown' + '\n';
+
+      commandString +=  title + '\n';
+      commandString +=  Array(title.length + 1).join('=') + '\n';
       let commandArray = [];
 
       // TODO: Display commands based on requireRoles
@@ -78,24 +83,22 @@ module.exports = {
     const userMessage = 'Available Commands';
     const userCommands = generateCommandSet(false);
     const member = bot.guilds.first().members.get(message.author.id);
-    message.author.send(userMessage);
 
     for (let i = 0; i < userCommands.length; i++) {
       message.author.send(userCommands[i]);
     }
 
-    if (member.roles.exists('name','Moderator')) {
+    if (member.roles.exists('name','Moderator') && !member.roles.exists('name','Admin')) {
+
       const modCommands = generateCommandSet('Moderator');
-      message.author.send('Moderator Commands');
-      for (let i = 0; i < userCommands.length; i++) {
+      for (let i = 0; i < modCommands.length; i++) {
         message.author.send(modCommands[i]);
       }
     }
 
     if (member.roles.exists('name','Admin')) {
       const adminCommands = generateCommandSet('Admin');
-      message.author.send('Admin Commands');
-      for (let i = 0; i < userCommands.length; i++) {
+      for (let i = 0; i < adminCommands.length; i++) {
         message.author.send(adminCommands[i]);
       }
     }

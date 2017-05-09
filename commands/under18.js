@@ -19,17 +19,17 @@
 
 module.exports = {
   usage: '[@user]',
-  description: 'Add the \'Under 18\' role. REMOVAL BY ADMIN/MOD ONLY',
+  description: 'Add the \'Under 18\' role.',
   allowDM: false,
   process: (bot, message) => {
 
     const under18Role = message.guild.roles.find('name', 'Under 18');
 
-    if (message.member.roles.findKey('name', 'Under 18')) {
+    if (message.member.roles.exists('name', 'Under 18')) {
       message.reply('You already have the Under 18 role. This can only be removed by an admin or moderator.');
       return;
     }
     message.member.addRole(under18Role);
-    message.channel.send(message.member + ' you have been given the `Under 18` role. :ok_hand:');
+    message.reply('You\'ve been given the `Under 18` role. :ok_hand:');
   }
 };

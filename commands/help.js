@@ -24,59 +24,80 @@ module.exports = {
   description: 'See what commands I can run!',
   allowDM: true,
   process: (bot, message) => {
-    let firstMessage = 'Available Commands';
-    let commandString = '```';
-    let commandArray = [];
 
-/*    let authorRoles = [];
-    for (let role in message.author.roles){
-     authorRoles.push(role.get('name'));
-    }
-    console.log(authorRoles);*/
+    function generateCommandSet(role) {
 
-    // TODO: Display commands based on requireRoles
-    for (let command in commands.commands) {
-      let cmd = commands.commands[command];
-      let info = '!' + command;
+      let commandString = '```';
+      let commandArray = [];
 
-      // Skip commands that require roles for now
-      if (cmd.requireRoles){
-        let member = bot.guilds.first().members.get(message.author.id);
-        console.log('command requires roles');
-        console.log('user has Admin: '+member.roles.exists('name','Admin')+ ' and is '+member.roles.exists('name','Admin'));
-        console.log('user has Moderator: '+member.roles.exists('name','Moderator')+ ' and is '+member.roles.exists('name','Moderator'));
-        if (cmd.requireRoles.includes('Admin') && !member.roles.exists('name','Admin')) {
+      // TODO: Display commands based on requireRoles
+      for (let command in commands.commands) {
+        let cmd = commands.commands[command];
+        let info = '!' + command;
+
+        // Skip commands that require roles based on parameter
+        if (cmd.requireRoles && !role){
+          // Drops user commands
+          continue;
+        }
+        if (!cmd.requireRoles && role){
+          // Drops non role commands when generating role list
           continue;
         }
 
-        if (cmd.requireRoles.includes("Moderator") && !member.roles.exists('name','Moderator')) {
-          continue;
+        if (cmd.requireRoles && role){
+          if (!cmd.requireRoles.includes(role)){
+            // Drops commands not requiring the role parameter
+            continue;
+          }
+        }
+
+        if (cmd.usage) {
+          info += ' ' + cmd.usage;
+        }
+
+        if (cmd.description) {
+          info += ' - ' + cmd.description;
+        }
+
+        if ((commandString.length + info.length) < 1900) {
+          commandString += info + '\n';
+        } else {
+          commandString += '```';
+          commandArray.push(commandString);
+          commandString = '```'; // Reset
+          commandString += info + '\n';
         }
       }
-      if (cmd.usage) {
-        info += ' ' + cmd.usage;
-      }
+      commandString += '```';
+      commandArray.push(commandString);
 
-      if (cmd.description) {
-        info += ' - ' + cmd.description;
-      }
+      return commandArray;
+    }
 
-      if ((commandString.length + info.length) < 1900) {
-        commandString += info + '\n';
-      } else {
-        commandString += '```';
-        commandArray.push(commandString);
-        commandString = '```'; // Reset
-        commandString += info + '\n';
+    const userMessage = 'Available Commands';
+    const userCommands = generateCommandSet(false);
+    const member = bot.guilds.first().members.get(message.author.id);
+    message.author.send(userMessage);
+
+    for (let i = 0; i < userCommands.length; i++) {
+      message.author.send(userCommands[i]);
+    }
+
+    if (member.roles.exists('name','Moderator')) {
+      const modCommands = generateCommandSet('Moderator');
+      message.author.send('Moderator Commands');
+      for (let i = 0; i < userCommands.length; i++) {
+        message.author.send(modCommands[i]);
       }
     }
-    commandString += '```';
-    commandArray.push(commandString);
 
-    message.author.send(firstMessage);
-
-    for (let i = 0; i < commandArray.length; i++) {
-      message.author.send(commandArray[i]);
+    if (member.roles.exists('name','Admin')) {
+      const adminCommands = generateCommandSet('Admin');
+      message.author.send('Admin Commands');
+      for (let i = 0; i < userCommands.length; i++) {
+        message.author.send(adminCommands[i]);
+      }
     }
 
     // If !help was run in a public channel, send a message to that channel too

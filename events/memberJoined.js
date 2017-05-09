@@ -39,21 +39,21 @@ module.exports = {
       const embedDate = new Date(Date.now()).toISOString();
       embed.setTimestamp(embedDate);
 
-      userLogsChannel.sendMessage(member + ' joined.', { embed: embed });
+      userLogsChannel.send(member + ' joined.', { embed: embed });
     }
 
     // Add a little message to #welcome-room to grab the user's attention
     if (!welcomeChannel) {
       console.error('Channel #welcome-room doesn\'t exist!');
     } else {
-      welcomeChannel.sendMessage('Welcome to Gaymers, ' + member + '! ' +
+      welcomeChannel.send('Welcome to Gaymers, ' + member + '! ' +
           'Please introduce yourself, and check your DMs for more info! ' +
           'You will have access to other channels once you introduce ' +
           'yourself :smile:');
     }
 
     // DM the user more onboarding information
-    member.sendMessage(
+    member.send(
       '__**Welcome to Gaymers!**__\n\n' +
       'Please introduce yourself in **#welcome-room**, and feel free to ' +
       'tell us about your favorite games, where you\'re from, how you heard ' +

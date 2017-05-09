@@ -35,6 +35,6 @@ module.exports = {
     const embedDate = new Date(Date.now()).toISOString();
     embed.setTimestamp(embedDate);
 
-    userLogsChannel.sendMessage(member + ' unbanned.', { embed: embed });
+    userLogsChannel.send(member + ' unbanned.', { embed: embed });
   }
 };

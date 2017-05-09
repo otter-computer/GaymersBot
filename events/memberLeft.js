@@ -36,7 +36,7 @@ module.exports = {
     const embedDate = new Date(Date.now()).toISOString();
     embed.setTimestamp(embedDate);
 
-    userLogsChannel.sendMessage(member + ' left.', { embed: embed });
+    userLogsChannel.send(member + ' left.', { embed: embed });
 
     // Attempt to find a welcome message for this user in the #welcome-room
     // If one is found within the last 100 messages, delete it. This will also

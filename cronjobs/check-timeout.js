@@ -61,7 +61,7 @@ module.exports = {
             updates['/admin/timeout/' + user] = null;
 
             // Log removal in user-logs
-            userLogs.sendMessage(member + ' has been removed from timeout. (' + moment(Date.now()).format(format) + ')');
+            userLogs.send(member + ' has been removed from timeout. (' + moment(Date.now()).format(format) + ')');
           }
         }
 

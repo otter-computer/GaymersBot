@@ -77,7 +77,7 @@ module.exports = {
       }
     }
 
-    messageLogsChannel.sendMessage(
+    messageLogsChannel.send(
       message.author + '\'s message deleted from ' + message.channel + '.',
       { embed: embed }
     );

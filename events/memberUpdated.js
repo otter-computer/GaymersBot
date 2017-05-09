@@ -60,7 +60,7 @@ function usernameUpdate(bot, oldMember, newMember) {
     embed.addField('New Nickname', newMember.nickname, true);
   }
 
-  userLogsChannel.sendMessage('', { embed: embed });
+  userLogsChannel.send('', { embed: embed });
 }
 
 
@@ -122,7 +122,7 @@ function memberRoleAdded(newMember) {
   if (!generalChannel) {
     console.error('Channel #general doesn\'t exist!');
   } else {
-    generalChannel.sendMessage('Welcome, ' + newMember + '!');
+    generalChannel.send('Welcome, ' + newMember + '!');
   }
 
   // Log the user becoming a member to #user-logs
@@ -140,11 +140,11 @@ function memberRoleAdded(newMember) {
     const embedDate = new Date(Date.now()).toISOString();
     embed.setTimestamp(embedDate);
 
-    userLogsChannel.sendMessage(newMember + ' granted membership.', { embed: embed });
+    userLogsChannel.send(newMember + ' granted membership.', { embed: embed });
   }
 
   // DM the user with our welcome message
-  newMember.sendMessage(
+  newMember.send(
     '__**Welcome to Gaymers!**__\n \n' +
     'Please follow our rules. You can find them in the #info-rules channel. \n \n' +
     'If you have any questions you can @admin or @moderator in any channel or PM an admin or moderator directly \n \n' +

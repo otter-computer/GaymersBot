@@ -67,7 +67,7 @@ function sendRequest(eventId, userId, modifier, callback, message) {
     path: '/events/' + eventId + urlModifer,
     method: 'POST',
     headers: {
-      'x-api-key': process.env.APIGW_DISCOBOT_X_API_KEY
+      'x-api-key': appConfig.APIGW_DISCOBOT_X_API_KEY
     }
   };
 

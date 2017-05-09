@@ -16,6 +16,19 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * */
+var appConfig = {};
+try {
+  var userConfig = require('./config');
+  appConfig = userConfig;
+}
+catch (e) {
+  console.log('config.json not found - will attempt to use environment variables.\n');
+  appConfig.AUTH_TOKEN = process.env.AUTH_TOKEN;
+  appConfig.SQS_ACCESS_KEY = process.env.SQS_ACCESS_KEY;
+  appConfig.SQS_SECRET_KEY = process.env.SQS_SECRET_KEY;
+  appConfig.APIGW_DISCOBOT_X_API_KEY = process.env.APIGW_DISCOBOT_X_API_KEY;
+  appConfig.SQS_QUEUE = process.env.SQS_QUEUE;
+}
 
 // const cron = require('node-cron');
 const Discord = require('discord.js');
@@ -27,14 +40,14 @@ const AWS = require('aws-sdk');
 
 AWS.config.update({
   region: 'eu-west-1',
-  accessKeyId: process.env.SQS_ACCESS_KEY,
-  secretAccessKey: process.env.SQS_SECRET_KEY
+  accessKeyId: appConfig.SQS_ACCESS_KEY,
+  secretAccessKey: appConfig.SQS_SECRET_KEY
 });
 
 require('./utils');
 
 // Auth token
-const token = process.env.AUTH_TOKEN;
+const token = appConfig.AUTH_TOKEN;
 if (!token) {
   console.log('No auth token found, please set the AUTH_TOKEN environment variable.\n');
   process.exit();
@@ -129,7 +142,7 @@ bot.on('ready', () => {
   console.log('Bot connected');
 
   const sqsStreamers = Consumer.create({
-    queueUrl: process.env.SQS_QUEUE,
+    queueUrl: appConfig.SQS_QUEUE,
     handleMessage: (message, done) => {
       try {
         msgq.messageReceived.process(bot, message);

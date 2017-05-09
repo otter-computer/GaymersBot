@@ -25,7 +25,7 @@ function postData(users) {
     path: '/userdata',
     method: 'POST',
     headers: {
-      'x-api-key': process.env.APIGW_DISCOBOT_X_API_KEY
+      'x-api-key': appConfig.APIGW_DISCOBOT_X_API_KEY
     }
   };
 

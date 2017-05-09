@@ -80,7 +80,6 @@ module.exports = {
       return commandArray;
     }
 
-    const userMessage = 'Available Commands';
     const userCommands = generateCommandSet(false);
     const member = bot.guilds.first().members.get(message.author.id);
 

@@ -17,8 +17,6 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * */
 
-const roles = require('../roles');
-
 // Whenever we want to give permissions to roles, this can be uncommented and used for permission names (with permissions.FLAGS)
 //const permissions = require('discord.js/src/util/Permissions.js');
 
@@ -51,7 +49,7 @@ module.exports = {
     usage: '[rolegroup] [role]',
     description: 'Create a role with the parameters in rolegroup',
     allowDM: false,
-    onlyIn: ['bot-room'],
+    requireRoles: ['Admin', 'Moderator'],
     process: (bot, message) => {
         let msg = message.content;
 

@@ -71,6 +71,7 @@ const commands = {};
 commands.avatar = require('./commands/avatar');
 commands.boop = require('./commands/boop');
 commands.choose = require('./commands/choose');
+commands.createrole = require('./commands/createrole');
 commands.event = require('./commands/event');
 commands.events = require('./commands/events');
 commands.help = require('./commands/help');

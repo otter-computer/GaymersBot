@@ -22,7 +22,7 @@
 
 // A role group must consist of a single, lowercase word
 const roleGroups = {
-    'gamerole': {hoist: 'false', permissions: [], mentionable: 'true'}
+  'gamerole': {hoist: 'false', permissions: [], mentionable: 'true'}
 };
 
 /**
@@ -33,67 +33,67 @@ const roleGroups = {
  * @returns If a valid role, the role object.
  */
 function findRole(guild, roleName) {
-    for (const role of guild.roles.array()) {
-        if (role.name.toLowerCase() === roleName.toLowerCase()) {
-            return role;
-        }
+  for (const role of guild.roles.array()) {
+    if (role.name.toLowerCase() === roleName.toLowerCase()) {
+      return role;
     }
+  }
 }
 
 function usage(message) {
-    message.reply('Usage: `!createrole ' + module.exports.usage + '`\n' +
-            'Available role groups:\n```' + Object.keys(roleGroups) + '```\n');
+  message.reply('Usage: `!createrole ' + module.exports.usage + '`\n' +
+      'Available role groups:\n```' + Object.keys(roleGroups) + '```\n');
 }
 
 module.exports = {
-    usage: '[rolegroup] [role]',
-    description: 'Create a role with the parameters in rolegroup',
-    allowDM: false,
-    requireRoles: ['Admin', 'Moderator'],
-    process: (bot, message) => {
-        let msg = message.content;
+  usage: '[rolegroup] [role]',
+  description: 'Create a role with the parameters in rolegroup',
+  allowDM: false,
+  requireRoles: ['Admin', 'Moderator'],
+  process: (bot, message) => {
+    let msg = message.content;
 
-        // Some users mis-read the usage text and assume that they need to
-        // surround the operator with square brackets. Let's just tolerate their
-        // ignorance. (replace '[' or ']' with '')
-        msg = msg.replace(/\[|\]/g, '');
+    // Some users mis-read the usage text and assume that they need to
+    // surround the operator with square brackets. Let's just tolerate their
+    // ignorance. (replace '[' or ']' with '')
+    msg = msg.replace(/\[|\]/g, '');
 
-        // Split the message into command arguments on spaces
-        msg = msg.split(' ');
+    // Split the message into command arguments on spaces
+    msg = msg.split(' ');
 
-        // Check that we have at least '!createrole', a role group and a role name
-        if (msg.length < 3) {
-            usage(message);
-            return;
-        }
-
-        // Remove the first element, as it will be '!createrole'
-        msg.shift();
-
-        let roleGroup = msg.shift().toLowerCase();
-        let roleName = msg.join(' ');
-
-        const roleExists = findRole(message.guild, roleName);
-        if (roleExists) {
-            message.reply('That role exists already!');
-            return;
-        }
-
-        if (roleGroup in roleGroups) {
-            message.guild.createRole({
-                name: roleName,
-                hoist:roleGroups[roleGroup].hoist,
-                permissions:roleGroups[roleGroup].permissions,
-                mentionable:roleGroups[roleGroup].mentionable})
-              .then(role => {
-                  console.log('Created role ' + roleName + ' ' + role);
-                  message.reply('Created role ' + roleName);
-              })
-              .catch(console.error);
-        } else {
-            message.reply('That role group does not exist!\n');
-            usage(message);
-            return;
-        }
+    // Check that we have at least '!createrole', a role group and a role name
+    if (msg.length < 3) {
+      usage(message);
+      return;
     }
+
+    // Remove the first element, as it will be '!createrole'
+    msg.shift();
+
+    let roleGroup = msg.shift().toLowerCase();
+    let roleName = msg.join(' ');
+
+    const roleExists = findRole(message.guild, roleName);
+    if (roleExists) {
+      message.reply('That role exists already!');
+      return;
+    }
+
+    if (roleGroup in roleGroups) {
+      message.guild.createRole({
+        name: roleName,
+        hoist:roleGroups[roleGroup].hoist,
+        permissions:roleGroups[roleGroup].permissions,
+        mentionable:roleGroups[roleGroup].mentionable})
+        .then(role => {
+          console.log('Created role ' + roleName + ' ' + role);
+          message.reply('Created role ' + roleName);
+        })
+        .catch(console.error);
+    } else {
+      message.reply('That role group does not exist!\n');
+      usage(message);
+      return;
+    }
+  }
 };

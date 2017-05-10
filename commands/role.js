@@ -18,6 +18,8 @@
  * */
 
 const roles = require('../roles');
+const restrictedRoles = roles.RESTRICTED_ROLES;
+const regionRoles = roles.REGION_ROLES;
 
 /**
  * Tries to case-insensitively find a role matching the input string.
@@ -34,7 +36,8 @@ function findRole(guild, roleName) {
   }
 }
 
-function usage(message) {
+function availableRoles(message) {
+
   const availableRoles = [];
 
   message.guild.roles.forEach(role => {
@@ -56,14 +59,30 @@ function usage(message) {
     availableRoles.push(role.name);
   });
 
+  return availableRoles;
+
+}
+
+
+function usage(message) {
+  availableRoles = availableRoles(message);
   message.reply('Usage: `!role ' + module.exports.usage + '`\n' +
                 'Here are the roles you can manage:\n```' +
                 availableRoles.join('\n') + '```');
 }
 
+function checkRestricted(role, restrictedSet) {
+    var length = restrictedSet.length;
+    for(var i = 0; i < length; i++) {
+        if(restrictedSet[i].toLowerCase() == role.toLowerCase())
+            return true;
+    }
+    return false;
+}
+
 module.exports = {
-  usage: 'add/remove [role]',
-  description: 'Set or remove a role from yourself.',
+  usage: '[role]',
+  description: 'Toggles on/off a role from yourself.',
   allowDM: false,
   onlyIn: ['bot-room'],
   process: (bot, message) => {
@@ -77,7 +96,7 @@ module.exports = {
     // Split the message into command arguments on spaces
     msg = msg.split(' ');
 
-    // Check that we have at least '!role' and something else (hopefully a 
+    // Check that we have at least '!role' and something else (hopefully a
     // valid operator, but we can also accept commands with no operators, more
     // on that later)
     if (msg.length < 2) {
@@ -88,59 +107,8 @@ module.exports = {
     // Remove the first element, as it will be '!role'
     msg.shift();
 
-    let operator = msg.shift().toLowerCase();
-
-    // If the user doesn't use add/remove/etc, check to see if they just
-    // supplied a role name. If so, toggle that role on them.
-    if (operator !== 'add' && operator !== 'set' && operator !== 'remove'
-        && operator !== 'unset') {
-      // Undo shifting the first element out
-      msg.unshift(operator);
-
-      // Attempt to re-interpret the whole thing as a role
-      const possibleRole = findRole(message.guild, msg.join(' '));
-      if (possibleRole) {
-        // This is a role! Do they have it?
-        if (message.member.roles.has(possibleRole.id)) {
-          // Rewrite their command to be an 'unset'
-          operator = 'unset';
-        } else {
-          // Rewrite their command to be a 'set'
-          operator = 'set';
-        }
-      } else {
-        usage(message);
-        return;
-      }
-    }
-
     // Collapse parameters into a space-delimited string
     let roleName = msg.join(' ');
-
-    // I could use a simple array 'includes' check to see if roleName is within
-    // RESTRICTED_ROLES, but that doesn't give me a chance to normalize the
-    // contents of RESTRICTED_ROLES. This might waste more CPU time, but it's
-    // more reliable than making sure all additions to RESTRICTED_ROLES are
-    // normalized correctly.
-    const restrictRolesLen = roles.RESTRICTED_ROLES.length;
-    for (let i = 0;i < restrictRolesLen;i++) {
-      if (roles.RESTRICTED_ROLES[i].toLowerCase() === roleName.toLowerCase()) {
-        message.reply('Naughty naughty... :wink: You can\'t ' + operator +
-            ' that role!');
-        return;
-      }
-    }
-
-    // Make sure regions aren't touched by this command
-    // (Same story as above with normalization)
-    const regionRolesLen = roles.REGION_ROLES.length;
-    for (let i = 0;i < regionRolesLen;i++) {
-      if (roles.REGION_ROLES[i].toLowerCase() === roleName.toLowerCase()) {
-        message.reply('You can change your region using the `!setregion` ' +
-            'command! :wink:');
-        return;
-      }
-    }
 
     // Perform a case-insensitive search for the role
     const targetRole = findRole(message.guild, roleName);
@@ -152,18 +120,29 @@ module.exports = {
       return;
     }
 
-    if (operator === 'add' || operator === 'set') {
-      // Check if they already have the role
-      if (message.member.roles.findKey('id', targetRole.id)) {
-        message.reply('You already have that role? :confused:');
-        return;
-      }
+    const isRestricted = checkRestricted(roleName, roles.RESTRICTED_ROLES);
+    if (isRestricted) {
+        message.reply('Naughty naughty... :wink: You can\'t use that role!');
+      return;
+    }
 
-      // Add the new role
-      message.member.addRole(targetRole)
+    const isRegion = checkRestricted(roleName, roles.REGION_ROLES);
+    if (isRegion) {
+        message.reply('You can change your region using the `!setregion` ' +
+            'command! :wink:');
+      return;
+    }
+
+
+    // Check if they already have the role
+    const hasRole = message.member.roles.findKey('id', targetRole.id);
+    if (hasRole) {
+      // Remove the role
+      message.member.removeRole(targetRole)
         .then(
           () => {
-            message.reply('I\'ve added your new role! :ok_hand:');
+            message.reply('I\'ve removed that role from you! :ok_hand:');
+            return;
           },
           (rejectReason) => {
             // TODO: Reject handler
@@ -173,18 +152,14 @@ module.exports = {
           // TODO: Error handler
           console.error(e.stack);
         });
-    } else if (operator === 'remove' || operator === 'unset') {
-      // Check if they have the role in the first place
-      if (!message.member.roles.findKey('id', targetRole.id)) {
-        message.reply('You don\'t have that role? :confused:');
-        return;
-      }
-
-      // Remove the role
-      message.member.removeRole(targetRole)
+    }
+    else {
+      // Add the new role
+      message.member.addRole(targetRole)
         .then(
           () => {
-            message.reply('I\'ve removed that role from you! :ok_hand:');
+            message.reply('I\'ve added your new role! :ok_hand:');
+            return;
           },
           (rejectReason) => {
             // TODO: Reject handler

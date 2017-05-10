@@ -222,11 +222,18 @@ function messageHandler(message) {
   }
 
   // Commands start with '!'
-  if (message.content[0] !== '!') {
+  if (message.content[0] !== '!' && message.mentions.users.first() !== bot.user) {
     return;
   }
 
-  const commandText = message.content.split(' ')[0].substring(1).toLowerCase();
+  let commandText;
+
+  if (message.content[0] === '!') {
+    commandText = message.content.split(' ')[0].substring(1).toLowerCase();
+  } else {
+    commandText = message.content.split(' ')[1].toLowerCase();
+  }
+
   const command = commands[commandText];
 
   // Check that the command exists

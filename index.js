@@ -24,10 +24,10 @@ try {
 catch (e) {
   console.log('config.json not found - will attempt to use environment variables.\n');
   appConfig.AUTH_TOKEN = process.env.AUTH_TOKEN;
-  appConfig.SQS_ACCESS_KEY = process.env.SQS_ACCESS_KEY;
-  appConfig.SQS_SECRET_KEY = process.env.SQS_SECRET_KEY;
-  appConfig.APIGW_DISCOBOT_X_API_KEY = process.env.APIGW_DISCOBOT_X_API_KEY;
-  appConfig.SQS_QUEUE = process.env.SQS_QUEUE;
+//  appConfig.SQS_ACCESS_KEY = process.env.SQS_ACCESS_KEY;
+//  appConfig.SQS_SECRET_KEY = process.env.SQS_SECRET_KEY;
+//  appConfig.APIGW_DISCOBOT_X_API_KEY = process.env.APIGW_DISCOBOT_X_API_KEY;
+//  appConfig.SQS_QUEUE = process.env.SQS_QUEUE;
 }
 
 // const cron = require('node-cron');
@@ -36,13 +36,13 @@ const roles = require('./roles');
 require('log-timestamp');
 
 const Consumer = require('sqs-consumer');
-const AWS = require('aws-sdk');
-
-AWS.config.update({
-  region: 'eu-west-1',
-  accessKeyId: appConfig.SQS_ACCESS_KEY,
-  secretAccessKey: appConfig.SQS_SECRET_KEY
-});
+//const AWS = require('aws-sdk');
+//
+//AWS.config.update({
+//  region: 'eu-west-1',
+//  accessKeyId: appConfig.SQS_ACCESS_KEY,
+//  secretAccessKey: appConfig.SQS_SECRET_KEY
+//});
 
 require('./utils');
 
@@ -71,6 +71,7 @@ const commands = {};
 commands.avatar = require('./commands/avatar');
 commands.boop = require('./commands/boop');
 commands.choose = require('./commands/choose');
+commands.createrole = require('./commands/createrole');
 commands.event = require('./commands/event');
 commands.events = require('./commands/events');
 commands.help = require('./commands/help');
@@ -141,25 +142,25 @@ const bot = new Discord.Client();
 bot.on('ready', () => {
   console.log('Bot connected');
 
-  const sqsStreamers = Consumer.create({
-    queueUrl: appConfig.SQS_QUEUE,
-    handleMessage: (message, done) => {
-      try {
-        msgq.messageReceived.process(bot, message);
-        done();
-      } catch (e) {
-        console.error(e.stack);
-      }
-
-    },
-    sqs: new AWS.SQS()
-  });
-
-  sqsStreamers.on('error', (err) => {
-    console.log(err.message);
-  });
-
-  sqsStreamers.start();
+//  const sqsStreamers = Consumer.create({
+//    queueUrl: appConfig.SQS_QUEUE,
+//    handleMessage: (message, done) => {
+//      try {
+//        msgq.messageReceived.process(bot, message);
+//        done();
+//      } catch (e) {
+//        console.error(e.stack);
+//      }
+//
+//    },
+//    sqs: new AWS.SQS()
+//  });
+//
+//  sqsStreamers.on('error', (err) => {
+//    console.log(err.message);
+//  });
+//
+//  sqsStreamers.start();
 
 });
 

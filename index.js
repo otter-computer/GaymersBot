@@ -85,6 +85,7 @@ commands.set18 = require('./commands/set18');
 commands.setregion = require('./commands/setregion');
 commands.slap = require('./commands/slap');
 commands.spray = require('./commands/spray');
+commands.startvote = require('./commands/startvote');
 commands.status = require('./commands/status');
 commands.stream = require('./commands/stream');
 // commands.timeout = require('./commands/timeout');

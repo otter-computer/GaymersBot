@@ -28,7 +28,6 @@ module.exports = {
       let guild = bot.guilds.first();
       let msg = message.cleanContent;
 
-
       // TODO handle removal of command prefix bettwe
       msg = msg.slice(11);
       // Split the message into command arguments on pipe
@@ -45,7 +44,7 @@ module.exports = {
         let optParts = option.split(',');
         let item = optParts[0];
         let emoji = optParts[1].trim();
-        outputString += item + emoji + '\n';
+        outputString += item + ': ' + emoji + '\n';
         outputReactions.push(emoji);
       }
       outputString += '```';
@@ -65,8 +64,6 @@ module.exports = {
 
             // React
             for (let emoji of outputReactions) {
-
-              //console.log('reacting with emoji: ' + emoji);
               lastMessage.react(emoji)
                 .then(
                       () => {

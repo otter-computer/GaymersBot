@@ -18,8 +18,6 @@
  * */
 
 const roles = require('../roles');
-const restrictedRoles = roles.RESTRICTED_ROLES;
-const regionRoles = roles.REGION_ROLES;
 
 /**
  * Tries to case-insensitively find a role matching the input string.
@@ -41,7 +39,6 @@ function availableRoles(message) {
   const availableRoles = [];
 
   message.guild.roles.forEach(role => {
-    console.log(role.name);
     // Exclude restricted roles
     if (roles.RESTRICTED_ROLES.includes(role.name)) {
       return;

@@ -18,8 +18,6 @@
  * */
 
 const roles = require('../roles');
-const restrictedRoles = roles.RESTRICTED_ROLES;
-const regionRoles = roles.REGION_ROLES;
 
 /**
  * Tries to case-insensitively find a role matching the input string.
@@ -51,6 +49,11 @@ function availableRoles(message) {
       return;
     }
 
+    // Exclude Mercy generated roles
+    if (role.name.startsWith('Mercy-')) {
+      return;
+    }
+
     // Exclude @everyone
     if (role.name === '@everyone') {
       return;
@@ -60,24 +63,27 @@ function availableRoles(message) {
   });
 
   return availableRoles;
-
 }
 
 
 function usage(message) {
-  availableRoles = availableRoles(message);
-  message.reply('Usage: `!role ' + module.exports.usage + '`\n' +
-                'Here are the roles you can manage:\n```' +
-                availableRoles.join('\n') + '```');
+  const roles = availableRoles(message).join('\n');
+
+  message.reply(
+    'Usage: `!role ' + module.exports.usage + '`\n' +
+    'Here are the roles you can manage:\n```\n' +
+    roles +
+    '```'
+  );
 }
 
 function checkRestricted(role, restrictedSet) {
-    var length = restrictedSet.length;
-    for(var i = 0; i < length; i++) {
-        if(restrictedSet[i].toLowerCase() == role.toLowerCase())
-            return true;
-    }
-    return false;
+  const length = restrictedSet.length;
+  for(var i = 0; i < length; i++) {
+    if(restrictedSet[i].toLowerCase() == role.toLowerCase())
+      return true;
+  }
+  return false;
 }
 
 module.exports = {
@@ -122,14 +128,13 @@ module.exports = {
 
     const isRestricted = checkRestricted(roleName, roles.RESTRICTED_ROLES);
     if (isRestricted) {
-        message.reply('Naughty naughty... :wink: You can\'t use that role!');
+      message.reply('Naughty naughty... :wink: You can\'t use that role!');
       return;
     }
 
     const isRegion = checkRestricted(roleName, roles.REGION_ROLES);
     if (isRegion) {
-        message.reply('You can change your region using the `!setregion` ' +
-            'command! :wink:');
+      message.reply('You can change your region using the `!setregion` command! :wink:');
       return;
     }
 
@@ -152,8 +157,7 @@ module.exports = {
           // TODO: Error handler
           console.error(e.stack);
         });
-    }
-    else {
+    } else {
       // Add the new role
       message.member.addRole(targetRole)
         .then(

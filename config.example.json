@@ -4,5 +4,5 @@
   "SQS_SECRET_KEY": "",
   "APIGW_DISCOBOT_X_API_KEY": "",
   "USE_AWS_SQS": false,
-  "SQS_QUEUE": "",
+  "SQS_QUEUE": ""
 }

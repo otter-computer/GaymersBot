@@ -22,7 +22,13 @@ try {
   appConfig = userConfig;
 }
 catch (e) {
-  console.log('config.json not found - will attempt to use environment variables.\n');
+  if (e.code == 'MODULE_NOT_FOUND'){
+    console.log('config.json not found');
+  } else {
+    console.log(e);
+    console.log('\nError processing config.json');
+  }
+  console.log('Will attempt to use environment variables.')
   appConfig.AUTH_TOKEN = process.env.AUTH_TOKEN;
   appConfig.SQS_ACCESS_KEY = process.env.SQS_ACCESS_KEY;
   appConfig.SQS_SECRET_KEY = process.env.SQS_SECRET_KEY;
@@ -32,7 +38,7 @@ catch (e) {
     appConfig.USE_AWS_SQS = false;
   } else {
     appConfig.USE_AWS_SQS = true;
-  } 
+  }
 }
 
 if (!appConfig.USE_AWS_SQS) console.log('SQS is disabled by configuration, message queues will not operate.')

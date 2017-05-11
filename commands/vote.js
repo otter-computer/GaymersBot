@@ -24,20 +24,20 @@ const voteEmojisBoolean = [
   '👎'
 ];
 
-const voteEmojisNumbers = [
-  ':one:',
-  ':two:',
-  ':three:',
-  ':four:',
-  ':five:',
-  ':six:',
-  ':seven:',
-  ':eight:',
-  ':nine:'
-];
+// const voteEmojisNumbers = [
+//   ':one:',
+//   ':two:',
+//   ':three:',
+//   ':four:',
+//   ':five:',
+//   ':six:',
+//   ':seven:',
+//   ':eight:',
+//   ':nine:'
+// ];
 
 module.exports = {
-  usage: 'Question, Option 1, Option 2, Option 3...',
+  usage: 'Question',
   description: 'Start a reaction based vote!',
   allowDM: false,
   process: (bot, message) => {

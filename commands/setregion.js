@@ -46,8 +46,8 @@ module.exports = {
       return;
     }
 
-    const newRegion = message.guild.roles.find('name', regionName);
-    if (!newRegion) {
+    const newRegionRole = message.guild.roles.find('name', regionName);
+    if (!newRegionRole) {
       // TODO: This means that the bot knows about a region that Discord
       // doesn't. :confused: The bot should call an admin if this happens.
       message.reply('Sorry, I had an issue setting your region. :confounded:');
@@ -60,17 +60,17 @@ module.exports = {
       return;
     }
 
-    const oldRegion = message.member.roles.find(function(existingRole) {
+    const oldRegionRole = message.member.roles.find(function(existingRole) {
       return REGIONS.includes(existingRole.name);
     });
 
-    if (oldRegion) {
-      message.member.removeRole(oldRegion)
+    if (oldRegionRole) {
+      message.member.removeRole(oldRegionRole)
         .then(member => {
-          member.addRole(newRegion);
+          member.addRole(newRegionRole);
         });
     } else {
-      message.member.addRole(newRegion);
+      message.member.addRole(newRegionRole);
     }
   }
 };

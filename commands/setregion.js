@@ -46,8 +46,8 @@ module.exports = {
       return;
     }
 
-    const newRegionRole = message.guild.roles.find('name', regionName);
-    if (!newRegionRole) {
+    const newRegion = message.guild.roles.find('name', regionName);
+    if (!newRegion) {
       // TODO: This means that the bot knows about a region that Discord
       // doesn't. :confused: The bot should call an admin if this happens.
       message.reply('Sorry, I had an issue setting your region. :confounded:');
@@ -60,34 +60,17 @@ module.exports = {
       return;
     }
 
-    // We need to rebuild the role list here because using removeRoles and
-    // addRoles shortly after each other seems to not work. It looks like
-    // role removal has no effect, even when put in removeRoles' .then()
-    // Hopefully I'll be able to debug this in the future and we can return
-    // to a simplified .removeRoles() .addRole() solution. JM
-    const modifiedRoleList = [];
-    message.member.roles.forEach(existingRole => {
-      if (REGIONS.includes(existingRole.name)) {
-        // Filter out any region roles
-        return;
-      }
-      modifiedRoleList.push(existingRole);
+    const oldRegion = message.member.roles.find(function(existingRole) {
+      return REGIONS.includes(existingRole.name);
     });
-    modifiedRoleList.push(newRegionRole);
 
-    message.member.setRoles(modifiedRoleList)
-      .then(
-        () => {
-          message.reply('I\'ve set your region! :white_check_mark::map: ' +
-            'Check out `!role` for other roles you can add!');
-        },
-        (rejectReason) => {
-          // TODO: Reject handler
-          console.error(rejectReason);
-        })
-      .catch((e) => {
-        // TODO: Error handler
-        console.error(e.stack);
-      });
+    if (oldRegion) {
+      message.member.removeRole(oldRegion)
+        .then(member => {
+          member.addRole(newRegion);
+        });
+    } else {
+      message.member.addRole(newRegion);
+    }
   }
 };

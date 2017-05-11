@@ -22,28 +22,42 @@ try {
   appConfig = userConfig;
 }
 catch (e) {
-  console.log('config.json not found - will attempt to use environment variables.\n');
+  if (e.code == 'MODULE_NOT_FOUND'){
+    console.log('config.json not found');
+  } else {
+    console.log(e);
+    console.log('\nError processing config.json');
+  }
+  console.log('Will attempt to use environment variables.')
   appConfig.AUTH_TOKEN = process.env.AUTH_TOKEN;
   appConfig.SQS_ACCESS_KEY = process.env.SQS_ACCESS_KEY;
   appConfig.SQS_SECRET_KEY = process.env.SQS_SECRET_KEY;
   appConfig.APIGW_DISCOBOT_X_API_KEY = process.env.APIGW_DISCOBOT_X_API_KEY;
   appConfig.SQS_QUEUE = process.env.SQS_QUEUE;
+  if (appConfig.SQS_QUEUE == ''){
+    appConfig.USE_AWS_SQS = false;
+  } else {
+    appConfig.USE_AWS_SQS = true;
+  }
 }
+
+if (!appConfig.USE_AWS_SQS) console.log('SQS is disabled by configuration, message queues will not operate.')
 
 // const cron = require('node-cron');
 const Discord = require('discord.js');
 const roles = require('./roles');
 require('log-timestamp');
 
-const Consumer = require('sqs-consumer');
-const AWS = require('aws-sdk');
+if (appConfig.USE_AWS_SQS) {
+  const Consumer = require('sqs-consumer');
+  const AWS = require('aws-sdk');
 
-AWS.config.update({
-  region: 'eu-west-1',
-  accessKeyId: appConfig.SQS_ACCESS_KEY,
-  secretAccessKey: appConfig.SQS_SECRET_KEY
-});
-
+  AWS.config.update({
+    region: 'eu-west-1',
+    accessKeyId: appConfig.SQS_ACCESS_KEY,
+    secretAccessKey: appConfig.SQS_SECRET_KEY
+  });
+}
 require('./utils');
 
 // Auth token
@@ -112,8 +126,9 @@ events.messageUpdated = require('./events/messageUpdated');
 const msgq = {};
 
 // Import events
-msgq.messageReceived = require('./msgq/messageReceived');
-
+if (appConfig.USE_AWS_SQS) {
+  msgq.messageReceived = require('./msgq/messageReceived');
+}
 // Cron
 // const cronJobs = {};
 
@@ -141,27 +156,27 @@ msgq.messageReceived = require('./msgq/messageReceived');
 const bot = new Discord.Client();
 bot.on('ready', () => {
   console.log('Bot connected');
+  if (appConfig.USE_AWS_SQS) {
+    const sqsStreamers = Consumer.create({
+      queueUrl: appConfig.SQS_QUEUE,
+      handleMessage: (message, done) => {
+        try {
+          msgq.messageReceived.process(bot, message);
+          done();
+        } catch (e) {
+          console.error(e.stack);
+        }
 
-  const sqsStreamers = Consumer.create({
-    queueUrl: appConfig.SQS_QUEUE,
-    handleMessage: (message, done) => {
-      try {
-        msgq.messageReceived.process(bot, message);
-        done();
-      } catch (e) {
-        console.error(e.stack);
-      }
+      },
+      sqs: new AWS.SQS()
+    });
 
-    },
-    sqs: new AWS.SQS()
-  });
+    sqsStreamers.on('error', (err) => {
+      console.log(err.message);
+    });
 
-  sqsStreamers.on('error', (err) => {
-    console.log(err.message);
-  });
-
-  sqsStreamers.start();
-
+    sqsStreamers.start();
+  }
 });
 
 /**

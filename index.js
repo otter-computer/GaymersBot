@@ -85,13 +85,13 @@ commands.set18 = require('./commands/set18');
 commands.setregion = require('./commands/setregion');
 commands.slap = require('./commands/slap');
 commands.spray = require('./commands/spray');
-commands.startvote = require('./commands/startvote');
 commands.status = require('./commands/status');
 commands.stream = require('./commands/stream');
 // commands.timeout = require('./commands/timeout');
 commands.under18 = require('./commands/under18');
 commands.unset18 = require('./commands/unset18');
 commands.unsetregion = require('./commands/unsetregion');
+commands.vote = require('./commands/vote');
 
 // Export commands for use in other modules (help)
 module.exports.commands = commands;

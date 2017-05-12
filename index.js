@@ -120,7 +120,6 @@ commands.slap = require('./commands/slap');
 commands.spray = require('./commands/spray');
 commands.status = require('./commands/status');
 commands.stream = require('./commands/stream');
-// commands.timeout = require('./commands/timeout');
 commands.under18 = require('./commands/under18');
 commands.unset18 = require('./commands/unset18');
 commands.unsetregion = require('./commands/unsetregion');
@@ -151,14 +150,8 @@ if (appConfig.USE_AWS_SQS) {
 // const cronJobs = {};
 
 // Import cron tasks
-// cronJobs.timeout = require('./cronjobs/check-timeout');
 // cronJobs.gameStats = require('./cronjobs/gameStats');
 // cronJobs.memberInfo = require('./cronjobs/memberInfo');
-
-// Timeout cron
-// cron.schedule('0 */5 * * * *', function() {
-//   cronJobs.timeout.process(bot);
-// }, true);
 
 // Game stats cron
 // cron.schedule('0 */5 * * * *', function() {

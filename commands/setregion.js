@@ -41,8 +41,8 @@ module.exports = {
     // If the user supplied a bad region name, give them the list
     if (!REGIONS.includes(regionName)) {
       message.reply('To set your region, type `!setregion ' +
-          module.exports.usage + '`\nHere\'s the regions I can give you: ' +
-          REGIONS.join(', '));
+        module.exports.usage + '`\nHere\'s the regions I can give you: ' +
+        REGIONS.join(', '));
       return;
     }
 
@@ -67,7 +67,9 @@ module.exports = {
     if (oldRegionRoles) {
       oldRegionRoles.forEach(role => {
         message.member.removeRole(role)
-          .catch(() => {
+          .catch((e) => {
+            // TODO: Error handler
+            console.error(e.stack);
             message.reply('I couldn\'t change your previous region!');
           });
       });
@@ -76,8 +78,14 @@ module.exports = {
         .then(() => {
           message.reply('I\'ve set your region! :white_check_mark::map: ' +
             'Check out `!role` for other roles you can add!');
-        })
-        .catch(() => {
+        },
+          (rejectReason) => {
+            // TODO: Reject handler
+            console.error(rejectReason);
+          })
+        .catch((e) => {
+          // TODO: Error handler
+          console.error(e.stack);
           message.reply('I couldn\'t give you a new region!');
         });
     } else {
@@ -85,8 +93,14 @@ module.exports = {
         .then(() => {
           message.reply('I\'ve set your region! :white_check_mark::map: ' +
             'Check out `!role` for other roles you can add!');
-        })
-        .catch(() => {
+        },
+          (rejectReason) => {
+            // TODO: Reject handler
+            console.error(rejectReason);
+          })
+        .catch((e) => {
+          // TODO: Error handler
+          console.error(e.stack);
           message.reply('I couldn\'t give you a new region!');
         });
     }

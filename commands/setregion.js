@@ -60,17 +60,35 @@ module.exports = {
       return;
     }
 
-    const oldRegionRole = message.member.roles.find(function(existingRole) {
+    const oldRegionRoles = message.member.roles.filter(function(existingRole) {
       return REGIONS.includes(existingRole.name);
     });
 
-    if (oldRegionRole) {
-      message.member.removeRole(oldRegionRole)
-        .then(member => {
-          member.addRole(newRegionRole);
+    if (oldRegionRoles) {
+      oldRegionRoles.forEach(role => {
+        message.member.removeRole(role)
+          .catch(() => {
+            message.reply('I couldn\'t change your previous region!');
+          });
+      });
+
+      message.member.addRole(newRegionRole)
+        .then(() => {
+          message.reply('I\'ve set your region! :white_check_mark::map: ' +
+            'Check out `!role` for other roles you can add!');
+        })
+        .catch(() => {
+          message.reply('I couldn\'t give you a new region!');
         });
     } else {
-      message.member.addRole(newRegionRole);
+      message.member.addRole(newRegionRole)
+        .then(() => {
+          message.reply('I\'ve set your region! :white_check_mark::map: ' +
+            'Check out `!role` for other roles you can add!');
+        })
+        .catch(() => {
+          message.reply('I couldn\'t give you a new region!');
+        });
     }
   }
 };

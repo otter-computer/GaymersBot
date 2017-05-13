@@ -45,7 +45,6 @@ if (!appConfig.USE_AWS_SQS) {
   console.warn('SQS is disabled by configuration, message queues will not operate.');
 }
 
-// const cron = require('node-cron');
 const Discord = require('discord.js');
 const Consumer = require('sqs-consumer');
 const AWS = require('aws-sdk');
@@ -146,22 +145,6 @@ const msgq = {};
 if (appConfig.USE_AWS_SQS) {
   msgq.messageReceived = require('./msgq/messageReceived');
 }
-// Cron
-// const cronJobs = {};
-
-// Import cron tasks
-// cronJobs.gameStats = require('./cronjobs/gameStats');
-// cronJobs.memberInfo = require('./cronjobs/memberInfo');
-
-// Game stats cron
-// cron.schedule('0 */5 * * * *', function() {
-//   cronJobs.gameStats.process(bot);
-// }, true);
-
-// Member info cron
-// cron.schedule('0 0 */1 * * *', function() {
-//   cronJobs.memberInfo.process(bot);
-// }, true);
 
 // Init bot
 const bot = new Discord.Client();

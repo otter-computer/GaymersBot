@@ -47,18 +47,12 @@ module.exports = {
     'Keyboard GOD!',
     'Keyboard Warrior',
     'Mee6',
-    'Member',
     'Moderator',
     'No links/files',
     'Push-to-talk',
     'Restricted',
     'Trial Moderator',
     'Under 18'
-  ],
-
-  // A user must have one of these roles to use the bot (unless in a DM)
-  REQUIRED_TO_USE_BOT: [
-    'Member'
   ],
 
   // A user with any of these roles will have their messages ignored by the bot

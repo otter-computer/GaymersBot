@@ -22,7 +22,7 @@ const Discord = require('discord.js');
 module.exports = {
   process: (bot, member) => {
     const userLogsChannel = member.guild.channels.find('name', 'user-logs');
-    const welcomeChannel = member.guild.channels.find('name', 'welcome-room');
+    const generalChannel = member.guild.channels.find('name', 'general');
 
     // Log the user joining to #user-logs
     if (!userLogsChannel) {
@@ -30,7 +30,7 @@ module.exports = {
     } else {
       const embed = new Discord.RichEmbed();
 
-      embed.setColor(0x3398DB);
+      embed.setColor(0x2ECC71);
 
       embed.setAuthor(
         member.displayName,
@@ -42,29 +42,18 @@ module.exports = {
       userLogsChannel.send(member + ' joined.', { embed: embed });
     }
 
-    // Add a little message to #welcome-room to grab the user's attention
-    if (!welcomeChannel) {
-      console.error('Channel #welcome-room doesn\'t exist!');
-    } else {
-      welcomeChannel.send('Welcome to Gaymers, ' + member + '! ' +
-          'Please introduce yourself, and check your DMs for more info! ' +
-          'You will have access to other channels once you introduce ' +
-          'yourself :smile:');
-    }
+    generalChannel.send('Welcome, ' + member + '!');
 
     // DM the user more onboarding information
     member.send(
-      '__**Welcome to Gaymers!**__\n\n' +
-      'Please introduce yourself in **#welcome-room**, and feel free to ' +
-      'tell us about your favorite games, where you\'re from, how you heard ' +
-      'about the server, and anything else about yourself you\'d like to ' +
-      'share.\n\n' +
-      'We have region-based tags to help you find local gaming friends, and ' +
-      'some special tags for members who like Overwatch, Battlefield, ' +
-      'League of Legends and more. We are happy to add them to your ' +
-      'profile so you have an easier time finding folks to play with!\n\n' +
-      'You will be given access to the other channels after you introduce ' +
-      'yourself.'
+      '__**Welcome to Gaymers!**__\n \n' +
+      'Please follow our rules. You can find them in the #info-rules channel. \n \n' +
+      'If you have any questions you can @admin or @moderator in any channel or PM an admin or moderator directly \n \n' +
+      '__**Useful Commands**__ \n' +
+      'These commands can be used in the #bot-room channel on Gaymers. \n \n' +
+      '**!help** - Discobot will PM you a complete list of commands. \n' +
+      '**!setregion [region]** - Discobot will set your colour based on your region. For example `!setregion Europe` or `!setregion North America` \n' +
+      '**!set18** - Discobot will give you access to the #over-18 channel. \n'
     );
   }
 };

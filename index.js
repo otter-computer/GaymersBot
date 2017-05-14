@@ -109,7 +109,6 @@ commands.help = require('./commands/help');
 commands.hug = require('./commands/hug');
 commands.joined = require('./commands/joined');
 commands.magic8ball = require('./commands/magic8ball');
-commands.member = require('./commands/member');
 commands.quote = require('./commands/quote');
 commands.regions = require('./commands/regions');
 commands.role = require('./commands/role');
@@ -235,32 +234,12 @@ function messageHandler(message) {
 
   // Checks that are only needed on a server
   if (message.guild) {
-    // Check that the user is allowed to use the bot
-    let shouldIgnoreMessage = true;
-
-    // Check that the bot has any required roles at all
-    if (roles.REQUIRED_TO_USE_BOT.length > 0) {
-      // Try to find a common role between the required list and the
-      // user's roles
-      roles.REQUIRED_TO_USE_BOT.forEach((requiredRole) => {
-        if (message.member.roles.findKey('name', requiredRole)) {
-          shouldIgnoreMessage = false;
-        }
-      });
-    } else {
-      shouldIgnoreMessage = false;
-    }
-
     // Check that the user is not part of a role that is banned from bot usage
     roles.BANNED_FROM_BOT.forEach((bannedRole) => {
       if (message.member.roles.findKey('name', bannedRole)) {
-        shouldIgnoreMessage = true;
+        return;
       }
     });
-
-    if (shouldIgnoreMessage) {
-      return;
-    }
 
     // If the command can only be used in certain channels, check that we're in
     // one of those channels

@@ -19,14 +19,6 @@ These are roles that cannot be managed with the `!role` command. An example of
 this is the 'Under 18' role that we assign to users to prevent them from using
 the `!set18` command.
 
-Required Roles (`REQUIRED_TO_USE_BOT`)
---------------------------------------
-
-If this list is not empty, the bot will ignore messages from users that don't
-have a role listed in this list. This is used where you don't want the bot
-used by new users that don't yet have the 'Member' role, for example. Note
-that this check does not happen in a DM since the user has no roles there.
-
 Banned Roles (`BANNED_ROLES`)
 -----------------------------
 

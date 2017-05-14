@@ -28,11 +28,11 @@ Features
 
 ### Events
 - memberBanned: Logs a member being banned in #user-logs.
-- memberJoined: Welcomes a user in #welcome-room, logs them joining
+- memberJoined: Welcomes a user in #general, logs them joining
   in #user-logs, and sends them a welcome PM.
 - memberLeft: Logs a member leaving in #user-logs.
 - memberUnbanned: Logs a member being unbanned in #user-logs.
-- memberUpdated: Welcomes a user in #general when the obtain the 'Member' role.
+- memberUpdated: Logs nickname changes, restrictions.
 - messageDeleted: Logs a deleted message in #user-logs.
 - messageUpdated: Logs a message edit in #user-logs.
 

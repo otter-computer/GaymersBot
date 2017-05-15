@@ -146,6 +146,15 @@ if (appConfig.USE_AWS_SQS) {
   msgq.messageReceived = require('./msgq/messageReceived');
 }
 
+// Slow mode data
+const channels = require('./channels');
+slowModeTimes = [];
+slowModeDelays = [];
+channels.SLOW.forEach(channel => {
+  slowModeTimes[channel.name] = []; // Each channel has a list of message authors with their last message time
+  slowModeDelays[channel.name] = channel.delay*1000; // Converted to milliseconds
+});
+
 // Init bot
 const bot = new Discord.Client();
 bot.on('ready', () => {
@@ -215,7 +224,34 @@ function messageHandler(message) {
 
   // Commands start with '!'
   if (message.content[0] !== '!') {
-    return;
+    // Limit messages if channel is in slow mode
+    isChannelSlow = channels.SLOW.some(channel => {
+      return channel.name === message.channel.name;
+    });
+
+    if (isChannelSlow) {
+      messageTime = message.createdAt;
+      previousTime = slowModeTimes[message.channel.name][message.author.id];
+
+      // There is no message during delay time
+      if (previousTime == undefined || messageTime - previousTime > slowModeDelays[message.channel.name]) {
+        slowModeTimes[message.channel.name][message.author.id] = messageTime;
+        return;
+      } else {
+        message.delete()
+          .then(msg => {
+            msg.author.send('The following message was deleted because the channel `' + message.channel.name +
+              '` is in slow mode:' + '```\n' + msg.content + '\n```\n' + 'You can send a message again in `' +
+              Math.ceil((slowModeDelays[message.channel.name] - (messageTime - previousTime))/1000).toString() + '` seconds');
+          })
+          .catch(reason => {
+            // TODO Error handler
+            console.error(reason);
+          });
+      }
+    } else {
+      return;
+    }
   }
 
   const commandText = message.content.split(' ')[0].substring(1).toLowerCase();

@@ -18,12 +18,22 @@
  * */
 
 const Discord = require('discord.js');
+const channels = require('../channels');
 
 module.exports = {
   // Logs a deleted message in #user-logs.
   process: (bot, message) => {
     // Don't repeat bot messages
     if (message.author.id === bot.user.id) return;
+
+    // Don't log deletions in slow mode channels
+    isChannelSlow = channels.SLOW.some(channel => {
+      return channel.name === message.channel.name;
+    });
+
+    if (isChannelSlow) {
+      return;
+    }
 
     // Block Erisbot shite
     if (message.content.startsWith('.music') ||

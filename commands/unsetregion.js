@@ -17,7 +17,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * */
 
-const REGION_ROLES = require('../roles').REGION_ROLES;
+const REGIONS = require('../roles').REGION_ROLES;
 
 module.exports = {
   usage: '',
@@ -25,22 +25,13 @@ module.exports = {
   allowDM: false,
   onlyIn: ['bot-room'],
   process: (bot, message) => {
-    // Assemble a list of role IDs to give the removeRoles function, this
-    // does all of the removal in one shot.
-    const rolesToRemove = [];
-    REGION_ROLES.forEach((region) => {
-      const roleId = message.guild.roles.findKey('name', region);
-      if (roleId) {
-        rolesToRemove.push(roleId);
-      } else {
-        // FIXME: Warn about invalid region in list
-      }
-    });
-    message.member.removeRoles(rolesToRemove)
-      .then(
-        () => {
+    // Remove all existing region roles from the user
+    message.member.removeRoles(REGIONS.reduce((acc, cur) => {
+      return acc.concat(message.guild.roles.find('name', cur));
+    }, []))
+      .then(() => {
           message.reply('I\'ve removed your region :no_entry_sign::map:');
-        },
+      },
         (rejectReason) => {
           // TODO: Reject handler
           console.error(rejectReason);

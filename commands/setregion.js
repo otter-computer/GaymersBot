@@ -60,49 +60,34 @@ module.exports = {
       return;
     }
 
-    const oldRegionRoles = message.member.roles.filter(function(existingRole) {
-      return REGIONS.includes(existingRole.name);
-    });
-
-    if (oldRegionRoles) {
-      oldRegionRoles.forEach(role => {
-        message.member.removeRole(role)
-          .catch((e) => {
-            // TODO: Error handler
-            console.error(e.stack);
-            message.reply('I couldn\'t change your previous region!');
-          });
+    // Remove all existing region roles from the user
+    message.member.removeRoles(REGIONS.reduce((acc, cur) => {
+      return acc.concat(message.guild.roles.find('name', cur));
+    }, []))
+      .then(() => {},
+        (rejectReason) => {
+          // TODO: Reject handler
+          console.error(rejectReason);
+        })
+      .catch((e) => {
+        // TODO: Error handler
+        console.error(e.stack);
       });
 
-      message.member.addRole(newRegionRole)
-        .then(() => {
-          message.reply('I\'ve set your region! :white_check_mark::map: ' +
-            'Check out `!role` for other roles you can add!');
-        },
-          (rejectReason) => {
-            // TODO: Reject handler
-            console.error(rejectReason);
-          })
-        .catch((e) => {
-          // TODO: Error handler
-          console.error(e.stack);
-          message.reply('I couldn\'t give you a new region!');
-        });
-    } else {
-      message.member.addRole(newRegionRole)
-        .then(() => {
-          message.reply('I\'ve set your region! :white_check_mark::map: ' +
-            'Check out `!role` for other roles you can add!');
-        },
-          (rejectReason) => {
-            // TODO: Reject handler
-            console.error(rejectReason);
-          })
-        .catch((e) => {
-          // TODO: Error handler
-          console.error(e.stack);
-          message.reply('I couldn\'t give you a new region!');
-        });
-    }
+    // Add the new region role
+    message.member.addRole(newRegionRole)
+      .then(() => {
+        message.reply('I\'ve set your region! :white_check_mark::map: ' +
+          'Check out `!role` for other roles you can add!');
+      },
+        (rejectReason) => {
+          // TODO: Reject handler
+          console.error(rejectReason);
+        })
+      .catch((e) => {
+        // TODO: Error handler
+        console.error(e.stack);
+        message.reply('I couldn\'t give you a new region! :sob:');
+      });
   }
 };

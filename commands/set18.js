@@ -26,7 +26,7 @@ module.exports = {
   process: (bot, message) => {
     if (message.member.roles.findKey('name', 'Under 18')) {
       message.reply('You\'re under 18. I can\'t add the 18+ role. ' +
-          ':frowning: Check out `!roles` to see what I *can* add! :wink:');
+          'Check out `!roles` to see what I *can* add! :smile:');
       return;
     }
 

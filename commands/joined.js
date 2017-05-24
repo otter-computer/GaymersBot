@@ -42,7 +42,7 @@ module.exports = {
 
     if (target.id === REYNBOW.id) {
       embed.setTitle(target.displayName.toUpperCase() +
-        ' BOUNCED IN HERE LIKE A FEISTY \'ROO ABOUT ' +
+        ' BOUNCED IN HERE LIKE A FEISTY \'ROO OVER ' +
         moment(REYNBOW.joinedAt).fromNow().toUpperCase() + ', MATE.');
       embed.setTimestamp(REYNBOW.joinedAt);
     } else {

@@ -41,8 +41,8 @@ module.exports = {
     // If the user supplied a bad region name, give them the list
     if (!REGIONS.includes(regionName)) {
       message.reply('To set your region, type `!setregion ' +
-          module.exports.usage + '`\nHere\'s the regions I can give you: ' +
-          REGIONS.join(', '));
+        module.exports.usage + '`\nHere\'s the regions I can give you: ' +
+        REGIONS.join(', '));
       return;
     }
 
@@ -60,34 +60,49 @@ module.exports = {
       return;
     }
 
-    // We need to rebuild the role list here because using removeRoles and
-    // addRoles shortly after each other seems to not work. It looks like
-    // role removal has no effect, even when put in removeRoles' .then()
-    // Hopefully I'll be able to debug this in the future and we can return
-    // to a simplified .removeRoles() .addRole() solution. JM
-    const modifiedRoleList = [];
-    message.member.roles.forEach(existingRole => {
-      if (REGIONS.includes(existingRole.name)) {
-        // Filter out any region roles
-        return;
-      }
-      modifiedRoleList.push(existingRole);
+    const oldRegionRoles = message.member.roles.filter(function(existingRole) {
+      return REGIONS.includes(existingRole.name);
     });
-    modifiedRoleList.push(newRegionRole);
 
-    message.member.setRoles(modifiedRoleList)
-      .then(
-        () => {
+    if (oldRegionRoles) {
+      oldRegionRoles.forEach(role => {
+        message.member.removeRole(role)
+          .catch((e) => {
+            // TODO: Error handler
+            console.error(e.stack);
+            message.reply('I couldn\'t change your previous region!');
+          });
+      });
+
+      message.member.addRole(newRegionRole)
+        .then(() => {
           message.reply('I\'ve set your region! :white_check_mark::map: ' +
             'Check out `!role` for other roles you can add!');
         },
-        (rejectReason) => {
-          // TODO: Reject handler
-          console.error(rejectReason);
-        })
-      .catch((e) => {
-        // TODO: Error handler
-        console.error(e.stack);
-      });
+          (rejectReason) => {
+            // TODO: Reject handler
+            console.error(rejectReason);
+          })
+        .catch((e) => {
+          // TODO: Error handler
+          console.error(e.stack);
+          message.reply('I couldn\'t give you a new region!');
+        });
+    } else {
+      message.member.addRole(newRegionRole)
+        .then(() => {
+          message.reply('I\'ve set your region! :white_check_mark::map: ' +
+            'Check out `!role` for other roles you can add!');
+        },
+          (rejectReason) => {
+            // TODO: Reject handler
+            console.error(rejectReason);
+          })
+        .catch((e) => {
+          // TODO: Error handler
+          console.error(e.stack);
+          message.reply('I couldn\'t give you a new region!');
+        });
+    }
   }
 };

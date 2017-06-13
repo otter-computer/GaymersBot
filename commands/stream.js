@@ -21,7 +21,7 @@ const splitargs = require('splitargs');
 
 module.exports = {
   usage: 'Message to display as a stream.',
-  description: 'ADMIN ONLY: Set the stream status of the bot.',
+  description: 'Set the stream status of the bot.',
   allowDM: false,
   requireRoles: ['Admin', 'Moderator'],
   process: (bot, message) => {

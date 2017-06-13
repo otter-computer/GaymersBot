@@ -19,7 +19,7 @@
 
 module.exports = {
   usage: '[@user]',
-  description: 'ADMIN ONLY: Give a user the \'Member\' role.',
+  description: 'Give a user the \'Member\' role.',
   allowDM: false,
   requireRoles: ['Admin', 'Moderator'],
   process: (bot, message) => {

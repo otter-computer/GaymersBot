@@ -45,6 +45,9 @@ if (!appConfig.USE_AWS_SQS) {
   console.warn('SQS is disabled by configuration, message queues will not operate.');
 }
 
+// exports config so it can be required in other modules
+module.exports.appConfig = appConfig;
+
 const Discord = require('discord.js');
 const Consumer = require('sqs-consumer');
 const AWS = require('aws-sdk');

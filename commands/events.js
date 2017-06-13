@@ -26,8 +26,8 @@ module.exports = {
   allowDM: false,
   process: (bot, message) => {
     const options = {
-      host: 'api.gaymers.gg',
-      path: '/events',
+      host: 'events.gaymers.gg',
+      path: '/',
       method: 'GET'
     };
 

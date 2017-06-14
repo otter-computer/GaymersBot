@@ -32,7 +32,7 @@ module.exports = {
       path: '/repos/gaymers-discord/administration/contents/server_rules.md',
       method: 'GET',
       headers: { "Content-Type": "application/json", 
-                 "User-Agent": "discord-oauth", 
+                 "User-Agent": "administration", 
                  "Authorization": "token " + appConfig.GITHUB_ACCESS_TOKEN}
     };
 
@@ -50,8 +50,16 @@ module.exports = {
         // TODO: Split contents into multiple parts when >2000 characters
         let tempTrim = decoded.toString().substring(0, 1900)
         let output = '```markdown\n' +  tempTrim + '\n```';
-        // TODO: Delete existing text in #info-rules and replace with output
-        message.channel.send(output);
+        
+        let rulesChannel = bot.channels.find('name', 'info-rules');
+        let originalMessage = rulesChannel.lastMessage;
+        if (originalMessage){
+          // This may not succeed as the message is only present if the client was on when the last message was sent
+          // http://discordjs.readthedocs.io/en/latest/docs_textchannel.html#lastmessage 
+          originalMessage.delete();
+        }
+        
+        rulesChannel.send(output);
 
       });
     });

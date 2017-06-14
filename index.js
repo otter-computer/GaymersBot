@@ -122,6 +122,7 @@ commands.stream = require('./commands/stream');
 commands.under18 = require('./commands/under18');
 commands.unset18 = require('./commands/unset18');
 commands.unsetregion = require('./commands/unsetregion');
+commands.vote = require('./commands/vote');
 
 // Export commands for use in other modules (help)
 module.exports.commands = commands;

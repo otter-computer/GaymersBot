@@ -46,20 +46,20 @@ module.exports = {
       response.on('end', () => {
         let jData = JSON.parse(data);
         let decoded = Buffer.from(jData.content, 'base64');
-                
-        // TODO: Split contents into multiple parts when >2000 characters
-        let tempTrim = decoded.toString().substring(0, 1900)
-        let output = '```markdown\n' +  tempTrim + '\n```';
-        
+
+        // Delete the original messages
         let rulesChannel = bot.channels.find('name', 'info-rules');
-        let originalMessage = rulesChannel.lastMessage;
-        if (originalMessage){
-          // This may not succeed as the message is only present if the client was on when the last message was sent
-          // http://discordjs.readthedocs.io/en/latest/docs_textchannel.html#lastmessage 
-          originalMessage.delete();
-        }
-        
-        rulesChannel.send(output);
+        rulesChannel.fetchMessages({limit: 20}).then(
+          messages => rulesChannel.bulkDelete(messages)
+        ).catch(console.error);
+
+        // Split output message on markdown line breaks
+        let msgArray = decoded.toString().split('---');
+        console.log(msgArray.length);
+        msgArray.forEach(function(element) {
+          let output = '```markdown\n' +  element + '\n```';
+          rulesChannel.send(output);
+        });
 
       });
     });

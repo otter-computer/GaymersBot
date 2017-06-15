@@ -29,7 +29,7 @@ module.exports = {
       '$USER :kiss:',
       '$USER :kiss:',
       '*lands a big wet one on $USER\'s cheek*',
-      '*plays tonsil hockey with $USER',
+      '*plays tonsil hockey with $USER*',
       '*puckers up for $USER*',
       '$USER :tongue:'
     ];

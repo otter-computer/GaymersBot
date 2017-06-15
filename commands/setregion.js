@@ -41,8 +41,8 @@ module.exports = {
     // If the user supplied a bad region name, give them the list
     if (!REGIONS.includes(regionName)) {
       message.reply('To set your region, type `!setregion ' +
-          module.exports.usage + '`\nHere\'s the regions I can give you: ' +
-          REGIONS.join(', '));
+        module.exports.usage + '`\nHere\'s the regions I can give you: ' +
+        REGIONS.join(', '));
       return;
     }
 
@@ -60,27 +60,11 @@ module.exports = {
       return;
     }
 
-    // We need to rebuild the role list here because using removeRoles and
-    // addRoles shortly after each other seems to not work. It looks like
-    // role removal has no effect, even when put in removeRoles' .then()
-    // Hopefully I'll be able to debug this in the future and we can return
-    // to a simplified .removeRoles() .addRole() solution. JM
-    const modifiedRoleList = [];
-    message.member.roles.forEach(existingRole => {
-      if (REGIONS.includes(existingRole.name)) {
-        // Filter out any region roles
-        return;
-      }
-      modifiedRoleList.push(existingRole);
-    });
-    modifiedRoleList.push(newRegionRole);
-
-    message.member.setRoles(modifiedRoleList)
-      .then(
-        () => {
-          message.reply('I\'ve set your region! :white_check_mark::map: ' +
-            'Check out `!role` for other roles you can add!');
-        },
+    // Remove all existing region roles from the user
+    message.member.removeRoles(REGIONS.reduce((acc, cur) => {
+      return acc.concat(message.guild.roles.find('name', cur));
+    }, []))
+      .then(() => {},
         (rejectReason) => {
           // TODO: Reject handler
           console.error(rejectReason);
@@ -88,6 +72,22 @@ module.exports = {
       .catch((e) => {
         // TODO: Error handler
         console.error(e.stack);
+      });
+
+    // Add the new region role
+    message.member.addRole(newRegionRole)
+      .then(() => {
+        message.reply('I\'ve set your region! :white_check_mark::map: ' +
+          'Check out `!role` for other roles you can add!');
+      },
+        (rejectReason) => {
+          // TODO: Reject handler
+          console.error(rejectReason);
+        })
+      .catch((e) => {
+        // TODO: Error handler
+        console.error(e.stack);
+        message.reply('I couldn\'t give you a new region! :sob:');
       });
   }
 };

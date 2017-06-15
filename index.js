@@ -116,6 +116,7 @@ commands.role = require('./commands/role');
 commands.set18 = require('./commands/set18');
 commands.setregion = require('./commands/setregion');
 commands.slap = require('./commands/slap');
+commands.smooch = require('./commands/smooch');
 commands.spray = require('./commands/spray');
 commands.status = require('./commands/status');
 commands.stream = require('./commands/stream');

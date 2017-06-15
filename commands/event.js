@@ -17,6 +17,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * */
 
+const appConfig = require('../index').appConfig;
 const splitargs = require('splitargs');
 const https = require('https');
 
@@ -63,11 +64,12 @@ function sendRequest(eventId, userId, modifier, callback, message) {
   }
 
   const options = {
-    host: 'api.gaymers.gg',
-    path: '/events/' + eventId + urlModifer,
+    host: 'events.gaymers.gg',
+    path: '/' + eventId + urlModifer,
     method: 'POST',
     headers: {
-      'x-api-key': appConfig.APIGW_DISCOBOT_X_API_KEY
+      'x-api-key': appConfig.APIGW_DISCOBOT_X_API_KEY,
+      'Content-Type': 'application/json'
     }
   };
 

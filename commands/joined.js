@@ -38,7 +38,6 @@ module.exports = {
 
     const embed = new Discord.RichEmbed();
     embed.setColor(0x3398DB);
-    embed.addField('User', target);
 
     if (target.id === REYNBOW.id) {
       embed.setTitle(target.displayName.toUpperCase() +
@@ -46,11 +45,30 @@ module.exports = {
         moment(REYNBOW.joinedAt).fromNow().toUpperCase() + ', MATE.');
       embed.setTimestamp(REYNBOW.joinedAt);
     } else {
-      embed.setTitle(target.displayName + ' joined ' +
-        moment(target.joinedAt).fromNow());
+      embed.setTitle(
+        target.displayName +
+        ' joined ' +
+        moment(target.joinedAt).fromNow()
+      );
+
       embed.setTimestamp(target.joinedAt);
     }
 
-    message.channel.send({ embed: embed });
+    embed.setAuthor(
+      target.displayName,
+      target.user.avatarURL,
+      ''
+    );
+
+    embed.addField('User:', target, true);
+    embed.addField('Requested By:', message.author, true);
+
+    message.channel.send(
+      'Here\'s ' +
+      target +
+      '\'s joined date, requested by ' +
+      message.author,
+      { embed: embed }
+    );
   }
 };

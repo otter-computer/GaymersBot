@@ -35,9 +35,9 @@ module.exports = {
 
     const user = message.mentions.users.first();
     if (user.avatarURL) {
-      message.channel.send(user + '\'s avatar: ' + user.avatarURL);
+      message.channel.send('At the request of ' + message.author + ' here is ' + user + '\'s avatar: ' + user.avatarURL);
     } else {
-      message.channel.send(user + ' doesn\'t have an avatar :sob:');
+      message.channel.send('Sorry ' + message.author + ', ' + user + ' doesn\'t have an avatar :sob:');
     }
   }
 };

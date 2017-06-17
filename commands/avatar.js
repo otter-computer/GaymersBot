@@ -53,8 +53,6 @@ module.exports = {
 
       const embed = new Discord.RichEmbed();
       embed.setColor(0x3398DB);
-      embed.addField('User:', user, true);
-      embed.addField('Requested By:', message.author, true);
 
       embed.setAuthor(
         message.guild.member(user).displayName,
@@ -65,6 +63,9 @@ module.exports = {
       embed.setImage(
         user.avatarURL
       );
+
+      embed.addField('User:', user, true);
+      embed.addField('Requested By:', message.author, true);
 
       message.channel.send(
         'Here\'s ' + user + '\'s avatar, requested by ' +

@@ -38,7 +38,8 @@ module.exports = {
 
     const embed = new Discord.RichEmbed();
     embed.setColor(0x3398DB);
-    embed.addField('User', target);
+    embed.addField('User:', target);
+    embed.addField('Requested By:', message.author);
 
     if (target.id === REYNBOW.id) {
       embed.setTitle(target.displayName.toUpperCase() +

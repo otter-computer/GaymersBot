@@ -86,7 +86,7 @@ function sendRequest(eventName, userId, modifier, callback, message) {
 
       let error;
 
-      if (parsedData.errorMessage || parsedData.affectedRows == 0) {
+      if (parsedData.code == 'ER_DUP_ENTRY' || parsedData.affectedRows == 0) {
         error = true;
       } else {
         error = false;

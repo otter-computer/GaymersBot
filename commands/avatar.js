@@ -17,6 +17,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * */
 
+const Discord = require('discord.js');
+
 module.exports = {
   usage: '[@user]',
   description: 'See someone\'s avatar.',
@@ -25,8 +27,21 @@ module.exports = {
     if (!message.mentions.users.first() ||
         message.mentions.users.first() === message.author) {
       if (message.author.avatarURL) {
-        message.channel.send('Your avatar: ' +
-          message.author.avatarURL);
+
+        const embed = new Discord.RichEmbed();
+        embed.setColor(0x3398DB);
+
+        embed.setAuthor(
+          message.guild.member(message.author).displayName,
+          message.author.avatarURL,
+          ''
+        );
+
+        embed.setImage(
+          message.author.avatarURL
+        );
+
+        message.channel.send({ embed: embed });
       } else {
         message.reply('You don\'t have an avatar :sob:');
       }
@@ -35,7 +50,27 @@ module.exports = {
 
     const user = message.mentions.users.first();
     if (user.avatarURL) {
-      message.channel.send('At the request of ' + message.author + ' here is ' + user + '\'s avatar: ' + user.avatarURL);
+
+      const embed = new Discord.RichEmbed();
+      embed.setColor(0x3398DB);
+      embed.addField('User:', user, true);
+      embed.addField('Requested By:', message.author, true);
+
+      embed.setAuthor(
+        message.guild.member(user).displayName,
+        user.avatarURL,
+        ''
+      );
+
+      embed.setImage(
+        user.avatarURL
+      );
+
+      message.channel.send(
+        'Here\'s ' + user + '\'s avatar, requested by ' +
+        message.author + ': ',
+        { embed: embed }
+      );
     } else {
       message.channel.send('Sorry ' + message.author + ', ' + user + ' doesn\'t have an avatar :sob:');
     }

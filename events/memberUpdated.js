@@ -114,9 +114,12 @@ function memberRestricted(member) {
 
 
 
-function memberRoleAdded(newMember) {
+function welcomeRoleAdded(newMember) {
   const generalChannel = newMember.guild.channels.find('name', 'general');
   const userLogsChannel = newMember.guild.channels.find('name', 'user-logs');
+
+  welcomeRole = findRole(newMember.guild, 'Welcome');
+  memberRole = findRole(newMember.guild, 'Member');
 
   // Publicly welcome the user
   if (!generalChannel) {
@@ -154,8 +157,18 @@ function memberRoleAdded(newMember) {
     '**!setregion [region]** - Discobot will set your colour based on your region. For example `!setregion Europe` or `!setregion North America` \n' +
     '**!set18** - Discobot will give you access to the #over-18 channel. \n'
   );
+
+  newMember.removeRole(welcomeRole);
+  newMember.addRole(memberRole);
 }
 
+function findRole(guild, roleName) {
+  for (const role of guild.roles.array()) {
+    if (role.name.toLowerCase() === roleName.toLowerCase()) {
+      return role;
+    }
+  }
+}
 
 
 module.exports = {
@@ -174,9 +187,9 @@ module.exports = {
     }
 
     // User became a member
-    if (!oldMember.roles.findKey('name', 'Member') &&
-      newMember.roles.findKey('name', 'Member')) {
-      memberRoleAdded(newMember);
+    if (!oldMember.roles.findKey('name', 'Welcome') &&
+      newMember.roles.findKey('name', 'Welcome')) {
+      welcomeRoleAdded(newMember);
     }
   }
 };

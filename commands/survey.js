@@ -45,7 +45,6 @@ module.exports = {
       response.on('end', () => {
         if (data){
           var jData = JSON.parse(data);
-          console.log(jData);
           if (args[1] && args[1] == 'results') {
             message.channel.send('Survey Link: ' + jData.surveyurl + '\n Survey Data: ' + jData.surveydata);
           }

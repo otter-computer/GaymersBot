@@ -123,6 +123,7 @@ commands.smooch = require('./commands/smooch');
 commands.spray = require('./commands/spray');
 commands.status = require('./commands/status');
 commands.stream = require('./commands/stream');
+commands.survey = require('./commands/survey');
 commands.under18 = require('./commands/under18');
 commands.unset18 = require('./commands/unset18');
 commands.unsetregion = require('./commands/unsetregion');

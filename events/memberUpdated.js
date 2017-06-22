@@ -118,8 +118,8 @@ function welcomeRoleAdded(newMember) {
   const generalChannel = newMember.guild.channels.find('name', 'general');
   const userLogsChannel = newMember.guild.channels.find('name', 'user-logs');
 
-  welcomeRole = findRole(newMember.guild, 'Welcome');
-  memberRole = findRole(newMember.guild, 'Member');
+  welcomeRole =  newMember.guild.roles.find('name', 'Welcome');
+  memberRole =  newMember.guild.roles.find('name', 'Member');
 
   // Publicly welcome the user
   if (!generalChannel) {
@@ -160,14 +160,6 @@ function welcomeRoleAdded(newMember) {
 
   newMember.removeRole(welcomeRole);
   newMember.addRole(memberRole);
-}
-
-function findRole(guild, roleName) {
-  for (const role of guild.roles.array()) {
-    if (role.name.toLowerCase() === roleName.toLowerCase()) {
-      return role;
-    }
-  }
 }
 
 

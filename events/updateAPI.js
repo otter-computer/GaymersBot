@@ -114,6 +114,36 @@ let under18flag = 0;
 
 }
 
+function updateLeaver(member) {
+
+let userid = member.user.id;
+
+  const options = {
+    host: 'users.gaymers.gg',
+    path: '/'+userid+'/leave',
+    method: 'POST',
+    headers: { "Content-Type": "application/json",
+               'x-api-key': appConfig.APIGW_DISCOBOT_X_API_KEY,}
+  };
+
+  const request = https.request(options, (response) => {
+
+    let data = '';
+
+    response.on('data', (chunk) => {
+      data += chunk;
+    });
+
+    response.on('end', () => {
+      let jData = JSON.parse(data);
+    });
+  });
+
+  request.write(JSON.stringify({}));
+  request.end();
+
+}
+
 module.exports = {
   process: (action, bot, oldMember, newMember) => {
 
@@ -126,7 +156,9 @@ module.exports = {
       updateRole(newMember); 
     }
 
-    
+    else if (action == 'leave') {
+      updateLeaver(oldMember); 
+    }
 
   }
 };

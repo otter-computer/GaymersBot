@@ -371,14 +371,14 @@ bot.on('messageDelete', (message) => {
 });
 
 // TEMPORARY - Catch all updates to resyncronise database
-bot.on('presenceUpdate', (oldMember, newMember) => {
+/*bot.on('presenceUpdate', (oldMember, newMember) => {
   try {
     events.updateAPI.process('presence', bot, oldMember, newMember);
   } catch (e) {
     console.error(e.stack);
   }
 });
-
+*/
 // Message edited
 //bot.on('messageUpdate', (oldMessage, newMessage) => {
 //  try {

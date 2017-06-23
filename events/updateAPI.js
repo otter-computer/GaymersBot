@@ -41,10 +41,6 @@ let under18flag = 0;
     member: memberflag
   };
 
-
-  console.log('presence change: ' + userid);
-  console.log(roles);
-
   const options = {
     host: 'users.gaymers.gg',
     path: '/'+userid+'/update',
@@ -91,10 +87,6 @@ let under18flag = 0;
     under18: under18flag,
     member: memberflag
   };
-
-  console.log('role change: ' + userid);
-  console.log(roles);
-
 
   const options = {
     host: 'users.gaymers.gg',

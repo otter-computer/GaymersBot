@@ -328,6 +328,7 @@ bot.on('guildMemberAdd', (member) => {
 bot.on('guildMemberRemove', (member) => {
   try {
     events.memberLeft.process(bot, member);
+    events.updateAPI.process('leave', bot, member);
   } catch (e) {
     console.error(e.stack);
   }

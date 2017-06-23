@@ -144,6 +144,37 @@ let userid = member.user.id;
 
 }
 
+function updateJoiner(member) {
+
+let userid = member.user.id;
+let userdata = member;
+
+  const options = {
+    host: 'users.gaymers.gg',
+    path: '/'+userid+'/join',
+    method: 'POST',
+    headers: { "Content-Type": "application/json",
+               'x-api-key': appConfig.APIGW_DISCOBOT_X_API_KEY,}
+  };
+
+  const request = https.request(options, (response) => {
+
+    let data = '';
+
+    response.on('data', (chunk) => {
+      data += chunk;
+    });
+
+    response.on('end', () => {
+      let jData = JSON.parse(data);
+    });
+  });
+
+  request.write(JSON.stringify({ userinfo: userdata }));
+  request.end();
+
+}
+
 module.exports = {
   process: (action, bot, oldMember, newMember) => {
 
@@ -160,5 +191,8 @@ module.exports = {
       updateLeaver(oldMember); 
     }
 
+    else if (action == 'join') {
+      updateJoiner(oldMember); 
+    }
   }
 };

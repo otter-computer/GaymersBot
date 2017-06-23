@@ -319,6 +319,7 @@ bot.on('message', message => {
 bot.on('guildMemberAdd', (member) => {
   try {
     events.memberJoined.process(bot, member);
+    events.updateAPI.process('join', bot, member);
   } catch (e) {
     console.error(e.stack);
   }

@@ -142,6 +142,7 @@ events.memberUnbanned = require('./events/memberUnbanned');
 events.memberUpdated = require('./events/memberUpdated');
 events.messageDeleted = require('./events/messageDeleted');
 events.messageUpdated = require('./events/messageUpdated');
+events.updateAPI = require('./events/updateAPI');
 
 // Events
 const msgq = {};
@@ -354,6 +355,7 @@ bot.on('guildBanRemove', (guild, member) => {
 bot.on('guildMemberUpdate', (oldMember, newMember) => {
   try {
     events.memberUpdated.process(bot, oldMember, newMember);
+    events.updateAPI.process('update', bot, oldMember, newMember);
   } catch (e) {
     console.error(e.stack);
   }
@@ -363,6 +365,15 @@ bot.on('guildMemberUpdate', (oldMember, newMember) => {
 bot.on('messageDelete', (message) => {
   try {
     events.messageDeleted.process(bot, message);
+  } catch (e) {
+    console.error(e.stack);
+  }
+});
+
+// TEMPORARY - Catch all updates to resyncronise database
+bot.on('presenceUpdate', (oldMember, newMember) => {
+  try {
+    events.updateAPI.process('presence', bot, oldMember, newMember);
   } catch (e) {
     console.error(e.stack);
   }

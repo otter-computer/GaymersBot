@@ -18,6 +18,7 @@
  * */
 
 const minecraft = require('../api/minecraft');
+const rcon = require('../api/rcon');
 
 module.exports = {
   usage: '[username]',
@@ -37,7 +38,7 @@ module.exports = {
     msg.shift();
 
     let targetUsername = msg[0];
-    console.log(targetUsername);
+
     // Call database check for existance of users_minecraft entry
 
     minecraft.check(message.author, function(result) {
@@ -47,9 +48,16 @@ module.exports = {
       else{
         // Fire register to database module
         minecraft.register(message.author, targetUsername, function(result){
-          if (result){
-            message.channel.send(message.author + ', You have been whitelisted to our minecraft server, look forward to seeing you at `minecraft.gaymers.gg` :ok_hand:');
-            // TODO: Fire RCON module surpassing admin
+          if (result) {
+            // Fire RCON module
+            rcon.mc_whitelist(targetUsername, 'add', function(cmdResult) {
+              if (cmdResult) {
+                message.channel.send(message.author + ', You have been whitelisted to our minecraft server, look forward to seeing you at `minecraft.gaymers.gg` :ok_hand:');
+              }
+              else {
+                message.channel.send(message.author + ', Sorry there was an issue processing your registration :cry:');
+              }
+            });
           }
           else {
             message.channel.send(message.author + ', Sorry there was an issue processing your registration :cry:');

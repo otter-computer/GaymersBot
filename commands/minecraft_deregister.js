@@ -18,6 +18,7 @@
  * */
 
 const minecraft = require('../api/minecraft');
+const rcon = require('../api/rcon');
 
 module.exports = {
   usage: '',
@@ -26,13 +27,21 @@ module.exports = {
   process: (bot, message) => {
 
     // Call database check for existance of users_minecraft entry
-    minecraft.check(message.author, function(result) {
+    minecraft.check(message.author, function(result, data) {
       if (result){
+        let targetUsername = data[0].minecraft_username;
         // Fire register to database module
         minecraft.deregister(message.author, function(result){
           if (result){
-            message.channel.send(message.author + ', You have been deregistered from our minecraft server :ok_hand:');
-            // TODO: Fire RCON module surpassing admin
+            // Fire RCON module
+            rcon.mc_whitelist(targetUsername, 'remove', function(cmdResult) {
+              if (cmdResult) {
+                message.channel.send(message.author + ', You have been deregistered from our minecraft server :ok_hand:');
+              }
+              else {
+                message.channel.send(message.author + ', Sorry there was an issue processing your deregistration :cry:');
+              }
+            });
           }
           else {
             message.channel.send(message.author + ', Sorry there was an issue processing your deregistration :cry:');

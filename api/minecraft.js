@@ -45,7 +45,7 @@ exports.check = function(member, callback) {
     response.on('end', () => {
       let jData = JSON.parse(data);
       if (jData.length == 1){
-        callback(true);
+        callback(true, jData);
       }
       else {
         callback(false);

@@ -71,3 +71,44 @@ exports.mc_whitelist = function(username, action, callback) {
   request.end();
 
 };
+
+exports.mcChat = function(message) {
+
+  let commandData = 'say ';
+
+  if (!message) {
+    return;
+  }
+
+  let user = message.author;
+
+  commandData += '<' + user.username + '>: ' + message.content;
+
+  const options = {
+    host: 'rcon.gaymers.gg',
+    path: '/minecraft',
+    method: 'POST',
+    headers: { "Content-Type": "application/json",
+               'x-api-key': appConfig.APIGW_DISCOBOT_X_API_KEY}
+  };
+
+  const request = https.request(options, (response) => {
+
+    let data = '';
+
+    response.on('data', (chunk) => {
+      data += chunk;
+    });
+
+    response.on('end', () => {
+      let jData = JSON.parse(data);
+      console.log(data);
+      return;
+
+    });
+  });
+
+  request.write(JSON.stringify({ command: commandData }));
+  request.end();
+
+};

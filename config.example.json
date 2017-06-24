@@ -4,5 +4,6 @@
   "SQS_ACCESS_KEY": "",
   "SQS_SECRET_KEY": "",
   "USE_AWS_SQS": false,
-  "SQS_QUEUE_URL": ""
+  "SQS_QUEUE_URL": "",
+  "MINECRAFT_CHAT_CHANNEL": ""
 }

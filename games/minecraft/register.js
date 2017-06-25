@@ -24,20 +24,9 @@ module.exports = {
   usage: '[username]',
   description: 'Whitelists a user for the Minecraft server.',
   allowDM: false,
-  process: (bot, message) => {
+  process: (bot, message, args=null) => {
 
-    let msg = message.content;
-
-    msg = msg.split(' ');
-
-    if (msg.length != 2) {
-      message.reply('Usage: !minecraft_register ' + module.exports.usage);
-      return;
-    }
-
-    msg.shift();
-
-    let targetUsername = msg[0];
+    let targetUsername = args;
 
     // Call database check for existance of users_minecraft entry
 

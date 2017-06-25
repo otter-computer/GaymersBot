@@ -101,7 +101,7 @@ process.on('SIGTERM', cleanup);
 
 // APIs
 
-minecraftChat = require('./api/rcon').mcChat;
+minecraftChat = require('./games/rcon').mcChat;
 
 // Commands
 const commands = {};
@@ -113,13 +113,10 @@ commands.choose = require('./commands/choose');
 commands.createrole = require('./commands/createrole');
 commands.event = require('./commands/event');
 commands.events = require('./commands/events');
-commands.game = require('./games/index');
 commands.help = require('./commands/help');
 commands.hug = require('./commands/hug');
 commands.joined = require('./commands/joined');
 commands.magic8ball = require('./commands/magic8ball');
-commands.minecraft_deregister = require('./commands/minecraft_deregister');
-commands.minecraft_register = require('./commands/minecraft_register');
 commands.member = require('./commands/member');
 commands.quote = require('./commands/quote');
 commands.regions = require('./commands/regions');
@@ -135,6 +132,9 @@ commands.under18 = require('./commands/under18');
 commands.unset18 = require('./commands/unset18');
 commands.unsetregion = require('./commands/unsetregion');
 commands.vote = require('./commands/vote');
+
+// Import nested games modules
+commands.games = require('./games/index');
 
 // Export commands for use in other modules (help)
 module.exports.commands = commands;

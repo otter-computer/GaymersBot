@@ -21,8 +21,10 @@
 const games = {};
 games.minecraft = require('./minecraft/index');
 
+function generateCommandSet(role, game) {
 
-function generateCommandSet(role, commands) {
+  const name = game.name;
+  const commands = game.commands;
 
   let title = role ? role : 'Available';
   title += ' Commands';
@@ -33,9 +35,9 @@ function generateCommandSet(role, commands) {
   let commandArray = [];
 
   // TODO: Display commands based on requireRoles
-  for (let command in commands.commands) {
-    let cmd = commands.commands[command];
-    let info = '!' + command;
+  for (let command in commands) {
+    let cmd = commands[command];
+    let info = '!games ' + name + ' ' + command;
 
     // Skip commands that require roles based on parameter
     if (cmd.requireRoles && !role){
@@ -78,29 +80,35 @@ function generateCommandSet(role, commands) {
 }
 
 
-function usage(message){
+function usage(bot, message, games){
 
-  const userCommands = generateCommandSet(false, games.minecraft.commands);
-  const member = bot.guilds.first().members.get(message.author.id);
 
-  for (let i = 0; i < userCommands.length; i++) {
-    message.author.send(userCommands[i]);
-  }
+  for (let game in games) {
 
-  if (member.roles.exists('name','Moderator') && !member.roles.exists('name','Admin')) {
+    const userCommands = generateCommandSet(false, games[game]);
+    const member = bot.guilds.first().members.get(message.author.id);
 
-    const modCommands = generateCommandSet('Moderator', games.minecraft.commands);
-    for (let i = 0; i < modCommands.length; i++) {
-      message.author.send(modCommands[i]);
+    for (let i = 0; i < userCommands.length; i++) {
+      message.author.send(userCommands[i]);
     }
+
+    if (member.roles.exists('name','Moderator') && !member.roles.exists('name','Admin')) {
+
+      const modCommands = generateCommandSet('Moderator', games[game]);
+      for (let i = 0; i < modCommands.length; i++) {
+        message.author.send(modCommands[i]);
+      }
+    }
+
+    if (member.roles.exists('name','Admin')) {
+      const adminCommands = generateCommandSet('Admin', games[game]);
+      for (let i = 0; i < adminCommands.length; i++) {
+        message.author.send(adminCommands[i]);
+      }
+    }
+
   }
 
-  if (member.roles.exists('name','Admin')) {
-    const adminCommands = generateCommandSet('Admin', games.minecraft.commands);
-    for (let i = 0; i < adminCommands.length; i++) {
-      message.author.send(adminCommands[i]);
-    }
-  }
 
 }
 
@@ -115,22 +123,55 @@ module.exports = {
     msg = msg.split(' ');
 
     if (msg.length < 2) {
-      usage(message);
+
+      usage(bot, message, games);
+
+      if (message.channel.type === 'text') {
+        message.reply('Check your DMs :wink:');
+      }
+
       return;
     }
 
-    // If !help was run in a public channel, send a message to that channel too
-    if (message.channel.type === 'text') {
-      message.reply('Check your DMs :wink:');
+    msg.shift();
+
+    let gameName = msg[0];
+    let action = msg[1];
+    let args = msg [2];
+
+    console.log(gameName);
+    console.log(action);
+
+    if (!gameName) {
+      console.log('game usage:');
+        usage(bot, message, games);
+
+        if (message.channel.type === 'text') {
+          message.reply('Check your DMs :wink:');
+        }
     }
 
 
+    if(!action){
+      console.log('action usage:');
+      usage(bot, message, games);
 
+      if (message.channel.type === 'text') {
+        message.reply('Check your DMs :wink:');
+      }
+    }
+
+    let gamecommands = games[gameName].commands;
+    console.log('gamecommands', gamecommands);
+    let command = gamecommands[action];
+    console.log('command', command);
+
+    if (command){
+      console.log('executing command');
+      command.process(bot, message, args);
+    }
 
 
   }
-
-
-
 
 };

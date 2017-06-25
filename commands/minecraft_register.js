@@ -55,7 +55,9 @@ module.exports = {
                 message.channel.send(message.author + ', You have been whitelisted to our minecraft server, look forward to seeing you at `minecraft.gaymers.gg` :ok_hand:');
               }
               else {
-                message.channel.send(message.author + ', Sorry there was an issue processing your registration :cry:');
+                minecraft.deregister(message.author, function(result){
+                  message.channel.send(message.author + ', Sorry there was an issue processing your registration :cry:. The server is offline.');
+                });
               }
             });
           }

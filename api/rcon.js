@@ -72,7 +72,7 @@ exports.mc_whitelist = function(username, action, callback) {
 
 };
 
-exports.mcChat = function(message) {
+exports.mcChat = function(message, callback) {
 
   let commandData = 'say ';
 
@@ -102,9 +102,14 @@ exports.mcChat = function(message) {
 
     response.on('end', () => {
       let jData = JSON.parse(data);
-      console.log(data);
-      return;
+      if(jData.errorMessage){
+        callback(true);
+      }
+      callback();
 
+    });
+    response.on('error', (err) => {
+      console.log(err);
     });
   });
 

@@ -17,8 +17,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * */
 
-const minecraft = require('../api/minecraft');
-const rcon = require('../api/rcon');
+const minecraft = require('./api');
+const rcon = require('../rcon');
 
 module.exports = {
   usage: '',

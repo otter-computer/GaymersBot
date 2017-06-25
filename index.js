@@ -227,7 +227,11 @@ function messageHandler(message) {
   }
 
   if (message.channel.name == appConfig.MINECRAFT_CHAT_CHANNEL) {
-    minecraftChat(message);
+    minecraftChat(message, function(err){
+      if (err){
+        message.reply('Minecraft Server is currently offline. :frowning2:');
+      }
+    });
     return;
   }
 

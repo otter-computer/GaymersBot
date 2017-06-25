@@ -39,7 +39,9 @@ module.exports = {
                 message.channel.send(message.author + ', You have been deregistered from our minecraft server :ok_hand:');
               }
               else {
-                message.channel.send(message.author + ', Sorry there was an issue processing your deregistration :cry:');
+                minecraft.register(message.author, targetUsername, function(result){
+                  message.channel.send(message.author + ', Sorry there was an issue processing your deregistration :cry:. The server is offline.');
+                });
               }
             });
           }

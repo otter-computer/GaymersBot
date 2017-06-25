@@ -113,6 +113,7 @@ commands.choose = require('./commands/choose');
 commands.createrole = require('./commands/createrole');
 commands.event = require('./commands/event');
 commands.events = require('./commands/events');
+commands.game = require('./games/index');
 commands.help = require('./commands/help');
 commands.hug = require('./commands/hug');
 commands.joined = require('./commands/joined');
@@ -226,7 +227,7 @@ function messageHandler(message) {
     return;
   }
 
-  if (message.channel.name == appConfig.MINECRAFT_CHAT_CHANNEL) {
+  if (message.channel.name == appConfig.MINECRAFT_CHAT_CHANNEL && message.content[0] !== '!') {
     minecraftChat(message, function(err){
       if (err){
         message.reply('Minecraft Server is currently offline. :frowning2:');

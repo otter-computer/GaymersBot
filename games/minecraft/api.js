@@ -17,7 +17,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * */
 
-const appConfig = require('../index').appConfig;
+const appConfig = require('../../index').appConfig;
 const https = require('https');
 
 // Minecraft API Spec available at https://github.com/gaymers-discord/gaymers-minecraft-api

@@ -72,6 +72,59 @@ exports.mc_whitelist = function(username, action, callback) {
 
 };
 
+exports.mc_command = function(username, action, callback) {
+
+  let commandData = '';
+
+  if (action == 'kick') {
+    commandData = commandData + 'kick ' + username;
+  }
+  else if (action == 'ban') {
+    commandData = commandData + 'ban ' + username;
+  }
+  else if (action == 'unban' || action == 'pardon') {
+    commandData = commandData + 'pardon ' + username;
+  }
+  else if (action == 'list') {
+    commandData = commandData + 'list';
+  }
+  else {
+    callback(false, 'Invalid action.');
+  }
+
+  const options = {
+    host: 'rcon.gaymers.gg',
+    path: '/minecraft',
+    method: 'POST',
+    headers: { "Content-Type": "application/json",
+               'x-api-key': appConfig.APIGW_DISCOBOT_X_API_KEY}
+  };
+
+  const request = https.request(options, (response) => {
+
+    let data = '';
+
+    response.on('data', (chunk) => {
+      data += chunk;
+    });
+
+    response.on('end', () => {
+      let jData = JSON.parse(data);
+      if (jData.errorMessage){
+        callback(false, "The server is offline.");
+      }
+      else {
+        callback(true);
+      }
+
+    });
+  });
+
+  request.write(JSON.stringify({ command: commandData }));
+  request.end();
+
+};
+
 exports.mcChat = function(message, callback) {
 
   let commandData = 'say ';

@@ -51,7 +51,7 @@ module.exports = {
         });
       }
       else{
-        message.channel.send(message.author + ', You are not registered with the minecraft server, if you wish to register please use `!minecraft_register username` first :ok_hand:');
+        message.channel.send(message.author + ', You are not registered with the minecraft server, if you wish to register please use `!games minecraft register [username]` first :ok_hand:');
       }
     });
   }

@@ -20,13 +20,16 @@
 const appConfig = require('../index').appConfig;
 const https = require('https');
 
-function updatePresence(member) {
+exports.updatePresence = function(member) {
 
-let userid = member.user.id;
-let userdata = member;
+  let userid = member.user.id;
+  let userdata = {
+    user: member.user,
+    joinedTimestamp: member.joinedTimestamp
+  };
 
-let memberflag = 0
-let under18flag = 0;
+  let memberflag = 0;
+  let under18flag = 0;
 
   if (member.roles.findKey('name', 'Under 18')) {
     under18flag = 1;
@@ -65,15 +68,18 @@ let under18flag = 0;
   request.write(JSON.stringify({ userinfo: userdata, roleinfo: roles }));
   request.end();
 
-}
+};
 
 
-function updateRole(member) {
+exports.updateRole = function(member) {
 
-let userid = member.user.id;
-let userdata = member;
-let memberflag = 0
-let under18flag = 0;
+  let userid = member.user.id;
+  let userdata = {
+    user: member.user,
+    joinedTimestamp: member.joinedTimestamp
+  };
+  let memberflag = 0;
+  let under18flag = 0;
 
   if (member.roles.findKey('name', 'Under 18')) {
     under18flag = 1;
@@ -109,12 +115,14 @@ let under18flag = 0;
     });
   });
 
+
+
   request.write(JSON.stringify({ userinfo: userdata, roleinfo: roles }));
   request.end();
 
-}
+};
 
-function updateLeaver(member) {
+exports.updateLeaver = function(member) {
 
 let userid = member.user.id;
 
@@ -142,12 +150,15 @@ let userid = member.user.id;
   request.write(JSON.stringify({}));
   request.end();
 
-}
+};
 
-function updateJoiner(member) {
+exports.updateJoiner = function(member) {
 
-let userid = member.user.id;
-let userdata = member;
+  let userid = member.user.id;
+  let userdata = {
+    user: member.user,
+    joinedTimestamp: member.joinedTimestamp
+  };
 
   const options = {
     host: 'users.gaymers.gg',
@@ -173,26 +184,4 @@ let userdata = member;
   request.write(JSON.stringify({ userinfo: userdata }));
   request.end();
 
-}
-
-module.exports = {
-  process: (action, bot, oldMember, newMember) => {
-
-    // Update from presence change
-    if (action == 'presence'){
-      updatePresence(newMember); 
-    }
-    // Update from role/nickname
-    else if (action == 'update') {
-      updateRole(newMember); 
-    }
-
-    else if (action == 'leave') {
-      updateLeaver(oldMember); 
-    }
-
-    else if (action == 'join') {
-      updateJoiner(oldMember); 
-    }
-  }
 };

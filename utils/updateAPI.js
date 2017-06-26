@@ -20,60 +20,13 @@
 const appConfig = require('../index').appConfig;
 const https = require('https');
 
-function updatePresence(member) {
+exports.updatePresence = function(member) {
 
-let userid = member.user.id;
-let userdata = member;
+  let userid = member.user.id;
+  let userdata = member;
 
-let memberflag = 0;
-let under18flag = 0;
-
-  if (member.roles.findKey('name', 'Under 18')) {
-    under18flag = 1;
-  }
-
-  if (member.roles.findKey('name', 'Member')) {
-    memberflag = 1;
-  }
-
-  let roles = {
-    under18: under18flag,
-    member: memberflag
-  };
-
-  const options = {
-    host: 'users.gaymers.gg',
-    path: '/'+userid+'/update',
-    method: 'POST',
-    headers: { "Content-Type": "application/json",
-               'x-api-key': appConfig.APIGW_DISCOBOT_X_API_KEY,}
-  };
-
-  const request = https.request(options, (response) => {
-
-    let data = '';
-
-    response.on('data', (chunk) => {
-      data += chunk;
-    });
-
-    response.on('end', () => {
-      let jData = JSON.parse(data);
-    });
-  });
-
-  request.write(JSON.stringify({ userinfo: userdata, roleinfo: roles }));
-  request.end();
-
-}
-
-
-function updateRole(member) {
-
-let userid = member.user.id;
-let userdata = member;
-let memberflag = 0;
-let under18flag = 0;
+  let memberflag = 0;
+  let under18flag = 0;
 
   if (member.roles.findKey('name', 'Under 18')) {
     under18flag = 1;
@@ -112,9 +65,56 @@ let under18flag = 0;
   request.write(JSON.stringify({ userinfo: userdata, roleinfo: roles }));
   request.end();
 
-}
+};
 
-function updateLeaver(member) {
+
+exports.updateRole = function(member) {
+
+  let userid = member.user.id;
+  let userdata = member;
+  let memberflag = 0;
+  let under18flag = 0;
+
+  if (member.roles.findKey('name', 'Under 18')) {
+    under18flag = 1;
+  }
+
+  if (member.roles.findKey('name', 'Member')) {
+    memberflag = 1;
+  }
+
+  let roles = {
+    under18: under18flag,
+    member: memberflag
+  };
+
+  const options = {
+    host: 'users.gaymers.gg',
+    path: '/'+userid+'/update',
+    method: 'POST',
+    headers: { "Content-Type": "application/json",
+               'x-api-key': appConfig.APIGW_DISCOBOT_X_API_KEY,}
+  };
+
+  const request = https.request(options, (response) => {
+
+    let data = '';
+
+    response.on('data', (chunk) => {
+      data += chunk;
+    });
+
+    response.on('end', () => {
+      let jData = JSON.parse(data);
+    });
+  });
+
+  request.write(JSON.stringify({ userinfo: userdata, roleinfo: roles }));
+  request.end();
+
+};
+
+exports.updateLeaver = function(member) {
 
 let userid = member.user.id;
 
@@ -142,12 +142,12 @@ let userid = member.user.id;
   request.write(JSON.stringify({}));
   request.end();
 
-}
+};
 
-function updateJoiner(member) {
+exports.updateJoiner = function(member) {
 
-let userid = member.user.id;
-let userdata = member;
+  let userid = member.user.id;
+  let userdata = member;
 
   const options = {
     host: 'users.gaymers.gg',
@@ -173,26 +173,4 @@ let userdata = member;
   request.write(JSON.stringify({ userinfo: userdata }));
   request.end();
 
-}
-
-module.exports = {
-  process: (action, bot, oldMember, newMember) => {
-
-    // Update from presence change
-    if (action == 'presence'){
-      updatePresence(newMember);
-    }
-    // Update from role/nickname
-    else if (action == 'update') {
-      updateRole(newMember);
-    }
-
-    else if (action == 'leave') {
-      updateLeaver(oldMember);
-    }
-
-    else if (action == 'join') {
-      updateJoiner(oldMember);
-    }
-  }
 };

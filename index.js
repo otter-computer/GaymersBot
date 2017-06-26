@@ -98,6 +98,9 @@ function cleanup() {
 process.on('SIGINT', cleanup);
 process.on('SIGTERM', cleanup);
 
+// Utilities
+const updateAPI = require('./utils/updateAPI');
+
 // Commands
 const commands = {};
 
@@ -142,7 +145,6 @@ events.memberUnbanned = require('./events/memberUnbanned');
 events.memberUpdated = require('./events/memberUpdated');
 events.messageDeleted = require('./events/messageDeleted');
 events.messageUpdated = require('./events/messageUpdated');
-events.updateAPI = require('./events/updateAPI');
 
 // Events
 const msgq = {};
@@ -319,7 +321,7 @@ bot.on('message', message => {
 bot.on('guildMemberAdd', (member) => {
   try {
     events.memberJoined.process(bot, member);
-    //events.updateAPI.process('join', bot, member);
+    //updateAPI.updateJoiner(member);
   } catch (e) {
     console.error(e.stack);
   }
@@ -329,7 +331,7 @@ bot.on('guildMemberAdd', (member) => {
 bot.on('guildMemberRemove', (member) => {
   try {
     events.memberLeft.process(bot, member);
-    events.updateAPI.process('leave', bot, member);
+    updateAPI.updateLeaver(member);
   } catch (e) {
     console.error(e.stack);
   }
@@ -357,7 +359,7 @@ bot.on('guildBanRemove', (guild, member) => {
 bot.on('guildMemberUpdate', (oldMember, newMember) => {
   try {
     events.memberUpdated.process(bot, oldMember, newMember);
-    events.updateAPI.process('update', bot, oldMember, newMember);
+    updateAPI.updateRole(newMember);
   } catch (e) {
     console.error(e.stack);
   }
@@ -372,15 +374,16 @@ bot.on('messageDelete', (message) => {
   }
 });
 
-// TEMPORARY - Catch all updates to resyncronise database
-/*bot.on('presenceUpdate', (oldMember, newMember) => {
-  try {
-    events.updateAPI.process('presence', bot, oldMember, newMember);
-  } catch (e) {
-    console.error(e.stack);
-  }
-});
-*/
+// Status update
+//bot.on('presenceUpdate', (oldMember, newMember) => {
+//  try {
+//    updateAPI.updatePresence(newMember);
+//  } catch (e) {
+//    console.error(e.stack);
+//  }
+//});
+
+
 // Message edited
 //bot.on('messageUpdate', (oldMessage, newMessage) => {
 //  try {

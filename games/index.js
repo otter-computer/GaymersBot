@@ -21,6 +21,50 @@
 const games = {};
 games.minecraft = require('./minecraft/index');
 
+function commandValidInChannel(command, message) {
+  if (command.onlyIn.includes(message.channel.name)) {
+    return true;
+  }
+
+  // Complain to the user about their mistake
+  const validChannels = [];
+  command.onlyIn.forEach(channelName => {
+    const channel = message.guild.channels.find('name', channelName);
+    // If that channel doesn't exist on this server, leave it out
+    if (!channel) {
+      return;
+    }
+
+    // If the user can't read messages in that channel, leave it out
+    if (!channel.permissionsFor(message.member)
+        .has('READ_MESSAGES')) {
+      return;
+    }
+
+    validChannels.push('`' + channelName + '`');
+  });
+
+  if (validChannels.length === 0) {
+    message.member.send('Sorry, that command can\'t be used in ' +
+      'that channel.');
+  } else if (validChannels.length === 1) {
+    message.member.send('Sorry, that command can only be used ' +
+      'in ' + validChannels[0] + '.');
+  } else {
+    message.member.send('Sorry, that command can only be used in ' +
+      'the following channels: ' + validChannels.join(', ') + '.');
+  }
+
+  // Remove the problem message
+  message.delete()
+    .catch(reason => {
+      // TODO Error handler
+      console.error(reason);
+    });
+
+  return false;
+}
+
 function generateCommandSet(role, game) {
 
   const name = game.name;
@@ -82,7 +126,6 @@ function generateCommandSet(role, game) {
 
 function usage(bot, message, games){
 
-
   for (let game in games) {
 
     const userCommands = generateCommandSet(false, games[game]);
@@ -108,7 +151,6 @@ function usage(bot, message, games){
     }
 
   }
-
 
 }
 
@@ -139,39 +181,65 @@ module.exports = {
     let action = msg[1];
     let args = msg [2];
 
-    console.log(gameName);
-    console.log(action);
-
     if (!gameName) {
-      console.log('game usage:');
         usage(bot, message, games);
-
         if (message.channel.type === 'text') {
           message.reply('Check your DMs :wink:');
         }
+        return;
     }
 
 
-    if(!action){
-      console.log('action usage:');
+    if (!action) {
       usage(bot, message, games);
-
       if (message.channel.type === 'text') {
         message.reply('Check your DMs :wink:');
       }
+      return;
     }
 
     let gamecommands = games[gameName].commands;
-    console.log('gamecommands', gamecommands);
     let command = gamecommands[action];
-    console.log('command', command);
 
-    if (command){
-      console.log('executing command');
-      command.process(bot, message, args);
+    if (!command) {
+        return;
+      }
+
+    // If the command can only be used in certain channels, check that we're in
+    // one of those channels
+    if (command.onlyIn && command.onlyIn.length > 0) {
+      if (!commandValidInChannel(command, message)) {
+        return;
+      }
     }
 
+    // If the command requires roles, check that the user has one of them
+    if (command.requireRoles) {
+      // A command can't require roles and support DMs.
+      // This is a programmer error.
+      if (!message.guild) {
+        // TODO: Programmer error
+        return;
+      }
 
+      let satisfiesRoles = false;
+
+      // Loop through the roles needed by the command and see if the user
+      // has any of them.
+      command.requireRoles.forEach((role) => {
+        if (message.member.roles.findKey('name', role)) {
+          satisfiesRoles = true;
+        }
+      });
+
+      if (!satisfiesRoles) {
+        message.channel.send('I\'m sorry ' + message.author + ', I\'m ' +
+          'afraid I can\'t do that.');
+        return;
+      }
+
+    }
+
+    command.process(bot, message, args);
   }
-
 };

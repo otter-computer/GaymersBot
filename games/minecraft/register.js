@@ -32,7 +32,7 @@ module.exports = {
 
     minecraft.check(message.author, function(result) {
       if (result){
-        message.channel.send(message.author + ', You are already registered with the minecraft server, if you wish to change your registration please use `!minecraft_deregister` first :ok_hand:');
+        message.channel.send(message.author + ', You are already registered with the minecraft server, if you wish to change your registration please use `!games minecraft deregister` first :ok_hand:');
       }
       else{
         // Fire register to database module

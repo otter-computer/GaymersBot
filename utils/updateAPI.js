@@ -23,7 +23,10 @@ const https = require('https');
 exports.updatePresence = function(member) {
 
   let userid = member.user.id;
-  let userdata = member;
+  let userdata = {
+    user: member.user,
+    joinedTimestamp: member.joinedTimestamp
+  };
 
   let memberflag = 0;
   let under18flag = 0;
@@ -71,7 +74,10 @@ exports.updatePresence = function(member) {
 exports.updateRole = function(member) {
 
   let userid = member.user.id;
-  let userdata = member;
+  let userdata = {
+    user: member.user,
+    joinedTimestamp: member.joinedTimestamp
+  };
   let memberflag = 0;
   let under18flag = 0;
 
@@ -108,6 +114,8 @@ exports.updateRole = function(member) {
       let jData = JSON.parse(data);
     });
   });
+
+
 
   request.write(JSON.stringify({ userinfo: userdata, roleinfo: roles }));
   request.end();
@@ -147,7 +155,10 @@ let userid = member.user.id;
 exports.updateJoiner = function(member) {
 
   let userid = member.user.id;
-  let userdata = member;
+  let userdata = {
+    user: member.user,
+    joinedTimestamp: member.joinedTimestamp
+  };
 
   const options = {
     host: 'users.gaymers.gg',

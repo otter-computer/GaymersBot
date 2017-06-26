@@ -25,7 +25,7 @@ function updatePresence(member) {
 let userid = member.user.id;
 let userdata = member;
 
-let memberflag = 0
+let memberflag = 0;
 let under18flag = 0;
 
   if (member.roles.findKey('name', 'Under 18')) {
@@ -72,7 +72,7 @@ function updateRole(member) {
 
 let userid = member.user.id;
 let userdata = member;
-let memberflag = 0
+let memberflag = 0;
 let under18flag = 0;
 
   if (member.roles.findKey('name', 'Under 18')) {
@@ -180,19 +180,19 @@ module.exports = {
 
     // Update from presence change
     if (action == 'presence'){
-      updatePresence(newMember); 
+      updatePresence(newMember);
     }
     // Update from role/nickname
     else if (action == 'update') {
-      updateRole(newMember); 
+      updateRole(newMember);
     }
 
     else if (action == 'leave') {
-      updateLeaver(oldMember); 
+      updateLeaver(oldMember);
     }
 
     else if (action == 'join') {
-      updateJoiner(oldMember); 
+      updateJoiner(oldMember);
     }
   }
 };

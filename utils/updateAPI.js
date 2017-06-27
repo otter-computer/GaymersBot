@@ -24,7 +24,13 @@ exports.updatePresence = function(member) {
 
   let userid = member.user.id;
   let userdata = {
-    user: member.user,
+    user: {
+      userid: member.user.id,
+      username: member.user.username,
+      discriminator: member.user.discriminator,
+      avatar: member.user.avatar
+    },
+    nickname: member.nickname,
     joinedTimestamp: member.joinedTimestamp
   };
 
@@ -75,7 +81,13 @@ exports.updateRole = function(member) {
 
   let userid = member.user.id;
   let userdata = {
-    user: member.user,
+    user: {
+      userid: member.user.id,
+      username: member.user.username,
+      discriminator: member.user.discriminator,
+      avatar: member.user.avatar
+    },
+    nickname: member.nickname,
     joinedTimestamp: member.joinedTimestamp
   };
   let memberflag = 0;
@@ -156,7 +168,13 @@ exports.updateJoiner = function(member) {
 
   let userid = member.user.id;
   let userdata = {
-    user: member.user,
+    user: {
+      userid: member.user.id,
+      username: member.user.username,
+      discriminator: member.user.discriminator,
+      avatar: member.user.avatar
+    },
+    nickname: member.nickname,
     joinedTimestamp: member.joinedTimestamp
   };
 

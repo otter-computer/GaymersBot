@@ -101,50 +101,14 @@ process.on('SIGTERM', cleanup);
 // Utilities
 const updateAPI = require('./utils/updateAPI');
 
-// Commands
-const commands = {};
-
-// Import commands
-commands.avatar = require('./commands/avatar');
-commands.boop = require('./commands/boop');
-commands.choose = require('./commands/choose');
-commands.createrole = require('./commands/createrole');
-commands.event = require('./commands/event');
-commands.events = require('./commands/events');
-commands.help = require('./commands/help');
-commands.hug = require('./commands/hug');
-commands.joined = require('./commands/joined');
-commands.magic8ball = require('./commands/magic8ball');
-commands.member = require('./commands/member');
-commands.quote = require('./commands/quote');
-commands.regions = require('./commands/regions');
-commands.role = require('./commands/role');
-commands.set18 = require('./commands/set18');
-commands.setregion = require('./commands/setregion');
-commands.slap = require('./commands/slap');
-commands.smooch = require('./commands/smooch');
-commands.spray = require('./commands/spray');
-commands.status = require('./commands/status');
-commands.stream = require('./commands/stream');
-commands.under18 = require('./commands/under18');
-commands.unset18 = require('./commands/unset18');
-commands.unsetregion = require('./commands/unsetregion');
-commands.vote = require('./commands/vote');
+// Import Commands
+const commands = require('./commands/index');
 
 // Export commands for use in other modules (help)
 module.exports.commands = commands;
 
-// Events
-const events = {};
-
-// Import events
-events.memberBanned = require('./events/memberBanned');
-events.memberJoined = require('./events/memberJoined');
-events.memberLeft = require('./events/memberLeft');
-events.memberUnbanned = require('./events/memberUnbanned');
-events.memberUpdated = require('./events/memberUpdated');
-events.messageDeleted = require('./events/messageDeleted');
-events.messageUpdated = require('./events/messageUpdated');
+// Import Events
+const events = require('./events/index');
 
 // Events
 const msgq = {};

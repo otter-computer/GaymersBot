@@ -52,9 +52,10 @@ const Discord = require('discord.js');
 const Consumer = require('sqs-consumer');
 const AWS = require('aws-sdk');
 const roles = require('./roles');
+const utils = require('./utils/discordHelpers');
 
 require('log-timestamp');
-require('./utils');
+require('./utils/javascriptHelpers');
 
 // SQS Setup
 let sqs;
@@ -127,58 +128,6 @@ bot.on('ready', () => {
   }
 });
 
-/**
- * Return `true` if the command is allowed in this channel, `false` if not.
- * Will DM the user and delete the message if not.
- *
- * @param command
- * @param message
- * @returns {boolean}
- */
-function commandValidInChannel(command, message) {
-  if (command.onlyIn.includes(message.channel.name)) {
-    return true;
-  }
-
-  // Complain to the user about their mistake
-  const validChannels = [];
-  command.onlyIn.forEach(channelName => {
-    const channel = message.guild.channels.find('name', channelName);
-    // If that channel doesn't exist on this server, leave it out
-    if (!channel) {
-      return;
-    }
-
-    // If the user can't read messages in that channel, leave it out
-    if (!channel.permissionsFor(message.member)
-        .has('READ_MESSAGES')) {
-      return;
-    }
-
-    validChannels.push('`' + channelName + '`');
-  });
-
-  if (validChannels.length === 0) {
-    message.member.send('Sorry, that command can\'t be used in ' +
-      'that channel.');
-  } else if (validChannels.length === 1) {
-    message.member.send('Sorry, that command can only be used ' +
-      'in ' + validChannels[0] + '.');
-  } else {
-    message.member.send('Sorry, that command can only be used in ' +
-      'the following channels: ' + validChannels.join(', ') + '.');
-  }
-
-  // Remove the problem message
-  message.delete()
-    .catch(reason => {
-      // TODO Error handler
-      console.error(reason);
-    });
-
-  return false;
-}
-
 function messageHandler(message) {
   // Ignore bot messages
   if (message.author.bot) {
@@ -237,7 +186,7 @@ function messageHandler(message) {
     // If the command can only be used in certain channels, check that we're in
     // one of those channels
     if (command.onlyIn && command.onlyIn.length > 0) {
-      if (!commandValidInChannel(command, message)) {
+      if (!utils.commandValidInChannel(command, message)) {
         return;
       }
     }

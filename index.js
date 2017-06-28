@@ -35,6 +35,7 @@ try {
   appConfig.SQS_SECRET_KEY = process.env.SQS_SECRET_KEY;
   appConfig.SQS_QUEUE_URL = process.env.SQS_QUEUE_URL;
   appConfig.USE_AWS_SQS = true;
+  appConfig.GITHUB_ACCESS_TOKEN = process.env.GITHUB_ACCESS_TOKEN;
 
   if (!process.env.USE_AWS_SQS) {
     appConfig.USE_AWS_SQS = false;
@@ -129,6 +130,7 @@ commands.stream = require('./commands/stream');
 commands.under18 = require('./commands/under18');
 commands.unset18 = require('./commands/unset18');
 commands.unsetregion = require('./commands/unsetregion');
+commands.updaterules = require('./commands/updaterules');
 commands.vote = require('./commands/vote');
 
 // Export commands for use in other modules (help)

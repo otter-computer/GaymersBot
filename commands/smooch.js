@@ -23,7 +23,7 @@ module.exports = {
   allowDM: true,
   process: (bot, message) => {
 
-    const hugReplies = [
+    const smoochReplies = [
       '*kisses $USER*',
       '*kisses $USER*',
       '$USER :kiss:',
@@ -42,6 +42,6 @@ module.exports = {
       user = message.author;
     }
 
-    message.channel.send(hugReplies.random().replace('$USER', user));
+    message.channel.send(smoochReplies.random().replace('$USER', user));
   }
 };

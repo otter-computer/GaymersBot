@@ -110,6 +110,7 @@ commands.boop = require('./commands/boop');
 commands.choose = require('./commands/choose');
 commands.createrole = require('./commands/createrole');
 commands.event = require('./commands/event');
+commands.eventpreview = require('./commands/eventpreview');
 commands.events = require('./commands/events');
 commands.help = require('./commands/help');
 commands.hug = require('./commands/hug');

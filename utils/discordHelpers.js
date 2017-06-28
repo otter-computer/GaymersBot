@@ -16,7 +16,7 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * */
- 
+
 exports.commandValidInChannel = function(command, message) {
 /*
  * Return `true` if the command is allowed in this channel, `false` if not.
@@ -68,4 +68,61 @@ exports.commandValidInChannel = function(command, message) {
     });
 
   return false;
-}
+};
+
+exports.generateCommandSet = function(role) {
+
+  const commands = require('../commands/index');
+
+  let title = role ? role : 'Available';
+  title += ' Commands';
+  let commandString = '```markdown' + '\n';
+
+  commandString +=  title + '\n';
+  commandString +=  Array(title.length + 1).join('=') + '\n';
+  let commandArray = [];
+
+  // TODO: Display commands based on requireRoles
+  for (let command in commands) {
+    let cmd = commands[command];
+    let info = '!' + command;
+
+    // Skip commands that require roles based on parameter
+    if (cmd.requireRoles && !role){
+      // Drops user commands
+      continue;
+    }
+    if (!cmd.requireRoles && role){
+      // Drops non role commands when generating role list
+      continue;
+    }
+
+    if (cmd.requireRoles && role){
+      if (!cmd.requireRoles.includes(role)){
+        // Drops commands not requiring the role parameter
+        continue;
+      }
+    }
+
+    if (cmd.usage) {
+      info += ' ' + cmd.usage;
+    }
+
+    if (cmd.description) {
+      info += ' - ' + cmd.description;
+    }
+
+    if ((commandString.length + info.length) < 1900) {
+      commandString += info + '\n';
+    } else {
+      commandString += '```';
+      commandArray.push(commandString);
+      commandString = '```'; // Reset
+      commandString += info + '\n';
+    }
+  }
+  commandString += '```';
+  commandArray.push(commandString);
+
+  return commandArray;
+};

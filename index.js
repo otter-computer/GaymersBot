@@ -105,9 +105,6 @@ const updateAPI = require('./utils/updateAPI');
 // Import Commands
 const commands = require('./commands/index');
 
-// Export commands for use in other modules (help)
-module.exports.commands = commands;
-
 // Import Events
 const events = require('./events/index');
 

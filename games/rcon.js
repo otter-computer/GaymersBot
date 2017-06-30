@@ -26,17 +26,17 @@ exports.mc_whitelist = function(username, action, callback) {
 
   let commandData = 'whitelist ';
 
-  if (action == 'add') {
-    commandData = commandData + 'add ' + username;
-  }
-  else if (action == 'remove') {
-    commandData = commandData + 'remove ' + username;
-  }
-  else if (action == 'list') {
-    commandData = commandData + 'list';
-  }
-  else {
-    callback('invalid action');
+  switch (action)
+  {
+    case "add":
+      commandData = commandData + 'add ' + username;
+      break;
+    case "remove":
+      commandData = commandData + 'remove ' + username;
+      break;
+    default:
+      callback('invalid action');
+      break;
   }
 
   const options = {
@@ -76,20 +76,21 @@ exports.mc_command = function(username, action, callback) {
 
   let commandData = '';
 
-  if (action == 'kick') {
-    commandData = commandData + 'kick ' + username;
-  }
-  else if (action == 'ban') {
-    commandData = commandData + 'ban ' + username;
-  }
-  else if (action == 'unban' || action == 'pardon') {
-    commandData = commandData + 'pardon ' + username;
-  }
-  else if (action == 'list') {
-    commandData = commandData + 'list';
-  }
-  else {
-    callback(false, 'Invalid action.');
+  switch (action)
+  {
+    case "kick":
+      commandData = commandData + 'kick ' + username;
+      break;
+    case "ban":
+      commandData = commandData + 'ban ' + username;
+      break;
+    case "unban":
+    case "pardon":
+      commandData = commandData + 'pardon ' + username;
+      break;
+    default:
+      callback(false,'invalid action');
+      break;
   }
 
   const options = {

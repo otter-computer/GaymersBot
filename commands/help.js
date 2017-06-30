@@ -30,21 +30,27 @@ module.exports = {
     const member = bot.guilds.first().members.get(message.author.id);
 
     for (let i = 0; i < userCommands.length; i++) {
-      message.author.send(userCommands[i]);
+      message.author.send(userCommands[i]).catch(error => {
+        console.error('Couldn\'t send DM' , error);
+      });
     }
 
     if (member.roles.exists('name','Moderator') && !member.roles.exists('name','Admin')) {
 
       const modCommands = utils.generateCommandSet('Moderator');
       for (let i = 0; i < modCommands.length; i++) {
-        message.author.send(modCommands[i]);
+        message.author.send(modCommands[i]).catch(error => {
+          console.error('Couldn\'t send DM' , error);
+        });
       }
     }
 
     if (member.roles.exists('name','Admin')) {
       const adminCommands = utils.generateCommandSet('Admin');
       for (let i = 0; i < adminCommands.length; i++) {
-        message.author.send(adminCommands[i]);
+        message.author.send(adminCommands[i]).catch(error => {
+          console.error('Couldn\'t send DM' , error);
+        });
       }
     }
 

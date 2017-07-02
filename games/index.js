@@ -17,118 +17,16 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * */
 
-
+const utils = require('../utils/discordHelpers');
 const games = {};
 games.minecraft = require('./minecraft/index');
-
-function commandValidInChannel(command, message) {
-  if (command.onlyIn.includes(message.channel.name)) {
-    return true;
-  }
-
-  // Complain to the user about their mistake
-  const validChannels = [];
-  command.onlyIn.forEach(channelName => {
-    const channel = message.guild.channels.find('name', channelName);
-    // If that channel doesn't exist on this server, leave it out
-    if (!channel) {
-      return;
-    }
-
-    // If the user can't read messages in that channel, leave it out
-    if (!channel.permissionsFor(message.member)
-        .has('READ_MESSAGES')) {
-      return;
-    }
-
-    validChannels.push('`' + channelName + '`');
-  });
-
-  if (validChannels.length === 0) {
-    message.member.send('Sorry, that command can\'t be used in ' +
-      'that channel.');
-  } else if (validChannels.length === 1) {
-    message.member.send('Sorry, that command can only be used ' +
-      'in ' + validChannels[0] + '.');
-  } else {
-    message.member.send('Sorry, that command can only be used in ' +
-      'the following channels: ' + validChannels.join(', ') + '.');
-  }
-
-  // Remove the problem message
-  message.delete()
-    .catch(reason => {
-      // TODO Error handler
-      console.error(reason);
-    });
-
-  return false;
-}
-
-function generateCommandSet(role, game) {
-
-  const name = game.name;
-  const commands = game.commands;
-
-  let title = role ? role : 'Available';
-  title += ' Commands';
-  let commandString = '```markdown' + '\n';
-
-  commandString +=  title + '\n';
-  commandString +=  Array(title.length + 1).join('=') + '\n';
-  let commandArray = [];
-
-  // TODO: Display commands based on requireRoles
-  for (let command in commands) {
-    let cmd = commands[command];
-    let info = '!games ' + name + ' ' + command;
-
-    // Skip commands that require roles based on parameter
-    if (cmd.requireRoles && !role){
-      // Drops user commands
-      continue;
-    }
-    if (!cmd.requireRoles && role){
-      // Drops non role commands when generating role list
-      continue;
-    }
-
-    if (cmd.requireRoles && role){
-      if (!cmd.requireRoles.includes(role)){
-        // Drops commands not requiring the role parameter
-        continue;
-      }
-    }
-
-    if (cmd.usage) {
-      info += ' ' + cmd.usage;
-    }
-
-    if (cmd.description) {
-      info += ' - ' + cmd.description;
-    }
-
-    if ((commandString.length + info.length) < 1900) {
-      commandString += info + '\n';
-    } else {
-      commandString += '```';
-      commandArray.push(commandString);
-      commandString = '```'; // Reset
-      commandString += info + '\n';
-    }
-  }
-  commandString += '```';
-  commandArray.push(commandString);
-
-  return commandArray;
-}
 
 
 function usage(bot, message, games){
 
   for (let game in games) {
 
-    const userCommands = generateCommandSet(false, games[game]);
+    const userCommands = utils.generateCommandSet(false, games[game]);
     const member = bot.guilds.first().members.get(message.author.id);
 
     for (let i = 0; i < userCommands.length; i++) {
@@ -137,14 +35,14 @@ function usage(bot, message, games){
 
     if (member.roles.exists('name','Moderator') && !member.roles.exists('name','Admin')) {
 
-      const modCommands = generateCommandSet('Moderator', games[game]);
+      const modCommands = utils.generateCommandSet('Moderator', games[game]);
       for (let i = 0; i < modCommands.length; i++) {
         message.author.send(modCommands[i]);
       }
     }
 
     if (member.roles.exists('name','Admin')) {
-      const adminCommands = generateCommandSet('Admin', games[game]);
+      const adminCommands = utils.generateCommandSet('Admin', games[game]);
       for (let i = 0; i < adminCommands.length; i++) {
         message.author.send(adminCommands[i]);
       }

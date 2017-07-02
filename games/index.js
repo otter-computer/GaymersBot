@@ -96,6 +96,14 @@ module.exports = {
       return;
     }
 
+    if (!games[gameName].commands) {
+      usage(bot, message, games);
+      if (message.channel.type === 'text') {
+        message.reply('Check your DMs :wink:');
+      }
+      return;
+    }
+
     let gamecommands = games[gameName].commands;
     let command = gamecommands[action];
 

@@ -25,3 +25,4 @@ exports.unsetregion = require('./unsetregion');
 exports.vote = require('./vote');
 
 exports.games = require('../games/index');
+exports.game = require('../games/index'); // Alias

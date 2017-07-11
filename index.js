@@ -102,9 +102,6 @@ process.on('SIGTERM', cleanup);
 // Utilities
 const updateAPI = require('./utils/updateAPI');
 
-// APIs
-minecraftChat = require('./games/rcon').mcChat;
-
 // Import Commands
 const commands = require('./commands/index');
 

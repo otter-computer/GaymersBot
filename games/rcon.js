@@ -156,6 +156,8 @@ exports.mcChat = function(message, callback) {
 
     response.on('end', () => {
       let jData = JSON.parse(data);
+      console.log('data back:');
+      console.log(jData);
       if(jData.errorMessage){
         callback(true);
       }

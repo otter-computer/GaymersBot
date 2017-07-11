@@ -17,6 +17,9 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * */
 
+const appConfig = require('../index').appConfig;
+const minecraftChat = require('../games/rcon').mcChat;
+
 exports.commandValidInChannel = function(command, message) {
 /*
  * Return `true` if the command is allowed in this channel, `false` if not.
@@ -144,6 +147,15 @@ exports.messageHandler = function(bot, message) {
 
   // Ignore bot messages
   if (message.author.bot) {
+    return;
+  }
+
+  if (message.channel.name == appConfig.MINECRAFT_CHAT_CHANNEL && message.content[0] !== '!') {
+    minecraftChat(message, function(err){
+      if (err){
+        message.reply('Minecraft Server is currently offline. :frowning2:');
+      }
+    });
     return;
   }
 

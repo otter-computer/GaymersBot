@@ -75,9 +75,9 @@ module.exports = {
 
     msg.shift();
 
-    let gameName = msg[0];
-    let action = msg[1];
-    let args = msg [2];
+    let gameName = msg[0].toLowerCase();
+    let action = msg[1].toLowerCase();
+    let args = msg [2].toLowerCase();
 
     if (!gameName) {
         usage(bot, message, games);

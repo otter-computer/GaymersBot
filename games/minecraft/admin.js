@@ -21,8 +21,8 @@ const minecraft = require('./api');
 const rcon = require('../rcon');
 
 module.exports = {
-  usage: '@DiscordUsername',
-  description: 'kick/ban a user.',
+  usage: '[kick/ban/unban] @DiscordUsername',
+  description: 'kick/ban/unban a DiscordUsername.',
   allowDM: false,
   requireRoles: ['Admin', 'Moderator'],
   process: (bot, message, args=null) => {

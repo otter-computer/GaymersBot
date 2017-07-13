@@ -17,6 +17,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * */
 
+const logger = require('../logger').logger;
+
 // Whenever we want to give permissions to roles, this can be uncommented and used for permission names (with permissions.FLAGS)
 //const permissions = require('discord.js/src/util/Permissions.js');
 
@@ -86,10 +88,10 @@ module.exports = {
         permissions:roleGroups[roleGroup].permissions,
         mentionable:roleGroups[roleGroup].mentionable})
         .then(role => {
-          console.log('Created role ' + roleName + ' ' + role);
+          logger.info('Created role ' + roleName + ' ' + role);
           message.reply('Created role ' + roleName);
         })
-        .catch(console.error);
+        .catch(logger.error);
     } else {
       message.reply('That role group does not exist!\n');
       usage(message);

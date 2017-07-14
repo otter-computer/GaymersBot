@@ -21,15 +21,23 @@ module.exports = {
   usage: '[@user]',
   description: 'Add the \'Under 18\' role.',
   allowDM: false,
+  requireRoles: ['Admin', 'Moderator'],
   process: (bot, message) => {
 
-    const under18Role = message.guild.roles.find('name', 'Under 18');
-
-    if (message.member.roles.exists('name', 'Under 18')) {
-      message.reply('You already have the Under 18 role. This can only be removed by an admin or moderator.');
+    if (!message.mentions.users.first()) {
+      message.reply('Usage: !under18 ' + module.exports.usage);
       return;
     }
-    message.member.addRole(under18Role);
-    message.reply('You\'ve been given the `Under 18` role. :ok_hand:');
+
+    const member = message.guild.member(message.mentions.users.first());
+    const under18Role = message.guild.roles.find('name', 'Under 18');
+
+    if (member.roles.exists('name', 'Under 18')) {
+      member.removeRole(under18Role);
+      message.reply('I have removed the `Under 18` role from the user. :ok_hand:');
+    } else {
+      member.addRole(under18Role);
+      message.reply('I have given the `Under 18` role to the user. :ok_hand:');
+    }
   }
 };

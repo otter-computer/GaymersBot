@@ -39,6 +39,30 @@ module.exports = {
     // ignorance. :(
     regionName = regionName.replace(/\[|\]/g, '');
 
+    // Provides aliases for regions, TODO: this should probably be part of the ../roles.js file
+
+    if (regionName.toUpperCase() == 'EU') {
+      regionName = 'Europe';
+    }
+    if (regionName.toUpperCase() == 'NA' || regionName == 'US' || regionName == 'CA' ) {
+      regionName = 'North America';
+    }
+    if (regionName.toUpperCase() == 'SA') {
+      regionName = 'South America';
+    }
+    if (regionName.toUpperCase() == 'OCE' || regionName == 'AU' || regionName == 'NZ') {
+      regionName = 'Oceania';
+    }
+    if (regionName.toUpperCase() == 'AF') {
+      regionName = 'Africa';
+    }
+    if (regionName.toUpperCase() == 'AZ') {
+      regionName = 'Asia';
+    }
+    if (regionName.toUpperCase() == 'ME') {
+      regionName = 'Middle East';
+    }
+
     // If the user supplied a bad region name, give them the list
     if (!REGIONS.includes(regionName)) {
       message.reply('To set your region, type `!setregion ' +

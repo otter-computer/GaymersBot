@@ -204,13 +204,13 @@ bot.on('messageDelete', (message) => {
 
 
 // Message edited
-//bot.on('messageUpdate', (oldMessage, newMessage) => {
-//  try {
-//    events.messageUpdated.process(bot, oldMessage, newMessage);
-//  } catch (e) {
-//    logger.error(e.stack);
-//  }
-//});
+bot.on('messageUpdate', (oldMessage, newMessage) => {
+ try {
+   events.messageUpdated.process(bot, oldMessage, newMessage);
+ } catch (e) {
+   logger.error(e.stack);
+ }
+});
 
 logger.info('Bot started');
 

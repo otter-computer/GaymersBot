@@ -17,6 +17,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * */
 
+const logger = require('../logger').logger;
 const commands = require('../commands/index');
 const roles = require('../roles');
 const utils = this;
@@ -68,7 +69,7 @@ exports.commandValidInChannel = function(command, message) {
   message.delete()
     .catch(reason => {
       // TODO Error handler
-      console.error(reason);
+      logger.error(reason);
     });
 
   return false;

@@ -17,6 +17,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * */
 
+const logger = require('../logger').logger;
 const Discord = require('discord.js');
 const https = require('https');
 const appConfig = require('../index').appConfig;
@@ -75,7 +76,7 @@ module.exports = {
 
       // Log the user joining to #user-logs
       if (!userLogsChannel) {
-        console.error('Channel #user-logs doesn\'t exist!');
+        logger.error('Channel #user-logs doesn\'t exist!');
       } else {
         const embed = new Discord.RichEmbed();
 
@@ -93,7 +94,7 @@ module.exports = {
 
       // Add a little message to #welcome-room to grab the user's attention
       if (!welcomeChannel) {
-        console.error('Channel #welcome-room doesn\'t exist!');
+        logger.error('Channel #welcome-room doesn\'t exist!');
       } else {
 
         welcomeChannel.send('Welcome '+userReturnMsg+'to Gaymers, ' + member + '! ' +

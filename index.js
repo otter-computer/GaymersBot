@@ -31,6 +31,7 @@ try {
 
   appConfig.AUTH_TOKEN = process.env.AUTH_TOKEN;
   appConfig.APIGW_DISCOBOT_X_API_KEY = process.env.APIGW_DISCOBOT_X_API_KEY;
+  appConfig.MINECRAFT_CHAT_CHANNEL = process.env.MINECRAFT_CHAT_CHANNEL;
   appConfig.SQS_ACCESS_KEY = process.env.SQS_ACCESS_KEY;
   appConfig.SQS_SECRET_KEY = process.env.SQS_SECRET_KEY;
   appConfig.SQS_QUEUE_URL = process.env.SQS_QUEUE_URL;
@@ -123,7 +124,6 @@ bot.on('ready', () => {
     sqs.start();
   }
 });
-
 
 // Handle messages
 bot.on('message', message => {

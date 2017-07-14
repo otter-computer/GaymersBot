@@ -17,9 +17,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * */
 
-const commands = require('../commands/index');
-const roles = require('../roles');
-const utils = this;
+const appConfig = require('../index').appConfig;
+const minecraftChat = require('../games/rcon').mcChat;
 
 exports.commandValidInChannel = function(command, message) {
 /*
@@ -74,7 +73,19 @@ exports.commandValidInChannel = function(command, message) {
   return false;
 };
 
-exports.generateCommandSet = function(role) {
+exports.generateCommandSet = function(role, game=false) {
+
+  let commands;
+  let cmdPrefix = '';
+
+  if (game){
+    commands = game.commands;
+    cmdPrefix = 'games ' + game.name + ' ';
+  }
+  else {
+    commands = require('../commands/index');
+  }
+
 
   let title = role ? role : 'Available';
   title += ' Commands';
@@ -87,7 +98,7 @@ exports.generateCommandSet = function(role) {
   // TODO: Display commands based on requireRoles
   for (let command in commands) {
     let cmd = commands[command];
-    let info = '!' + command;
+    let info = '!'+ cmdPrefix + command;
 
     // Skip commands that require roles based on parameter
     if (cmd.requireRoles && !role){
@@ -131,8 +142,20 @@ exports.generateCommandSet = function(role) {
 
 exports.messageHandler = function(bot, message) {
 
+  const commands = require('../commands/index');
+  const roles = require('../roles');
+
   // Ignore bot messages
   if (message.author.bot) {
+    return;
+  }
+
+  if (message.channel.name == appConfig.MINECRAFT_CHAT_CHANNEL && message.content[0] !== '!') {
+    minecraftChat(message, function(err){
+      if (err){
+        message.reply('Minecraft Server is currently offline. :frowning2:');
+      }
+    });
     return;
   }
 
@@ -188,7 +211,7 @@ exports.messageHandler = function(bot, message) {
     // If the command can only be used in certain channels, check that we're in
     // one of those channels
     if (command.onlyIn && command.onlyIn.length > 0) {
-      if (!utils.commandValidInChannel(command, message)) {
+      if (!this.commandValidInChannel(command, message)) {
         return;
       }
     }

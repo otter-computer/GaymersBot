@@ -23,3 +23,6 @@ exports.under18 = require('./under18');
 exports.unset18 = require('./unset18');
 exports.unsetregion = require('./unsetregion');
 exports.vote = require('./vote');
+
+exports.games = require('../games/index');
+exports.game = require('../games/index'); // Alias

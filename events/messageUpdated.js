@@ -39,7 +39,7 @@ module.exports = {
     } else {
         embed.addField('Old Message', 'No Content');
     }
-    if (oldMessage.content) {
+    if (newMessage.content) {
         embed.addField('New Message', newMessage.content);
     } else {
         embed.addField('New Message', 'No Content');

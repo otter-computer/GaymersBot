@@ -153,7 +153,7 @@ function memberRoleAdded(newMember) {
     'These commands can be used in the #bot-room channel on Gaymers. \n \n' +
     '**!help** - Discobot will PM you a complete list of commands. \n' +
     '**!setregion [region]** - Discobot will set your colour based on your region. For example `!setregion Europe` or `!setregion North America` \n' +
-    '**!set18** - Discobot will give you access to the #over-18 channel. \n'
+    '**!set18** - Discobot will give you access to the #nsfw-general channel. \n'
   );
 }
 

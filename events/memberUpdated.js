@@ -153,6 +153,7 @@ function memberRoleAdded(newMember) {
     'These commands can be used in the #bot-room channel on Gaymers. \n \n' +
     '**!help** - I\'ll DM you a complete list of commands. \n' +
     '**!setregion [region]** - I\'ll set your colour based on your region. For example `!setregion Europe` or `!setregion North America` \n' +
+    '**!role** - Check out what other roles you can add.\n' +
     '**!set18** - I\'ll give you access to the #nsfw-general channel. \n'
   );
 }

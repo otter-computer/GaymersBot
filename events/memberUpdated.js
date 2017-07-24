@@ -72,7 +72,8 @@ function memberRestricted(member) {
   // over a 'DENY' permission, which results in the 'ALLOW's from 'Member'
   // keeping 'Restricted' from working.
   const memberRole = member.guild.roles.find('name', 'Member');
-  member.removeRole(memberRole)
+  const eighteenRole = member.guild.roles.find('name', '18+');
+  member.removeRoles([memberRole, eighteenRole])
     .then(
       () => { },
       reason => {

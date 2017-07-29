@@ -43,8 +43,8 @@ module.exports = {
       return;
     }
 
-    const choice = choices.random();
-    const response = responses.random().replace('%', choice);
+    const choice = choices[Math.floor(Math.random() * choices.length)];
+    const response = responses[Math.floor(Math.random() * responses.length)].replace('%', choice);
     message.reply(response);
   }
 };

@@ -36,6 +36,6 @@ module.exports = {
       user = message.author;
     }
 
-    message.channel.send(slapReplies.random().replace('$USER', user));
+    message.channel.send(slapReplies[Math.floor(Math.random() * slapReplies.length)].replace('$USER', user));
   }
 };

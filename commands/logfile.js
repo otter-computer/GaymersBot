@@ -17,30 +17,32 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * */
 
+const readLastLines = require('read-last-lines');
+
 module.exports = {
-  usage: '[@user]',
-  description: 'Spray someone thirsty...',
-  allowDM: true,
+  usage: '[-n 10]',
+  description: 'Gets logs from bot.',
+  allowDM: false,
+  requireRoles: ['Admin', 'Moderator'],
+  onlyIn: ['discobot-masters'],
   process: (bot, message) => {
 
-    const sprayReplies = [
-      '*sprays $USER with a fire hose.*'
-    ];
+    msg = message.content.split(" ");
 
-    const spraySpecial = '*sprays $USER with canned cheese.*';
+    if (msg[1] == "-n"){
+      if(!msg[2]){
+        message.reply('You need to specify a number of lines when using the `-n` flag.');
+      }
+      else{
+        readLastLines.read('logfile.log', msg[2])
+        .then((lines) => message.channel.send('```\n' + lines  + '\n ```'));
+      }
 
-    let user;
-
-    if (message.mentions.users.first()) {
-      user = message.mentions.users.first();
-    } else {
-      user = message.author;
     }
 
-    if (Math.floor(Math.random() * 50) + 1 === 50) {
-      message.channel.send(spraySpecial.replace('$USER', user));
-    } else {
-      message.channel.send(sprayReplies[Math.floor(Math.random() * sprayReplies.length)].replace('$USER', user));
+    else{
+      message.channel.send({files:[{attachment:'logfile.log', name: 'logfile.log'}]});
     }
+
   }
 };

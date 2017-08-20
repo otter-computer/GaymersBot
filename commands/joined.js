@@ -39,8 +39,6 @@ module.exports = {
         moment(target.joinedAt).fromNow()
       );
 
-      embed.setTimestamp(target.joinedAt);
-
     embed.setAuthor(
       target.displayName,
       target.user.avatarURL,
@@ -49,6 +47,7 @@ module.exports = {
 
     embed.addField('User:', target, true);
     embed.addField('Requested By:', message.author, true);
+    embed.addField('Date:', target.joinedAt, true);
 
     message.channel.send(
       'Here\'s ' +

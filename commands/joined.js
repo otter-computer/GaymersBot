@@ -20,12 +20,6 @@
 const Discord = require('discord.js');
 const moment = require('moment');
 
-// For the special little snowflake...
-const REYNBOW = {
-  'id': '123395731548536832',
-  'joinedAt': '2015-12-27T01:00:00Z'
-};
-
 module.exports = {
   usage: '[@user]',
   description: 'See when someone joined the server.',
@@ -39,19 +33,11 @@ module.exports = {
     const embed = new Discord.RichEmbed();
     embed.setColor(0x3398DB);
 
-    if (target.id === REYNBOW.id) {
-      embed.setTitle(target.displayName.toUpperCase() +
-        ' BOUNCED IN HERE LIKE A FEISTY \'ROO OVER ' +
-        moment(REYNBOW.joinedAt).fromNow().toUpperCase() + ', MATE.');
-      embed.setTimestamp(REYNBOW.joinedAt);
-    } else {
       embed.setTitle(
         target.displayName +
         ' joined ' +
         moment(target.joinedAt).fromNow()
       );
-
-    }
 
     embed.setAuthor(
       target.displayName,

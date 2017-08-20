@@ -26,4 +26,6 @@ const logger = new (winston.Logger)({
     ]
   });
 
+logger.emitErrs = false;
+
 module.exports.logger = logger;

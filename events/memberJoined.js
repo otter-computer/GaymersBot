@@ -86,6 +86,8 @@ module.exports = {
           member.displayName,
           member.avatarURL, '');
 
+        embed.addField('Account Created:', member.user.createdAt);
+
         const embedDate = new Date(Date.now()).toISOString();
         embed.setTimestamp(embedDate);
 

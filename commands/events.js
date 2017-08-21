@@ -17,6 +17,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * */
 
+const appConfig = require('../index').appConfig;
 const Discord = require('discord.js');
 const https = require('https');
 
@@ -25,13 +26,20 @@ module.exports = {
   description: 'List upcoming server events.',
   allowDM: false,
   process: (bot, message) => {
-    const options = {
-      host: 'events.gaymers.gg',
-      path: '/',
-      method: 'GET'
+
+    let eventFiles = [];
+
+    let options = {
+      host: 'api.github.com',
+      path: '/repos/gaymers-discord/gaymers-website/contents/src/pages',
+      method: 'GET',
+      headers: { "Content-Type": "application/json",
+                 "User-Agent": "administration",
+                 "Authorization": "token " + appConfig.GITHUB_ACCESS_TOKEN}
     };
 
-    const request = https.get(options, (response) => {
+    // Pull all the event files in the event folder
+    const mainRequest = https.get(options, (response) => {
       let data = '';
 
       response.on('data', (chunk) => {
@@ -39,13 +47,71 @@ module.exports = {
       });
 
       response.on('end', () => {
-        buildEmbeds(JSON.parse(data), message);
+        let jData = JSON.parse(data);
+
+        for ( var index in jData ) {
+          if ( jData[index].type == 'file' ) {
+            eventFiles.push(jData[index].name);
+          }
+        }
+
+        console.log(eventFiles);
+        console.log('^^^^^ file listing ^^^^^');
+
+        doSubRequest(eventFiles, function(eventObj){
+          console.log(eventObj);
+          console.log('^^^^^ data listing ^^^^^');
+          //loop over eventObj and build embeds
+          //buildEmbeds(JSON.parse(data), message);
+        });
       });
     });
 
-    request.end();
+    mainRequest.end();
   }
 };
+
+function doSubRequest(eventFiles, callback){
+  // Recurse through each filename to get the contents
+  let events = {};
+
+  eventFiles.forEach(function(element) {
+
+    let options = {
+      host: 'api.github.com',
+      path: '/repos/gaymers-discord/gaymers-website/contents/src/pages/' + element,
+      method: 'GET',
+      headers: { "Content-Type": "application/json",
+                 "User-Agent": "administration",
+                 "Authorization": "token " + appConfig.GITHUB_ACCESS_TOKEN}
+    };
+
+    const subRequest = https.get(options, (response) => {
+      let data = '';
+
+      response.on('data', (chunk) => {
+        data += chunk;
+      });
+
+      response.on('end', () => {
+        let jData = JSON.parse(data);
+        //console.log(jData);
+
+
+        let event = {};
+        event.name = jData.name.split('.')[0];
+        event.content = Buffer.from(jData.content, 'base64').toString();
+        console.log(event);
+        events[element] = event;
+
+        callback(events);
+        //buildEmbeds(JSON.parse(data), message);
+      });
+    });
+
+    subRequest.end();
+  });
+}
 
 function buildEmbeds(events, message) {
   let embeds = [];

@@ -116,9 +116,12 @@ function memberRestricted(member) {
 
 
 
-function memberRoleAdded(newMember) {
+function welcomeRoleAdded(newMember) {
   const generalChannel = newMember.guild.channels.find('name', 'general');
   const userLogsChannel = newMember.guild.channels.find('name', 'user-logs');
+
+  welcomeRole =  newMember.guild.roles.find('name', 'Welcome');
+  memberRole =  newMember.guild.roles.find('name', 'Member');
 
   // Publicly welcome the user
   if (!generalChannel) {
@@ -157,8 +160,10 @@ function memberRoleAdded(newMember) {
     '**!role** - Check out what other roles you can add.\n' +
     '**!set18** - I\'ll give you access to the #nsfw-general channel.\n'
   );
-}
 
+  newMember.removeRole(welcomeRole);
+  newMember.addRole(memberRole);
+}
 
 
 module.exports = {
@@ -177,9 +182,9 @@ module.exports = {
     }
 
     // User became a member
-    if (!oldMember.roles.findKey('name', 'Member') &&
-      newMember.roles.findKey('name', 'Member')) {
-      memberRoleAdded(newMember);
+    if (!oldMember.roles.findKey('name', 'Welcome') &&
+      newMember.roles.findKey('name', 'Welcome')) {
+      welcomeRoleAdded(newMember);
     }
   }
 };

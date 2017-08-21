@@ -29,7 +29,7 @@ module.exports = {
     }
 
     const member = message.guild.member(message.mentions.users.first());
-    const memberRole = message.guild.roles.find('name', 'Member');
+    const memberRole = message.guild.roles.find('name', 'Welcome');
 
     member.addRole(memberRole);
     message.channel.send(member + ' has been given the `Member` role. :ok_hand:');

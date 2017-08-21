@@ -23,7 +23,7 @@ module.exports = {
   // Logs a message edit in #user-logs.
   process: (bot, oldMessage, newMessage) => {
     // Don't tag bot message updates
-    if (oldMessage.author === bot || newMessage.author === bot) return;
+    if (oldMessage.author === bot || newMessage.author === bot || oldMessage.content === newMessage.content) return;
 
     let messageLogsChannel = bot.channels.find('name', 'message-logs');
 
@@ -34,8 +34,16 @@ module.exports = {
     embed.addField('User', newMessage.author, true);
     embed.addField('Channel', newMessage.channel, true);
 
-    embed.addField('Old Message', oldMessage.content);
-    embed.addField('New Message', newMessage.content);
+    if (oldMessage.content) {
+        embed.addField('Old Message', oldMessage.content);
+    } else {
+        embed.addField('Old Message', 'No Content');
+    }
+    if (newMessage.content) {
+        embed.addField('New Message', newMessage.content);
+    } else {
+        embed.addField('New Message', 'No Content');
+    }
 
     const embedDate = new Date(Date.now()).toISOString();
     embed.setTimestamp(embedDate);

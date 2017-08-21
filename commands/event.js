@@ -23,7 +23,7 @@ const splitargs = require('splitargs');
 const https = require('https');
 
 module.exports = {
-  usage: '[join/leave] [event ID]',
+  usage: '[join/leave] [event name]',
   description: 'Sign up to a server event!',
   allowDM: false,
   process: (bot, message) => {
@@ -55,7 +55,7 @@ module.exports = {
 
 };
 
-function sendRequest(eventId, userId, modifier, callback, message) {
+function sendRequest(eventName, userId, modifier, callback, message) {
   let urlModifer;
 
   if (modifier) {
@@ -66,7 +66,7 @@ function sendRequest(eventId, userId, modifier, callback, message) {
 
   const options = {
     host: 'events.gaymers.gg',
-    path: '/' + eventId + urlModifer,
+    path: '/' + eventName + urlModifer,
     method: 'POST',
     headers: {
       'x-api-key': appConfig.APIGW_DISCOBOT_X_API_KEY,
@@ -87,7 +87,7 @@ function sendRequest(eventId, userId, modifier, callback, message) {
 
       let error;
 
-      if (parsedData.errorMessage || parsedData.affectedRows == 0) {
+      if (parsedData.code == 'ER_DUP_ENTRY' || parsedData.affectedRows == 0) {
         error = true;
       } else {
         error = false;
@@ -105,19 +105,19 @@ function sendRequest(eventId, userId, modifier, callback, message) {
   request.end();
 }
 
-function joinEvent(message, eventId) {
-  sendRequest(eventId, message.author.id, true, callback, message);
+function joinEvent(message, eventName) {
+  sendRequest(eventName, message.author.id, true, callback, message);
 }
 
-function leaveEvent(message, eventId) {
-  sendRequest(eventId, message.author.id, false, callback, message);
+function leaveEvent(message, eventName) {
+  sendRequest(eventName, message.author.id, false, callback, message);
 }
 
 function errorHandler(message) {
   message.reply(
     'Sorry, I didn\'t understand. :sob: ' +
     'Try using the command like this:\n' +
-    '`!event [join/leave] [Event ID]`'
+    '`!event [join/leave] [Event Name]`'
   );
 }
 

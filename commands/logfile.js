@@ -24,7 +24,7 @@ module.exports = {
   description: 'Gets logs from bot.',
   allowDM: false,
   requireRoles: ['Admin', 'Moderator'],
-  onlyIn: ['discobots-masters'],
+  onlyIn: ['rainbow-wrenches'],
   process: (bot, message) => {
 
     msg = message.content.split(" ");

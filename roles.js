@@ -45,6 +45,7 @@ module.exports = {
     'Invulnerable',
     'Member',
     'Moderator',
+    'NGT',
     'No links/files',
     'Push-to-talk',
     'Restricted',

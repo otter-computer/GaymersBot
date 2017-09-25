@@ -63,7 +63,7 @@ function availableRoles(message) {
     availableRoles.push(role.name);
   });
 
-  return availableRoles;
+  return availableRoles.sort();
 }
 
 

@@ -100,8 +100,8 @@ module.exports = {
         welcomeChannel.send('Welcome '+userReturnMsg+'to Gaymers, ' + member + '! ' +
             'Please introduce yourself, and check your DMs for more info! ' +
             'You will have access to other channels once you introduce ' +
-            'yourself :smile:\n' +
-            'Feel free to tag a Moderator using `@Moderator` once you have' +
+            'yourself. :smile:\n\n' +
+            'Feel free to tag a Moderator using `@Moderator` once you have ' +
             'introduced yourself if they are taking too long to respond. :smile:') ;
       }
 

@@ -42,6 +42,7 @@ module.exports = {
     'Data Visualisation Bot',
     'DiscoBot',
     'Event Manager',
+    'GaymersBot',
     'Invulnerable',
     'Member',
     'Moderator',

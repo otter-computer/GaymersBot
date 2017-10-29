@@ -17,6 +17,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * */
 
+const logger = require('../logger').logger;
 const REGIONS = require('../roles').REGION_ROLES;
 
 module.exports = {
@@ -37,6 +38,36 @@ module.exports = {
     // surround the name with square brackets. Let's just tolerate their
     // ignorance. :(
     regionName = regionName.replace(/\[|\]/g, '');
+
+    // Hacky support for region aliases
+    switch (regionName.toUpperCase()) {
+      case 'EU':
+        regionName = 'Europe';
+        break;
+      case 'NA':
+      case 'US':
+      case 'CA':
+        regionName = 'North America';
+        break;
+      case 'SA':
+        regionName = 'South America';
+        break;
+      case 'OCE':
+      case 'AU':
+      case 'NZ':
+        regionName = 'Oceania';
+        break;
+      case 'AF':
+        regionName = 'Africa';
+        break;
+      case 'AS':
+      case 'AZ':
+        regionName = 'Asia';
+        break;
+      case 'ME':
+        regionName = 'Middle East';
+        break;
+    }
 
     // If the user supplied a bad region name, give them the list
     if (!REGIONS.includes(regionName)) {
@@ -83,11 +114,11 @@ module.exports = {
         },
         (rejectReason) => {
           // TODO: Reject handler
-          console.error(rejectReason);
+          logger.error(rejectReason);
         })
       .catch((e) => {
         // TODO: Error handler
-        console.error(e.stack);
+        logger.error(e.stack);
       });
   }
 };

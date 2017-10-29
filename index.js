@@ -16,18 +16,21 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * */
+
+const logger = require('./logger').logger;
+
 let appConfig = {};
 
 try {
   appConfig = require('./config');
 } catch (error) {
   if (error.code == 'MODULE_NOT_FOUND') {
-    console.error('config.json not found');
+    logger.error('config.json not found');
   } else {
-    console.error('Error processing config.json', error);
+    logger.error('Error processing config.json', error);
   }
 
-  console.warn('Will attempt to use environment variables.');
+  logger.warn('Will attempt to use environment variables.');
 
   appConfig.AUTH_TOKEN = process.env.AUTH_TOKEN;
   appConfig.APIGW_DISCOBOT_X_API_KEY = process.env.APIGW_DISCOBOT_X_API_KEY;
@@ -42,7 +45,7 @@ try {
 }
 
 if (!appConfig.USE_AWS_SQS) {
-  console.warn('SQS is disabled by configuration, message queues will not operate.');
+  logger.warn('SQS is disabled by configuration, message queues will not operate.');
 }
 
 // exports config so it can be required in other modules
@@ -53,7 +56,6 @@ const Consumer = require('sqs-consumer');
 const AWS = require('aws-sdk');
 const utils = require('./utils/discordHelpers');
 
-require('log-timestamp');
 require('./utils/javascriptHelpers');
 
 // SQS Setup
@@ -76,14 +78,14 @@ if (appConfig.USE_AWS_SQS) {
   });
 
   sqs.on('error', (err) => {
-    console.error(err.message);
+    logger.error(err.message);
   });
 }
 
 // Auth token
 const token = appConfig.AUTH_TOKEN;
 if (!token) {
-  console.log('No auth token found, please set the AUTH_TOKEN environment variable.\n');
+  logger.info('No auth token found, please set the AUTH_TOKEN environment variable.\n');
   process.exit();
 }
 
@@ -91,7 +93,7 @@ if (!token) {
 function cleanup() {
   if (bot)
     bot.destroy();
-  console.log('Bot shut down');
+  logger.info('Bot shut down');
   process.exit();
 }
 
@@ -118,7 +120,7 @@ if (appConfig.USE_AWS_SQS) {
 // Init bot
 const bot = new Discord.Client();
 bot.on('ready', () => {
-  console.log('Bot connected');
+  logger.info('Bot connected');
   if (appConfig.USE_AWS_SQS) {
     sqs.start();
   }
@@ -130,7 +132,7 @@ bot.on('message', message => {
   try {
     utils.messageHandler(bot, message);
   } catch (e) {
-    console.error(e.stack);
+    logger.error(e.stack);
   }
 });
 
@@ -140,7 +142,7 @@ bot.on('guildMemberAdd', (member) => {
     events.memberJoined.process(bot, member);
     //updateAPI.updateJoiner(member);
   } catch (e) {
-    console.error(e.stack);
+    logger.error(e.stack);
   }
 });
 
@@ -150,7 +152,7 @@ bot.on('guildMemberRemove', (member) => {
     events.memberLeft.process(bot, member);
     updateAPI.updateLeaver(member);
   } catch (e) {
-    console.error(e.stack);
+    logger.error(e.stack);
   }
 });
 
@@ -159,7 +161,7 @@ bot.on('guildBanAdd', (guild, member) => {
   try {
     events.memberBanned.process(bot, guild, member);
   } catch (e) {
-    console.error(e.stack);
+    logger.error(e.stack);
   }
 });
 
@@ -168,7 +170,7 @@ bot.on('guildBanRemove', (guild, member) => {
   try {
     events.memberUnbanned.process(bot, guild, member);
   } catch (e) {
-    console.error(e.stack);
+    logger.error(e.stack);
   }
 });
 
@@ -178,7 +180,7 @@ bot.on('guildMemberUpdate', (oldMember, newMember) => {
     events.memberUpdated.process(bot, oldMember, newMember);
     updateAPI.updateRole(newMember);
   } catch (e) {
-    console.error(e.stack);
+    logger.error(e.stack);
   }
 });
 
@@ -187,7 +189,7 @@ bot.on('messageDelete', (message) => {
   try {
     events.messageDeleted.process(bot, message);
   } catch (e) {
-    console.error(e.stack);
+    logger.error(e.stack);
   }
 });
 
@@ -196,7 +198,7 @@ bot.on('messageDelete', (message) => {
 //  try {
 //    updateAPI.updatePresence(newMember);
 //  } catch (e) {
-//    console.error(e.stack);
+//    logger.error(e.stack);
 //  }
 //});
 
@@ -206,10 +208,10 @@ bot.on('messageDelete', (message) => {
 //  try {
 //    events.messageUpdated.process(bot, oldMessage, newMessage);
 //  } catch (e) {
-//    console.error(e.stack);
+//    logger.error(e.stack);
 //  }
 //});
 
-console.log('Bot started');
+logger.info('Bot started');
 
 bot.login(token);

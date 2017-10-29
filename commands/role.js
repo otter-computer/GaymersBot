@@ -17,6 +17,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * */
 
+const logger = require('../logger').logger;
 const roles = require('../roles');
 
 /**
@@ -62,7 +63,7 @@ function availableRoles(message) {
     availableRoles.push(role.name);
   });
 
-  return availableRoles;
+  return availableRoles.sort();
 }
 
 
@@ -151,11 +152,11 @@ module.exports = {
           },
           (rejectReason) => {
             // TODO: Reject handler
-            console.error(rejectReason);
+            logger.error(rejectReason);
           })
         .catch((e) => {
           // TODO: Error handler
-          console.error(e.stack);
+          logger.error(e.stack);
         });
     } else {
       // Add the new role
@@ -167,11 +168,11 @@ module.exports = {
           },
           (rejectReason) => {
             // TODO: Reject handler
-            console.error(rejectReason);
+            logger.error(rejectReason);
           })
         .catch((e) => {
           // TODO: Error handler
-          console.error(e.stack);
+          logger.error(e.stack);
         });
     }
   }

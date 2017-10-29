@@ -16,7 +16,8 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * */
-
+ 
+const logger = require('../logger').logger;
 const appConfig = require('../index').appConfig;
 const splitargs = require('splitargs');
 const https = require('https');
@@ -97,7 +98,7 @@ function sendRequest(eventId, userId, modifier, callback, message) {
   });
 
   request.on('error', (e) => {
-    // console.log('Error', e);
+    // logger.error(e);
   });
 
   request.write(JSON.stringify({ userid: userId }));

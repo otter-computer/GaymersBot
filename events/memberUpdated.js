@@ -147,16 +147,17 @@ function memberRoleAdded(newMember) {
 
   // DM the user with our welcome message
   newMember.send(
-    '__**Welcome to Gaymers!**__\n\n' +
-    'Please follow our rules. You can find them in the #info-rules channel.\n\n' +
-    'If you have any questions you can @Admin or @Moderator in any channel or DM a staff member directly.\n\n' +
-    '__**Useful Commands**__\n' +
-    'These commands can be used in the #bot-room channel on Gaymers.\n\n' +
-    '**!help** - I\'ll DM you a complete list of commands.\n' +
-    '**!setregion [region]** - I\'ll set your colour based on your region. For example `!setregion Europe` or `!setregion North America`\n' +
-    '**!role** - Check out what other roles you can add.\n' +
-    '**!set18** - I\'ll give you access to the #nsfw-general channel.\n'
-  );
+    '__**Welcome to Gaymers!**__\n \n' +
+    'Please follow our rules. You can find them in the #info-rules channel. \n \n' +
+    'If you have any questions you can @admin or @moderator in any channel or PM an admin or moderator directly \n \n' +
+    '__**Useful Commands**__ \n' +
+    'These commands can be used in the #bot-room channel on Gaymers. \n \n' +
+    '**!help** - Discobot will PM you a complete list of commands. \n' +
+    '**!setregion [region]** - Discobot will set your colour based on your region. For example `!setregion Europe` or `!setregion North America` \n' +
+    '**!set18** - Discobot will give you access to the #over-18 channel. \n'
+  ).catch(error => {
+    console.error('Couldn\'t send DM' , error);
+  });
 }
 
 

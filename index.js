@@ -117,6 +117,15 @@ if (appConfig.USE_AWS_SQS) {
   msgq.messageReceived = require('./msgq/messageReceived');
 }
 
+// Slow mode data
+const channels = require('./channels');
+slowModeTimes = [];
+slowModeDelays = [];
+channels.SLOW.forEach(channel => {
+  slowModeTimes[channel.name] = []; // Each channel has a list of message authors with their last message time
+  slowModeDelays[channel.name] = channel.delay*1000; // Converted to milliseconds
+});
+
 // Init bot
 const bot = new Discord.Client();
 bot.on('ready', () => {
@@ -126,6 +135,177 @@ bot.on('ready', () => {
   }
 });
 
+/**
+ * Return `true` if the command is allowed in this channel, `false` if not.
+ * Will DM the user and delete the message if not.
+ *
+ * @param command
+ * @param message
+ * @returns {boolean}
+ */
+function commandValidInChannel(command, message) {
+  if (command.onlyIn.includes(message.channel.name)) {
+    return true;
+  }
+
+  // Complain to the user about their mistake
+  const validChannels = [];
+  command.onlyIn.forEach(channelName => {
+    const channel = message.guild.channels.find('name', channelName);
+    // If that channel doesn't exist on this server, leave it out
+    if (!channel) {
+      return;
+    }
+
+    // If the user can't read messages in that channel, leave it out
+    if (!channel.permissionsFor(message.member)
+        .has('READ_MESSAGES')) {
+      return;
+    }
+
+    validChannels.push('`' + channelName + '`');
+  });
+
+  if (validChannels.length === 0) {
+    message.member.send('Sorry, that command can\'t be used in ' +
+      'that channel.');
+  } else if (validChannels.length === 1) {
+    message.member.send('Sorry, that command can only be used ' +
+      'in ' + validChannels[0] + '.');
+  } else {
+    message.member.send('Sorry, that command can only be used in ' +
+      'the following channels: ' + validChannels.join(', ') + '.');
+  }
+
+  // Remove the problem message
+  message.delete()
+    .catch(reason => {
+      // TODO Error handler
+      console.error(reason);
+    });
+
+  return false;
+}
+
+function messageHandler(message) {
+  // Ignore bot messages
+  if (message.author.bot) {
+    return;
+  }
+
+  // Commands start with '!'
+  if (message.content[0] !== '!') {
+    // Limit messages if channel is in slow mode
+    isChannelSlow = channels.SLOW.some(channel => {
+      return channel.name === message.channel.name;
+    });
+
+    if (isChannelSlow) {
+      messageTime = message.createdAt;
+      previousTime = slowModeTimes[message.channel.name][message.author.id];
+
+      // There is no message during delay time
+      if (previousTime == undefined || messageTime - previousTime > slowModeDelays[message.channel.name]) {
+        slowModeTimes[message.channel.name][message.author.id] = messageTime;
+        return;
+      } else {
+        message.delete()
+          .then(msg => {
+            msg.author.send('The following message was deleted because the channel `' + message.channel.name +
+              '` is in slow mode:' + '```\n' + msg.content + '\n```\n' + 'You can send a message again in `' +
+              Math.ceil((slowModeDelays[message.channel.name] - (messageTime - previousTime))/1000).toString() + '` seconds');
+          })
+          .catch(reason => {
+            // TODO Error handler
+            console.error(reason);
+          });
+      }
+    } else {
+      return;
+    }
+  }
+
+  const commandText = message.content.split(' ')[0].substring(1).toLowerCase();
+  const command = commands[commandText];
+
+  // Check that the command exists
+  if (!command) {
+    return;
+  }
+
+  // If a command isn't allowed in a DM (or doesn't have allowDM defined),
+  // make sure we're in a guild.
+  if (!command.allowDM && !message.guild) {
+    message.reply('Sorry, I can only do that on a server. :frowning2:');
+    return;
+  }
+
+  // Checks that are only needed on a server
+  if (message.guild) {
+    // Check that the user is allowed to use the bot
+    let shouldIgnoreMessage = true;
+
+    // Check that the bot has any required roles at all
+    if (roles.REQUIRED_TO_USE_BOT.length > 0) {
+      // Try to find a common role between the required list and the
+      // user's roles
+      roles.REQUIRED_TO_USE_BOT.forEach((requiredRole) => {
+        if (message.member.roles.findKey('name', requiredRole)) {
+          shouldIgnoreMessage = false;
+        }
+      });
+    } else {
+      shouldIgnoreMessage = false;
+    }
+
+    // Check that the user is not part of a role that is banned from bot usage
+    roles.BANNED_FROM_BOT.forEach((bannedRole) => {
+      if (message.member.roles.findKey('name', bannedRole)) {
+        shouldIgnoreMessage = true;
+      }
+    });
+
+    if (shouldIgnoreMessage) {
+      return;
+    }
+
+    // If the command can only be used in certain channels, check that we're in
+    // one of those channels
+    if (command.onlyIn && command.onlyIn.length > 0) {
+      if (!commandValidInChannel(command, message)) {
+        return;
+      }
+    }
+  }
+
+  // If the command requires roles, check that the user has one of them
+  if (command.requireRoles) {
+    // A command can't require roles and support DMs.
+    // This is a programmer error.
+    if (!message.guild) {
+      // TODO: Programmer error
+      return;
+    }
+
+    let satisfiesRoles = false;
+
+    // Loop through the roles needed by the command and see if the user
+    // has any of them.
+    command.requireRoles.forEach((role) => {
+      if (message.member.roles.findKey('name', role)) {
+        satisfiesRoles = true;
+      }
+    });
+
+    if (!satisfiesRoles) {
+      message.channel.send('I\'m sorry ' + message.author + ', I\'m ' +
+        'afraid I can\'t do that.');
+      return;
+    }
+  }
+
+  command.process(bot, message);
+}
 
 // Handle messages
 bot.on('message', message => {

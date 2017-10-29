@@ -16,6 +16,8 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * */
+ 
+const logger = require('../logger').logger;
 
 module.exports = {
   usage: '',
@@ -25,7 +27,8 @@ module.exports = {
   onlyIn: ['bot-room'],
   process: (bot, message) => {
     if (message.member.roles.findKey('name', 'Under 18')) {
-      message.reply('You\'re under 18. I can\'t add the 18+ role. :frowning: ');
+      message.reply('You\'re under 18. I can\'t add the 18+ role. ' +
+          'Check out `!role` to see what I *can* add! :smile:');
       return;
     }
 
@@ -42,11 +45,11 @@ module.exports = {
         },
         (rejectReason) => {
           // TODO: Reject handler
-          console.error(rejectReason);
+          logger.error(rejectReason);
         })
       .catch((e) => {
         // TODO: Error handler
-        console.error(e.stack);
+        logger.error(e.stack);
       });
   }
 };

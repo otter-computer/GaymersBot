@@ -17,7 +17,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * */
 
-const commands = require('../index');
+const commands = require('./index');
+const utils = require('../utils/discordHelpers');
 
 module.exports = {
   usage: '',
@@ -25,80 +26,31 @@ module.exports = {
   allowDM: true,
   process: (bot, message) => {
 
-    function generateCommandSet(role) {
-
-      let title = role ? role : 'Available';
-      title += ' Commands';
-      let commandString = '```markdown' + '\n';
-
-      commandString +=  title + '\n';
-      commandString +=  Array(title.length + 1).join('=') + '\n';
-      let commandArray = [];
-
-      // TODO: Display commands based on requireRoles
-      for (let command in commands.commands) {
-        let cmd = commands.commands[command];
-        let info = '!' + command;
-
-        // Skip commands that require roles based on parameter
-        if (cmd.requireRoles && !role){
-          // Drops user commands
-          continue;
-        }
-        if (!cmd.requireRoles && role){
-          // Drops non role commands when generating role list
-          continue;
-        }
-
-        if (cmd.requireRoles && role){
-          if (!cmd.requireRoles.includes(role)){
-            // Drops commands not requiring the role parameter
-            continue;
-          }
-        }
-
-        if (cmd.usage) {
-          info += ' ' + cmd.usage;
-        }
-
-        if (cmd.description) {
-          info += ' - ' + cmd.description;
-        }
-
-        if ((commandString.length + info.length) < 1900) {
-          commandString += info + '\n';
-        } else {
-          commandString += '```';
-          commandArray.push(commandString);
-          commandString = '```'; // Reset
-          commandString += info + '\n';
-        }
-      }
-      commandString += '```';
-      commandArray.push(commandString);
-
-      return commandArray;
-    }
-
-    const userCommands = generateCommandSet(false);
+    const userCommands = utils.generateCommandSet(false);
     const member = bot.guilds.first().members.get(message.author.id);
 
     for (let i = 0; i < userCommands.length; i++) {
-      message.author.send(userCommands[i]);
+      message.author.send(userCommands[i]).catch(error => {
+        console.error('Couldn\'t send DM' , error);
+      });
     }
 
     if (member.roles.exists('name','Moderator') && !member.roles.exists('name','Admin')) {
 
-      const modCommands = generateCommandSet('Moderator');
+      const modCommands = utils.generateCommandSet('Moderator');
       for (let i = 0; i < modCommands.length; i++) {
-        message.author.send(modCommands[i]);
+        message.author.send(modCommands[i]).catch(error => {
+          console.error('Couldn\'t send DM' , error);
+        });
       }
     }
 
     if (member.roles.exists('name','Admin')) {
-      const adminCommands = generateCommandSet('Admin');
+      const adminCommands = utils.generateCommandSet('Admin');
       for (let i = 0; i < adminCommands.length; i++) {
-        message.author.send(adminCommands[i]);
+        message.author.send(adminCommands[i]).catch(error => {
+          console.error('Couldn\'t send DM' , error);
+        });
       }
     }
 

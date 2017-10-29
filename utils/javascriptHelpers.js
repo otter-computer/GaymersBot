@@ -17,30 +17,16 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * */
 
-module.exports = {
-  usage: '[@user]',
-  description: 'Spray someone thirsty...',
-  allowDM: true,
-  process: (bot, message) => {
-
-    const sprayReplies = [
-      '*sprays $USER with a fire hose.*'
-    ];
-
-    const spraySpecial = '*sprays $USER with canned cheese.*';
-
-    let user;
-
-    if (message.mentions.users.first()) {
-      user = message.mentions.users.first();
-    } else {
-      user = message.author;
-    }
-
-    if (Math.floor(Math.random() * 50) + 1 === 50) {
-      message.channel.send(spraySpecial.replace('$USER', user));
-    } else {
-      message.channel.send(sprayReplies[Math.floor(Math.random() * sprayReplies.length)].replace('$USER', user));
-    }
-  }
+// Util function to convert string to Title Case
+String.prototype.toProperCase = function () {
+  return this.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
 };
+
+// Util function to choose a random from array
+// Due to the logic of iterating over arrays and including this proto, I have disabled it
+// Offending code lives here https://github.com/hydrabolt/discord.js/blob/master/src/structures/interfaces/TextBasedChannel.js#L94
+
+/*Array.prototype.random = function() {
+  return this[Math.floor(Math.random() * this.length)];
+};
+*/

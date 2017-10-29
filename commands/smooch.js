@@ -17,12 +17,31 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * */
 
-// Util function to convert string to Title Case
-String.prototype.toProperCase = function () {
-  return this.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-};
+module.exports = {
+  usage: '[@user]',
+  description: 'Give someone a smooch :kiss:',
+  allowDM: true,
+  process: (bot, message) => {
 
-// Util function to choose a random from array
-Array.prototype.random = function() {
-  return this[Math.floor(Math.random() * this.length)];
+    const smoochReplies = [
+      '*kisses $USER*',
+      '*kisses $USER*',
+      '$USER :kiss:',
+      '$USER :kiss:',
+      '*lands a big wet one on $USER\'s cheek*',
+      '*plays tonsil hockey with $USER*',
+      '*puckers up for $USER*',
+      '$USER :tongue:'
+    ];
+
+    let user;
+
+    if (message.mentions.users.first()) {
+      user = message.mentions.users.first();
+    } else {
+      user = message.author;
+    }
+
+    message.channel.send(smoochReplies[Math.floor(Math.random() * smoochReplies.length)].replace('$USER', user));
+  }
 };

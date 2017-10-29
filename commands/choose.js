@@ -35,7 +35,7 @@ module.exports = {
       'I choose \"%\"'
     ];
 
-    let choices = splitargs(message.content);
+    const choices = splitargs(message.content);
     choices.shift();
 
     if (choices.length === 0) {
@@ -43,10 +43,8 @@ module.exports = {
       return;
     }
 
-    let choice = choices[Math.floor(Math.random() * choices.length)];
-
-    let response = responses[Math.floor(Math.random() * responses.length)];
-
-    message.reply(response.replace('%', choice));
+    const choice = choices[Math.floor(Math.random() * choices.length)];
+    const response = responses[Math.floor(Math.random() * responses.length)].replace('%', choice);
+    message.reply(response);
   }
 };

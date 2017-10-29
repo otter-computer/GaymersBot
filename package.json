@@ -11,14 +11,16 @@
   },
   "license": "GPL-2.0",
   "dependencies": {
+    "aws-sdk": "^2.82.0",
     "discord.js": "^11.0.0",
     "erlpack": "github:hammerandchisel/erlpack",
-    "log-timestamp": "^0.1.2",
     "moment": "^2.13.0",
     "moment-timezone": "^0.5.4",
+    "read-last-lines": "^1.2.0",
     "splitargs": "^0.0.7",
     "sqs-consumer": "^3.6.0",
-    "sqs-producer": "^1.5.0"
+    "sqs-producer": "^1.5.0",
+    "winston": "^2.3.1"
   },
   "engines": {
     "node": "^6.4.0"

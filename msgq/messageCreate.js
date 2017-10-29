@@ -17,6 +17,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * */
 
+const logger = require('../logger').logger;
 const Producer = require('sqs-producer');
 
 module.exports = {
@@ -33,7 +34,7 @@ module.exports = {
       body: JSON.stringify(message),
       delaySeconds: delayTime
     }], function(err) {
-      if (err) console.log(err);
+      if (err) logger.error(err);
     });
   }
 };

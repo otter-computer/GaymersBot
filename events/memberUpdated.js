@@ -16,7 +16,8 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * */
-
+ 
+const logger = require('../logger').logger;
 const Discord = require('discord.js');
 
 function usernameUpdate(bot, oldMember, newMember) {
@@ -71,17 +72,18 @@ function memberRestricted(member) {
   // over a 'DENY' permission, which results in the 'ALLOW's from 'Member'
   // keeping 'Restricted' from working.
   const memberRole = member.guild.roles.find('name', 'Member');
-  member.removeRole(memberRole)
+  const eighteenRole = member.guild.roles.find('name', '18+');
+  member.removeRoles([memberRole, eighteenRole])
     .then(
       () => { },
       reason => {
         // TODO Rejection handler
-        console.error(reason);
+        logger.error(reason);
       }
     )
     .catch(e => {
       // TODO Error handler
-      console.error(e);
+      logger.error(e);
     });
 
   // If the member is in a voice chat, move them to AFK
@@ -91,7 +93,7 @@ function memberRestricted(member) {
     if (!afkVoiceChannel) {
       // If there's no AFK channel defined by the server owner, look for a
       // channel named 'AFK'
-      console.error('There is no server AFK channel, searching for a ' +
+      logger.error('There is no server AFK channel, searching for a ' +
         'channel named AFK...');
       afkVoiceChannel = member.guild.channels.filter(value => {
         return value.type === 'voice' && value.name.toUpperCase() === 'AFK';
@@ -101,7 +103,7 @@ function memberRestricted(member) {
         // There's neither server-defined AFK channel nor a channel named
         // 'AFK'?! Fall back to a mute.
         member.setMute(true);
-        console.error('There is neither a server AFK channel nor a channel ' +
+        logger.error('There is neither a server AFK channel nor a channel ' +
           'named AFK.');
         // TODO Error handler
         return;
@@ -120,14 +122,14 @@ function memberRoleAdded(newMember) {
 
   // Publicly welcome the user
   if (!generalChannel) {
-    console.error('Channel #general doesn\'t exist!');
+    logger.error('Channel #general doesn\'t exist!');
   } else {
     generalChannel.send('Welcome, ' + newMember + '!');
   }
 
   // Log the user becoming a member to #user-logs
   if (!userLogsChannel) {
-    console.error('Channel #user-logs doesn\'t exist!');
+    logger.error('Channel #user-logs doesn\'t exist!');
   } else {
 
     const embed = new Discord.RichEmbed();
@@ -153,7 +155,9 @@ function memberRoleAdded(newMember) {
     '**!help** - Discobot will PM you a complete list of commands. \n' +
     '**!setregion [region]** - Discobot will set your colour based on your region. For example `!setregion Europe` or `!setregion North America` \n' +
     '**!set18** - Discobot will give you access to the #over-18 channel. \n'
-  );
+  ).catch(error => {
+    console.error('Couldn\'t send DM' , error);
+  });
 }
 
 

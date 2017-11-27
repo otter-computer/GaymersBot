@@ -16,8 +16,7 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * */
- 
-const logger = require('../logger').logger;
+
 const Discord = require('discord.js');
 
 function usernameUpdate(bot, oldMember, newMember) {
@@ -78,12 +77,12 @@ function memberRestricted(member) {
       () => { },
       reason => {
         // TODO Rejection handler
-        logger.error(reason);
+        console.error(reason);
       }
     )
     .catch(e => {
       // TODO Error handler
-      logger.error(e);
+      console.error(e);
     });
 
   // If the member is in a voice chat, move them to AFK
@@ -93,7 +92,7 @@ function memberRestricted(member) {
     if (!afkVoiceChannel) {
       // If there's no AFK channel defined by the server owner, look for a
       // channel named 'AFK'
-      logger.error('There is no server AFK channel, searching for a ' +
+      console.error('There is no server AFK channel, searching for a ' +
         'channel named AFK...');
       afkVoiceChannel = member.guild.channels.filter(value => {
         return value.type === 'voice' && value.name.toUpperCase() === 'AFK';
@@ -103,7 +102,7 @@ function memberRestricted(member) {
         // There's neither server-defined AFK channel nor a channel named
         // 'AFK'?! Fall back to a mute.
         member.setMute(true);
-        logger.error('There is neither a server AFK channel nor a channel ' +
+        console.error('There is neither a server AFK channel nor a channel ' +
           'named AFK.');
         // TODO Error handler
         return;
@@ -122,22 +121,24 @@ function memberRoleAdded(newMember) {
 
   // Publicly welcome the user
   if (!generalChannel) {
-    logger.error('Channel #general doesn\'t exist!');
+    console.error('Channel #general doesn\'t exist!');
   } else {
     generalChannel.send('Welcome, ' + newMember + '!');
   }
 
   // Log the user becoming a member to #user-logs
   if (!userLogsChannel) {
-    logger.error('Channel #user-logs doesn\'t exist!');
+    console.error('Channel #user-logs doesn\'t exist!');
   } else {
 
     const embed = new Discord.RichEmbed();
 
     embed.setColor(0x2ECC71);
     embed.setAuthor(
-        newMember.displayName,
-        newMember.avatarURL, '');
+      newMember.displayName,
+      newMember.avatarURL,
+      ''
+    );
 
     const embedDate = new Date(Date.now()).toISOString();
     embed.setTimestamp(embedDate);

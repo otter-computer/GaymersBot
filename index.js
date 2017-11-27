@@ -17,75 +17,17 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * */
 
-const logger = require('./logger').logger;
-
-let appConfig = {};
-
-try {
-  appConfig = require('./config');
-} catch (error) {
-  if (error.code == 'MODULE_NOT_FOUND') {
-    logger.error('config.json not found');
-  } else {
-    logger.error('Error processing config.json', error);
-  }
-
-  logger.warn('Will attempt to use environment variables.');
-
-  appConfig.AUTH_TOKEN = process.env.AUTH_TOKEN;
-  appConfig.APIGW_DISCOBOT_X_API_KEY = process.env.APIGW_DISCOBOT_X_API_KEY;
-  appConfig.SQS_ACCESS_KEY = process.env.SQS_ACCESS_KEY;
-  appConfig.SQS_SECRET_KEY = process.env.SQS_SECRET_KEY;
-  appConfig.SQS_QUEUE_URL = process.env.SQS_QUEUE_URL;
-  appConfig.USE_AWS_SQS = true;
-
-  if (!process.env.USE_AWS_SQS) {
-    appConfig.USE_AWS_SQS = false;
-  }
-}
-
-if (!appConfig.USE_AWS_SQS) {
-  logger.warn('SQS is disabled by configuration, message queues will not operate.');
-}
-
-// exports config so it can be required in other modules
-module.exports.appConfig = appConfig;
-
 const Discord = require('discord.js');
-const Consumer = require('sqs-consumer');
-const AWS = require('aws-sdk');
 const utils = require('./utils/discordHelpers');
-
 require('./utils/javascriptHelpers');
 
-// SQS Setup
-let sqs;
-
-if (appConfig.USE_AWS_SQS) {
-  AWS.config.update({
-    region: 'eu-west-1',
-    accessKeyId: appConfig.SQS_ACCESS_KEY,
-    secretAccessKey: appConfig.SQS_SECRET_KEY
-  });
-
-  sqs = Consumer.create({
-    queueUrl: process.env.SQS_QUEUE_URL,
-    handleMessage: (message, done) => {
-      msgq.messageReceived.process(bot, message);
-      done();
-    },
-    sqs: new AWS.SQS()
-  });
-
-  sqs.on('error', (err) => {
-    logger.error(err.message);
-  });
-}
+// Load env vars
+require('dotenv').config();
 
 // Auth token
-const token = appConfig.AUTH_TOKEN;
+const token = process.env.AUTH_TOKEN;
 if (!token) {
-  logger.info('No auth token found, please set the AUTH_TOKEN environment variable.\n');
+  console.log('No auth token found, please set the AUTH_TOKEN environment variable.\n');
   process.exit();
 }
 
@@ -93,18 +35,12 @@ if (!token) {
 function cleanup() {
   if (bot)
     bot.destroy();
-  logger.info('Bot shut down');
+  console.log('Bot shut down');
   process.exit();
 }
 
 process.on('SIGINT', cleanup);
 process.on('SIGTERM', cleanup);
-
-// Utilities
-const updateAPI = require('./utils/updateAPI');
-
-// Import Commands
-const commands = require('./commands/index');
 
 // Import Events
 const events = require('./events/index');
@@ -113,206 +49,22 @@ const events = require('./events/index');
 const msgq = {};
 
 // Import events
-if (appConfig.USE_AWS_SQS) {
+if (process.env.USE_AWS_SQS) {
   msgq.messageReceived = require('./msgq/messageReceived');
 }
-
-// Slow mode data
-const channels = require('./channels');
-slowModeTimes = [];
-slowModeDelays = [];
-channels.SLOW.forEach(channel => {
-  slowModeTimes[channel.name] = []; // Each channel has a list of message authors with their last message time
-  slowModeDelays[channel.name] = channel.delay*1000; // Converted to milliseconds
-});
 
 // Init bot
 const bot = new Discord.Client();
 bot.on('ready', () => {
-  logger.info('Bot connected');
-  if (appConfig.USE_AWS_SQS) {
-    sqs.start();
-  }
+  console.log('Bot connected');
 });
-
-/**
- * Return `true` if the command is allowed in this channel, `false` if not.
- * Will DM the user and delete the message if not.
- *
- * @param command
- * @param message
- * @returns {boolean}
- */
-function commandValidInChannel(command, message) {
-  if (command.onlyIn.includes(message.channel.name)) {
-    return true;
-  }
-
-  // Complain to the user about their mistake
-  const validChannels = [];
-  command.onlyIn.forEach(channelName => {
-    const channel = message.guild.channels.find('name', channelName);
-    // If that channel doesn't exist on this server, leave it out
-    if (!channel) {
-      return;
-    }
-
-    // If the user can't read messages in that channel, leave it out
-    if (!channel.permissionsFor(message.member)
-        .has('READ_MESSAGES')) {
-      return;
-    }
-
-    validChannels.push('`' + channelName + '`');
-  });
-
-  if (validChannels.length === 0) {
-    message.member.send('Sorry, that command can\'t be used in ' +
-      'that channel.');
-  } else if (validChannels.length === 1) {
-    message.member.send('Sorry, that command can only be used ' +
-      'in ' + validChannels[0] + '.');
-  } else {
-    message.member.send('Sorry, that command can only be used in ' +
-      'the following channels: ' + validChannels.join(', ') + '.');
-  }
-
-  // Remove the problem message
-  message.delete()
-    .catch(reason => {
-      // TODO Error handler
-      console.error(reason);
-    });
-
-  return false;
-}
-
-function messageHandler(message) {
-  // Ignore bot messages
-  if (message.author.bot) {
-    return;
-  }
-
-  // Commands start with '!'
-  if (message.content[0] !== '!') {
-    // Limit messages if channel is in slow mode
-    isChannelSlow = channels.SLOW.some(channel => {
-      return channel.name === message.channel.name;
-    });
-
-    if (isChannelSlow) {
-      messageTime = message.createdAt;
-      previousTime = slowModeTimes[message.channel.name][message.author.id];
-
-      // There is no message during delay time
-      if (previousTime == undefined || messageTime - previousTime > slowModeDelays[message.channel.name]) {
-        slowModeTimes[message.channel.name][message.author.id] = messageTime;
-        return;
-      } else {
-        message.delete()
-          .then(msg => {
-            msg.author.send('The following message was deleted because the channel `' + message.channel.name +
-              '` is in slow mode:' + '```\n' + msg.content + '\n```\n' + 'You can send a message again in `' +
-              Math.ceil((slowModeDelays[message.channel.name] - (messageTime - previousTime))/1000).toString() + '` seconds');
-          })
-          .catch(reason => {
-            // TODO Error handler
-            console.error(reason);
-          });
-      }
-    } else {
-      return;
-    }
-  }
-
-  const commandText = message.content.split(' ')[0].substring(1).toLowerCase();
-  const command = commands[commandText];
-
-  // Check that the command exists
-  if (!command) {
-    return;
-  }
-
-  // If a command isn't allowed in a DM (or doesn't have allowDM defined),
-  // make sure we're in a guild.
-  if (!command.allowDM && !message.guild) {
-    message.reply('Sorry, I can only do that on a server. :frowning2:');
-    return;
-  }
-
-  // Checks that are only needed on a server
-  if (message.guild) {
-    // Check that the user is allowed to use the bot
-    let shouldIgnoreMessage = true;
-
-    // Check that the bot has any required roles at all
-    if (roles.REQUIRED_TO_USE_BOT.length > 0) {
-      // Try to find a common role between the required list and the
-      // user's roles
-      roles.REQUIRED_TO_USE_BOT.forEach((requiredRole) => {
-        if (message.member.roles.findKey('name', requiredRole)) {
-          shouldIgnoreMessage = false;
-        }
-      });
-    } else {
-      shouldIgnoreMessage = false;
-    }
-
-    // Check that the user is not part of a role that is banned from bot usage
-    roles.BANNED_FROM_BOT.forEach((bannedRole) => {
-      if (message.member.roles.findKey('name', bannedRole)) {
-        shouldIgnoreMessage = true;
-      }
-    });
-
-    if (shouldIgnoreMessage) {
-      return;
-    }
-
-    // If the command can only be used in certain channels, check that we're in
-    // one of those channels
-    if (command.onlyIn && command.onlyIn.length > 0) {
-      if (!commandValidInChannel(command, message)) {
-        return;
-      }
-    }
-  }
-
-  // If the command requires roles, check that the user has one of them
-  if (command.requireRoles) {
-    // A command can't require roles and support DMs.
-    // This is a programmer error.
-    if (!message.guild) {
-      // TODO: Programmer error
-      return;
-    }
-
-    let satisfiesRoles = false;
-
-    // Loop through the roles needed by the command and see if the user
-    // has any of them.
-    command.requireRoles.forEach((role) => {
-      if (message.member.roles.findKey('name', role)) {
-        satisfiesRoles = true;
-      }
-    });
-
-    if (!satisfiesRoles) {
-      message.channel.send('I\'m sorry ' + message.author + ', I\'m ' +
-        'afraid I can\'t do that.');
-      return;
-    }
-  }
-
-  command.process(bot, message);
-}
 
 // Handle messages
 bot.on('message', message => {
   try {
     utils.messageHandler(bot, message);
   } catch (e) {
-    logger.error(e.stack);
+    console.error(e.stack);
   }
 });
 
@@ -320,9 +72,8 @@ bot.on('message', message => {
 bot.on('guildMemberAdd', (member) => {
   try {
     events.memberJoined.process(bot, member);
-    //updateAPI.updateJoiner(member);
   } catch (e) {
-    logger.error(e.stack);
+    console.error(e.stack);
   }
 });
 
@@ -330,9 +81,8 @@ bot.on('guildMemberAdd', (member) => {
 bot.on('guildMemberRemove', (member) => {
   try {
     events.memberLeft.process(bot, member);
-    updateAPI.updateLeaver(member);
   } catch (e) {
-    logger.error(e.stack);
+    console.error(e.stack);
   }
 });
 
@@ -341,7 +91,7 @@ bot.on('guildBanAdd', (guild, member) => {
   try {
     events.memberBanned.process(bot, guild, member);
   } catch (e) {
-    logger.error(e.stack);
+    console.error(e.stack);
   }
 });
 
@@ -350,7 +100,7 @@ bot.on('guildBanRemove', (guild, member) => {
   try {
     events.memberUnbanned.process(bot, guild, member);
   } catch (e) {
-    logger.error(e.stack);
+    console.error(e.stack);
   }
 });
 
@@ -358,9 +108,8 @@ bot.on('guildBanRemove', (guild, member) => {
 bot.on('guildMemberUpdate', (oldMember, newMember) => {
   try {
     events.memberUpdated.process(bot, oldMember, newMember);
-    updateAPI.updateRole(newMember);
   } catch (e) {
-    logger.error(e.stack);
+    console.error(e.stack);
   }
 });
 
@@ -369,7 +118,7 @@ bot.on('messageDelete', (message) => {
   try {
     events.messageDeleted.process(bot, message);
   } catch (e) {
-    logger.error(e.stack);
+    console.error(e.stack);
   }
 });
 
@@ -378,7 +127,7 @@ bot.on('messageDelete', (message) => {
 //  try {
 //    updateAPI.updatePresence(newMember);
 //  } catch (e) {
-//    logger.error(e.stack);
+//    console.error(e.stack);
 //  }
 //});
 
@@ -388,10 +137,10 @@ bot.on('messageDelete', (message) => {
 //  try {
 //    events.messageUpdated.process(bot, oldMessage, newMessage);
 //  } catch (e) {
-//    logger.error(e.stack);
+//    console.error(e.stack);
 //  }
 //});
 
-logger.info('Bot started');
+console.log('Bot started');
 
 bot.login(token);

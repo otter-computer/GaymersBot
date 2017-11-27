@@ -16,8 +16,6 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * */
- 
-const logger = require('../logger').logger;
 
 module.exports = {
   usage: '',
@@ -45,11 +43,11 @@ module.exports = {
         },
         (rejectReason) => {
           // TODO: Reject handler
-          logger.error(rejectReason);
+          console.error(rejectReason);
         })
       .catch((e) => {
         // TODO: Error handler
-        logger.error(e.stack);
+        console.error(e.stack);
       });
   }
 };

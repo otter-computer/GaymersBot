@@ -17,106 +17,48 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * */
 
-const logger = require('../logger').logger;
 const Discord = require('discord.js');
-const https = require('https');
-const appConfig = require('../index').appConfig;
-
-function checkUserExists(member,callback){
-
-  let userid = member.user.id;
-
-  const options = {
-    host: 'users.gaymers.gg',
-    path: '/'+userid+'',
-    method: 'GET',
-    headers: { "Content-Type": "application/json",
-               'x-api-key': appConfig.APIGW_DISCOBOT_X_API_KEY,}
-  };
-
-  const request = https.get(options, (response) => {
-
-    let data = '';
-
-    response.on('data', (chunk) => {
-      data += chunk;
-    });
-
-    response.on('end', () => {
-      let jData = JSON.parse(data);
-
-      if (jData.length == 1){
-        callback(true);
-      }
-      else {
-        callback(false);
-      }
-
-    });
-  });
-
-  request.end();
-
-}
 
 module.exports = {
   process: (bot, member) => {
     const userLogsChannel = member.guild.channels.find('name', 'user-logs');
     const welcomeChannel = member.guild.channels.find('name', 'welcome-room');
 
-    checkUserExists(member, function(existance){
+    // Log the user joining to #user-logs
+    const embed = new Discord.RichEmbed();
 
-      let userReturnMsg = '';
-      let modReturnMsg = ' joined.';
+    embed.setColor(0x3398DB);
 
-      if (existance){
-        userReturnMsg = 'back ';
-        modReturnMsg = ' returned.';
-      }
+    embed.setAuthor(
+      member.displayName,
+      member.avatarURL, '');
 
-      // Log the user joining to #user-logs
-      if (!userLogsChannel) {
-        logger.error('Channel #user-logs doesn\'t exist!');
-      } else {
-        const embed = new Discord.RichEmbed();
+    const embedDate = new Date(Date.now()).toISOString();
+    embed.setTimestamp(embedDate);
 
-        embed.setColor(0x3398DB);
+    userLogsChannel.send(member, { embed: embed });
 
-        embed.setAuthor(
-          member.displayName,
-          member.avatarURL, '');
+    // Add a little message to #welcome-room to grab the user's attention
+    welcomeChannel.send(
+      'Welcome to Gaymers, ' + member + '! ' +
+      'Please introduce yourself, and check your DMs for more info! ' +
+      'You will have access to other channels once you introduce ' +
+      'yourself. :smile:'
+    );
 
-        const embedDate = new Date(Date.now()).toISOString();
-        embed.setTimestamp(embedDate);
-
-        userLogsChannel.send(member + modReturnMsg, { embed: embed });
-      }
-
-      // Add a little message to #welcome-room to grab the user's attention
-      if (!welcomeChannel) {
-        logger.error('Channel #welcome-room doesn\'t exist!');
-      } else {
-
-        welcomeChannel.send('Welcome '+userReturnMsg+'to Gaymers, ' + member + '! ' +
-            'Please introduce yourself, and check your DMs for more info! ' +
-            'You will have access to other channels once you introduce ' +
-            'yourself. :smile:');
-      }
-
-      // DM the user more onboarding information
-      member.send(
-        '__**Welcome '+userReturnMsg+'to Gaymers!**__\n\n' +
-        'Please introduce yourself in **#welcome-room**, and feel free to ' +
-        'tell us about your favorite games, where you\'re from, how you heard ' +
-        'about the server, and anything else about yourself you\'d like to ' +
-        'share.\n\n' +
-        'We have region-based tags to help you find local gaming friends, and ' +
-        'some special tags for members who like Overwatch, Battlefield, ' +
-        'League of Legends and more. We are happy to add them to your ' +
-        'profile so you have an easier time finding folks to play with!\n\n' +
-        'You will be given access to the other channels after you introduce ' +
-        'yourself.'
-      );
-    });
+    // DM the user more onboarding information
+    member.send(
+      '__**Welcome to Gaymers!**__\n\n' +
+      'Please introduce yourself in **#welcome-room**, and feel free to ' +
+      'tell us about your favorite games, where you\'re from, how you heard ' +
+      'about the server, and anything else about yourself you\'d like to ' +
+      'share.\n\n' +
+      'We have region-based tags to help you find local gaming friends, and ' +
+      'some special tags for members who like Overwatch, Battlefield, ' +
+      'League of Legends and more. We are happy to add them to your ' +
+      'profile so you have an easier time finding folks to play with!\n\n' +
+      'You will be given access to the other channels after you introduce ' +
+      'yourself.'
+    );
   }
 };

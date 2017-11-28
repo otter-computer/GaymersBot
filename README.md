@@ -11,8 +11,6 @@ Features
 - avatar: See someone's avatar.
 - boop: BOOP!
 - choose: Let DiscoBot choose for you.
-- event: Sign up to a server event!
-- events: List upcoming server events.
 - help: See what commands I can run!
 - hug: Give someone a hug :blush:
 - joined: See when someone joined the server.
@@ -22,9 +20,15 @@ Features
 - set18: Gives you the 18+ role, allows access to #over-18 and #over-18-text.
 - setregion: Set your region, get pretty color.
 - slap: Slap someone that deserves it.
+- smooch: Give someone a smooch :kiss:
 - spray: Spray someone thirsty...
 - unset18: Removes the 18+ role.
 - unsetregion: Remove your region, remain mysterious.
+
+### Admin Commands
+- member: Give a user the 'Member' role.
+- quote: Display the content of a message in a quoted embed.
+- under18: Give a user the 'Under 18' role.
 
 ### Events
 - memberBanned: Logs a member being banned in #user-logs.
@@ -41,7 +45,6 @@ Requirements
 
 - node.js
 - Discord Bot Account
-- [AWS](https://aws.amazon.com/) account
 
 Running
 -------
@@ -55,14 +58,3 @@ bot locally. You can create one of these
 [here](https://discordapp.com/developers/applications/me). The application must
 be created as a 'Bot User' and invited to your test server following the
 instructions in the Discord docs.
-
-### AWS SQS
-
-> SQS is now an optional component within the bot, you can either specify USE_AWS_SQS as false in the config, or simply leave SQS_QUEUE blank.
-
-The bot makes use of Amazon's Simple Queue Service to run certain tasks. In order to set this up you will need to create an SQS queue from the AWS developer console. You can then add the `SQS_QUEUE` environment variables with the URLs generated from AWS.
-
-From there you need to create a new user in AWS IAM. You need to assign that user Read and Write permissions to SQS. Then you can generate an access key to fill the `SQS_ACCESS_KEY` environment variable, and a secret key to fill `SQS_SECRET_KEY`.
-
-
-After adding these, run `npm start` to run the bot.

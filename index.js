@@ -45,14 +45,6 @@ process.on('SIGTERM', cleanup);
 // Import Events
 const events = require('./events/index');
 
-// Events
-const msgq = {};
-
-// Import events
-if (process.env.USE_AWS_SQS) {
-  msgq.messageReceived = require('./msgq/messageReceived');
-}
-
 // Init bot
 const bot = new Discord.Client();
 bot.on('ready', () => {

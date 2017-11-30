@@ -17,7 +17,6 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * */
 
-const logger = require('../logger').logger;
 const Discord = require('discord.js');
 
 module.exports = {
@@ -56,7 +55,7 @@ module.exports = {
 
         if (firstMention.id === member.id) {
           message.delete()
-            .catch(logger.error);
+            .catch(console.error);
         }
       });
     });

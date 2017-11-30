@@ -17,7 +17,6 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * */
 
-const logger = require('../logger').logger;
 const commands = require('../commands/index');
 const roles = require('../roles');
 const utils = this;
@@ -46,8 +45,7 @@ exports.commandValidInChannel = function(command, message) {
     }
 
     // If the user can't read messages in that channel, leave it out
-    if (!channel.permissionsFor(message.member)
-        .has('READ_MESSAGES')) {
+    if (!channel.permissionsFor(message.member).has('READ_MESSAGES')) {
       return;
     }
 
@@ -55,27 +53,33 @@ exports.commandValidInChannel = function(command, message) {
   });
 
   if (validChannels.length === 0) {
-    message.member.send('Sorry, that command can\'t be used in ' +
-      'that channel.').catch(error => {
-        console.error('Couldn\'t send DM' , error);
-      });
+    message.member.send(
+      'Sorry, that command can\'t be used in ' +
+      'that channel.'
+    ).catch(error => {
+      console.error('Couldn\'t send DM' , error);
+    });
   } else if (validChannels.length === 1) {
-    message.member.send('Sorry, that command can only be used ' +
-      'in ' + validChannels[0] + '.').catch(error => {
-        console.error('Couldn\'t send DM' , error);
-      });
+    message.member.send(
+      'Sorry, that command can only be used ' +
+      'in ' + validChannels[0] + '.'
+    ).catch(error => {
+      console.error('Couldn\'t send DM' , error);
+    });
   } else {
-    message.member.send('Sorry, that command can only be used in ' +
-      'the following channels: ' + validChannels.join(', ') + '.').catch(error => {
-        console.error('Couldn\'t send DM' , error);
-      });
+    message.member.send(
+      'Sorry, that command can only be used in ' +
+      'the following channels: ' + validChannels.join(', ') + '.'
+    ).catch(error => {
+      console.error('Couldn\'t send DM' , error);
+    });
   }
 
   // Remove the problem message
   message.delete()
     .catch(reason => {
       // TODO Error handler
-      logger.error(reason);
+      console.error(reason);
     });
 
   return false;

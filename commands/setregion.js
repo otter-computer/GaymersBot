@@ -17,7 +17,6 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * */
 
-const logger = require('../logger').logger;
 const REGIONS = require('../roles').REGION_ROLES;
 
 module.exports = {
@@ -41,32 +40,32 @@ module.exports = {
 
     // Hacky support for region aliases
     switch (regionName.toUpperCase()) {
-      case 'EU':
-        regionName = 'Europe';
-        break;
-      case 'NA':
-      case 'US':
-      case 'CA':
-        regionName = 'North America';
-        break;
-      case 'SA':
-        regionName = 'South America';
-        break;
-      case 'OCE':
-      case 'AU':
-      case 'NZ':
-        regionName = 'Oceania';
-        break;
-      case 'AF':
-        regionName = 'Africa';
-        break;
-      case 'AS':
-      case 'AZ':
-        regionName = 'Asia';
-        break;
-      case 'ME':
-        regionName = 'Middle East';
-        break;
+    case 'EU':
+      regionName = 'Europe';
+      break;
+    case 'NA':
+    case 'US':
+    case 'CA':
+      regionName = 'North America';
+      break;
+    case 'SA':
+      regionName = 'South America';
+      break;
+    case 'OCE':
+    case 'AU':
+    case 'NZ':
+      regionName = 'Oceania';
+      break;
+    case 'AF':
+      regionName = 'Africa';
+      break;
+    case 'AS':
+    case 'AZ':
+      regionName = 'Asia';
+      break;
+    case 'ME':
+      regionName = 'Middle East';
+      break;
     }
 
     // If the user supplied a bad region name, give them the list
@@ -114,11 +113,11 @@ module.exports = {
         },
         (rejectReason) => {
           // TODO: Reject handler
-          logger.error(rejectReason);
+          console.error(rejectReason);
         })
       .catch((e) => {
         // TODO: Error handler
-        logger.error(e.stack);
+        console.error(e.stack);
       });
   }
 };

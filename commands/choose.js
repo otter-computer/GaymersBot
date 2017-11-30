@@ -26,13 +26,13 @@ module.exports = {
   process: (bot, message) => {
 
     const responses = [
-      'I think \"%\" is the best choice',
-      'I\'ve decided on \"%\"',
-      'Definitely \"%\"',
-      '\"%\" would be best',
-      'After much deliberation, \"%\"',
-      'I reckon \"%\"',
-      'I choose \"%\"'
+      'I think "%" is the best choice',
+      'I\'ve decided on "%"',
+      'Definitely "%"',
+      '"%" would be best',
+      'After much deliberation, "%"',
+      'I reckon "%"',
+      'I choose "%"'
     ];
 
     const choices = splitargs(message.content);

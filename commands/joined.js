@@ -33,11 +33,11 @@ module.exports = {
     const embed = new Discord.RichEmbed();
     embed.setColor(0x3398DB);
 
-      embed.setTitle(
-        target.displayName +
-        ' joined ' +
-        moment(target.joinedAt).fromNow()
-      );
+    embed.setTitle(
+      target.displayName +
+      ' joined ' +
+      moment(target.joinedAt).fromNow()
+    );
 
     embed.setAuthor(
       target.displayName,

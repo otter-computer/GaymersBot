@@ -26,7 +26,7 @@ module.exports = {
     // Log the user joining to #user-logs
     const embed = new Discord.RichEmbed();
 
-    embed.setColor(0x3398DB);
+    embed.setColor(0x2ECC71);
 
     embed.setAuthor(
       member.displayName,

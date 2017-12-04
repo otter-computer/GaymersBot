@@ -5,7 +5,6 @@ exports.help = require('./help');
 exports.hug = require('./hug');
 exports.joined = require('./joined');
 exports.magic8ball = require('./magic8ball');
-exports.member = require('./member');
 exports.quote = require('./quote');
 exports.regions = require('./regions');
 exports.role = require('./role');

@@ -22,7 +22,6 @@ const Discord = require('discord.js');
 module.exports = {
   process: (bot, member) => {
     const userLogsChannel = member.guild.channels.find('name', 'user-logs');
-    const welcomeChannel = member.guild.channels.find('name', 'welcome-room');
 
     // Log the user joining to #user-logs
     const embed = new Discord.RichEmbed();
@@ -38,27 +37,18 @@ module.exports = {
 
     userLogsChannel.send(member, { embed: embed });
 
-    // Add a little message to #welcome-room to grab the user's attention
-    welcomeChannel.send(
-      'Welcome to Gaymers, ' + member + '! ' +
-      'Please introduce yourself, and check your DMs for more info! ' +
-      'You will have access to other channels once you introduce ' +
-      'yourself. :smile:'
-    );
-
     // DM the user more onboarding information
-    member.send(
-      '__**Welcome to Gaymers!**__\n\n' +
-      'Please introduce yourself in **#welcome-room**, and feel free to ' +
-      'tell us about your favorite games, where you\'re from, how you heard ' +
-      'about the server, and anything else about yourself you\'d like to ' +
-      'share.\n\n' +
-      'We have region-based tags to help you find local gaming friends, and ' +
-      'some special tags for members who like Overwatch, Battlefield, ' +
-      'League of Legends and more. We are happy to add them to your ' +
-      'profile so you have an easier time finding folks to play with!\n\n' +
-      'You will be given access to the other channels after you introduce ' +
-      'yourself.'
-    );
+    member.send(`
+      ***Welcome to Gaymers!***
+      Thanks for joining us!
+
+      Make sure you read over our rules in the \`#info-rules\` channel. If you have any questions or concerns feel free to ping \`@Admin\` or \`@Moderator\`, or message a staff member directly.
+
+      We have region-based roles that give your name a color. To add one, type \`!setregion North America\` in the \`#bot-room\`.
+
+      We also have game roles to help you find people to play with. To find out what games we have, and how to add one to yourself, type \`!role\` in the \`#bot-room\`.
+
+      To find our other commands, type \`!help\` in the \`#bot-room\`.
+    `);
   }
 };

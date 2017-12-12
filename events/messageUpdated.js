@@ -39,6 +39,7 @@ module.exports = {
 
     const embedDate = new Date(Date.now()).toISOString();
     embed.setTimestamp(embedDate);
+    embed.setFooter('Message Edited');
 
     messageLogsChannel.send({ embed: embed });
   }

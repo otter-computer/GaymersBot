@@ -35,7 +35,8 @@ module.exports = {
 
     const embedDate = new Date(Date.now()).toISOString();
     embed.setTimestamp(embedDate);
+    embed.setFooter(member.displayName + ' left');
 
-    userLogsChannel.send(member + ' left.', { embed: embed });
+    userLogsChannel.send(member.displayName + ' (' + member + ') left.', { embed: embed });
   }
 };

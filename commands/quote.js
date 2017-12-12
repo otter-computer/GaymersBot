@@ -78,6 +78,7 @@ module.exports = {
     }
 
     embed.setTimestamp(targetMessage.createdAt);
+    embed.setFooter('Quote');
     embed.addField('Channel', targetMessage.channel.name);
 
     if (targetMessage.cleanContent) {

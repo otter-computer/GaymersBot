@@ -34,8 +34,9 @@ module.exports = {
 
     const embedDate = new Date(Date.now()).toISOString();
     embed.setTimestamp(embedDate);
+    embed.setFooter(member.displayName + ' joined');
 
-    userLogsChannel.send(member, { embed: embed });
+    userLogsChannel.send(member + ' joined.', { embed: embed });
 
     // DM the user more onboarding information
     member.send(`

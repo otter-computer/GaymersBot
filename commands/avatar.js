@@ -27,18 +27,26 @@ module.exports = {
     if (!message.mentions.users.first() ||
         message.mentions.users.first() === message.author) {
       if (message.author.avatarURL) {
+        //Removes size parameter which breaks animated avatars hosting
+        //Keep it in static avatars for higher quality
+        avatarURLParts = message.author.avatarURL.split('?');
+        if (avatarURLParts[0].slice(-3) == 'gif') {
+          avatarURL = avatarURLParts[0];
+        } else {
+          avatarURL = message.author.avatarURL;
+        }
 
         const embed = new Discord.RichEmbed();
         embed.setColor(0x3398DB);
 
         embed.setAuthor(
           message.guild.member(message.author).displayName,
-          message.author.avatarURL,
+          avatarURL,
           ''
         );
 
         embed.setImage(
-          message.author.avatarURL
+          avatarURL
         );
 
         message.channel.send({ embed: embed });
@@ -50,18 +58,25 @@ module.exports = {
 
     const user = message.mentions.users.first();
     if (user.avatarURL) {
+      //Removes size parameter which breaks animated avatars hosting
+      //Keep it in static avatars for higher quality
+      avatarURLParts = user.avatarURL.split('?');
+      if (avatarURLParts[0].slice(-3) == 'gif') {
+        avatarURL = avatarURLParts[0];
+      } else {
+        avatarURL = user.avatarURL;
+      }
 
       const embed = new Discord.RichEmbed();
       embed.setColor(0x3398DB);
-
       embed.setAuthor(
         message.guild.member(user).displayName,
-        user.avatarURL,
+        avatarURL,
         ''
       );
 
       embed.setImage(
-        user.avatarURL
+        avatarURL
       );
 
       embed.addField('User:', user, true);

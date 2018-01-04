@@ -34,7 +34,8 @@ module.exports = {
 
     const embedDate = new Date(Date.now()).toISOString();
     embed.setTimestamp(embedDate);
+    embed.setFooter(member.username + ' banned');
 
-    userLogsChannel.send(member + ' banned.', { embed: embed });
+    userLogsChannel.send(member.username + ' (' + member + ') banned.', { embed: embed });
   }
 };

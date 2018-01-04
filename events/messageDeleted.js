@@ -44,6 +44,7 @@ module.exports = {
     }
 
     embed.setTimestamp(message.createdAt);
+    embed.setFooter('Message deleted');
 
     // Message content
     if (message.content) {

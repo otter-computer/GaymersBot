@@ -29,6 +29,7 @@ function usernameUpdate(bot, oldMember, newMember) {
 
   const embedDate = new Date(Date.now()).toISOString();
   embed.setTimestamp(embedDate);
+  embed.setFooter('User changed name');
 
   // User changed account username
   if (oldMember.user.username !== newMember.user.username) {

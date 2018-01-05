@@ -27,21 +27,16 @@ module.exports = {
     if (!message.mentions.users.first() ||
         message.mentions.users.first() === message.author) {
       if (message.author.avatarURL) {
+        //Removes size parameter which breaks animated avatars hosting
+        //Keep it in static avatars for higher quality
+        avatarURLParts = message.author.avatarURL.split('?');
+        if (avatarURLParts[0].slice(-3) == 'gif') {
+          avatarURL = avatarURLParts[0];
+        } else {
+          avatarURL = message.author.avatarURL;
+        }
 
-        const embed = new Discord.RichEmbed();
-        embed.setColor(0x3398DB);
-
-        embed.setAuthor(
-          message.guild.member(message.author).displayName,
-          message.author.avatarURL,
-          ''
-        );
-
-        embed.setImage(
-          message.author.avatarURL
-        );
-
-        message.channel.send({ embed: embed });
+        message.channel.send(avatarURL);
       } else {
         message.reply('You don\'t have an avatar :sob:');
       }
@@ -50,27 +45,19 @@ module.exports = {
 
     const user = message.mentions.users.first();
     if (user.avatarURL) {
-
-      const embed = new Discord.RichEmbed();
-      embed.setColor(0x3398DB);
-
-      embed.setAuthor(
-        message.guild.member(user).displayName,
-        user.avatarURL,
-        ''
-      );
-
-      embed.setImage(
-        user.avatarURL
-      );
-
-      embed.addField('User:', user, true);
-      embed.addField('Requested By:', message.author, true);
+      //Removes size parameter which breaks animated avatars hosting
+      //Keep it in static avatars for higher quality
+      avatarURLParts = user.avatarURL.split('?');
+      if (avatarURLParts[0].slice(-3) == 'gif') {
+        avatarURL = avatarURLParts[0];
+      } else {
+        avatarURL = user.avatarURL;
+      }
 
       message.channel.send(
         'Here\'s ' + user + '\'s avatar, requested by ' +
-        message.author + ': ',
-        { embed: embed }
+        message.author + ': ' +
+        avatarURL
       );
     } else {
       message.channel.send('Sorry ' + message.author + ', ' + user + ' doesn\'t have an avatar :sob:');

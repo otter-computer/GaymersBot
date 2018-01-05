@@ -36,20 +36,7 @@ module.exports = {
           avatarURL = message.author.avatarURL;
         }
 
-        const embed = new Discord.RichEmbed();
-        embed.setColor(0x3398DB);
-
-        embed.setAuthor(
-          message.guild.member(message.author).displayName,
-          avatarURL,
-          ''
-        );
-
-        embed.setImage(
-          avatarURL
-        );
-
-        message.channel.send({ embed: embed });
+        message.channel.send(avatarURL);
       } else {
         message.reply('You don\'t have an avatar :sob:');
       }
@@ -67,25 +54,10 @@ module.exports = {
         avatarURL = user.avatarURL;
       }
 
-      const embed = new Discord.RichEmbed();
-      embed.setColor(0x3398DB);
-      embed.setAuthor(
-        message.guild.member(user).displayName,
-        avatarURL,
-        ''
-      );
-
-      embed.setImage(
-        avatarURL
-      );
-
-      embed.addField('User:', user, true);
-      embed.addField('Requested By:', message.author, true);
-
       message.channel.send(
         'Here\'s ' + user + '\'s avatar, requested by ' +
-        message.author + ': ',
-        { embed: embed }
+        message.author + ': ' +
+        avatarURL
       );
     } else {
       message.channel.send('Sorry ' + message.author + ', ' + user + ' doesn\'t have an avatar :sob:');

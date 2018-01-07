@@ -24,18 +24,7 @@ module.exports = {
   process: (bot, guild, member) => {
     let userLogsChannel = bot.channels.find('name', 'user-logs');
 
-    const embed = new Discord.RichEmbed();
-
-    embed.setColor(0xE74C3C);
-
-    embed.setAuthor(
-      member.username,
-      member.avatarURL, '');
-
-    const embedDate = new Date(Date.now()).toISOString();
-    embed.setTimestamp(embedDate);
-    embed.setFooter(member.username + ' banned');
-
-    userLogsChannel.send(member.username + ' (' + member + ') banned.', { embed: embed });
+    userLogsChannel.send(':banhammer: ' + member.username +
+      ' (' + member + ') banned' + ' at ' + new Date().toLocaleString());
   }
 };

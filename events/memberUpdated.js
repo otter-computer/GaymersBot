@@ -22,7 +22,7 @@ const Discord = require('discord.js');
 function usernameUpdate(bot, oldMember, newMember) {
   const userLogsChannel = bot.channels.find('name', 'user-logs');
 
-  messageString = newMember.user.username + ' (' + newMember.toString() + ')';
+  messageString = ':abc: ' + newMember.user.username + ' (' + newMember.toString() + ')';
 
   // User changed account username
   if (oldMember.user.username !== newMember.user.username) {

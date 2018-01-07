@@ -25,7 +25,7 @@ module.exports = {
 
     const userLogsChannel = member.guild.channels.find('name', 'user-logs');
 
-    userLogsChannel.send(':runner: ' + member.displayName +
+    userLogsChannel.send(':outbox_tray: ' + member.displayName +
       ' (' + member + ') left' + ' at ' + new Date().toLocaleString());
   }
 };

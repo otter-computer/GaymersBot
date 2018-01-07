@@ -23,7 +23,7 @@ module.exports = {
   process: (bot, member) => {
     const userLogsChannel = member.guild.channels.find('name', 'user-logs');
 
-    userLogsChannel.send(':wave: ' + member + ' joined' + ' at ' + new Date().toLocaleString());
+    userLogsChannel.send(':inbox_tray: ' + member.displayName + ' (' + member + ') joined' + ' at ' + new Date().toLocaleString());
 
     // DM the user more onboarding information
     member.send(`

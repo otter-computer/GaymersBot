@@ -47,6 +47,7 @@ module.exports = {
     'Moderator',
     'NGT',
     'No links/files',
+    'Private Avatar',
     'Push-to-talk',
     'Restricted',
     'Trial Moderator',

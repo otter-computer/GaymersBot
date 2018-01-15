@@ -15,6 +15,7 @@ Features
 - hug: Give someone a hug :blush:
 - joined: See when someone joined the server.
 - magic8ball: See the future, have DiscoBot read your fortune.
+- privateavatar: Toggles between private/public avatar.
 - regions: Lists all available regions for use with the !setregion command.
 - role: Set or remove a role from yourself.
 - set18: Gives you the 18+ role, allows access to #over-18 and #over-18-text.

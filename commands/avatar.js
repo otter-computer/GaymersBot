@@ -43,8 +43,13 @@ module.exports = {
       return;
     }
 
-    const user = message.mentions.users.first();
+    const member = message.mentions.members.first();
+    const user = member.user;
     if (user.avatarURL) {
+      if (member.roles.findKey('name', 'Private Avatar')) {
+        message.reply('That user has made their avatar private <:naughty:334288355124576256>');
+        return;
+      }
       //Removes size parameter which breaks animated avatars hosting
       //Keep it in static avatars for higher quality
       avatarURLParts = user.avatarURL.split('?');

@@ -25,18 +25,7 @@ module.exports = {
 
     const userLogsChannel = member.guild.channels.find('name', 'user-logs');
 
-    const embed = new Discord.RichEmbed();
-
-    embed.setColor(0x607D8B);
-    embed.setAuthor(
-      member.displayName,
-      member.avatarURL, ''
-    );
-
-    const embedDate = new Date(Date.now()).toISOString();
-    embed.setTimestamp(embedDate);
-    embed.setFooter(member.displayName + ' left');
-
-    userLogsChannel.send(member.displayName + ' (' + member + ') left.', { embed: embed });
+    userLogsChannel.send(':outbox_tray: ' + member.displayName +
+      ' (' + member + ') left' + ' at ' + new Date().toLocaleString());
   }
 };

@@ -23,20 +23,7 @@ module.exports = {
   process: (bot, member) => {
     const userLogsChannel = member.guild.channels.find('name', 'user-logs');
 
-    // Log the user joining to #user-logs
-    const embed = new Discord.RichEmbed();
-
-    embed.setColor(0x2ECC71);
-
-    embed.setAuthor(
-      member.displayName,
-      member.avatarURL, '');
-
-    const embedDate = new Date(Date.now()).toISOString();
-    embed.setTimestamp(embedDate);
-    embed.setFooter(member.displayName + ' joined');
-
-    userLogsChannel.send(member + ' joined.', { embed: embed });
+    userLogsChannel.send(':inbox_tray: ' + member.displayName + ' (' + member + ') joined' + ' at ' + new Date().toLocaleString());
 
     // DM the user more onboarding information
     member.send(`

@@ -22,46 +22,31 @@ const Discord = require('discord.js');
 function usernameUpdate(bot, oldMember, newMember) {
   const userLogsChannel = bot.channels.find('name', 'user-logs');
 
-  // Create the embed
-  const embed = new Discord.RichEmbed();
-  embed.setColor(0xF1C40E);
-  embed.addField('User', newMember);
-
-  const embedDate = new Date(Date.now()).toISOString();
-  embed.setTimestamp(embedDate);
-  embed.setFooter('User changed name');
+  messageString = ':abc: ' + newMember.user.username + ' (' + newMember.toString() + ')';
 
   // User changed account username
   if (oldMember.user.username !== newMember.user.username) {
-    embed.setTitle('User Changed Account Username');
-
-    embed.addField('Old Username', oldMember.user.username, true);
-    embed.addField('New Username', newMember.user.username, true);
+    messageString += 'changed account username from "' + oldMember.user.username + '"';
   }
 
   // User adds a nickname
   if (!oldMember.nickname && newMember.nickname) {
-    embed.setTitle('User Added Nickname');
-
-    embed.addField('New Nickname', newMember.nickname, true);
+    messageString += ' added nickname "' + newMember.displayName + '"';
   }
 
   // User removes a nickname
   if (oldMember.nickname && !newMember.nickname) {
-    embed.setTitle('User Removed Nickname');
-
-    embed.addField('Old Nickname', oldMember.nickname, true);
+    messageString += ' removed nickname "' + oldMember.displayName + '"';
   }
 
   if (oldMember.nickname && newMember.nickname &&
     oldMember.nickname != newMember.nickname) {
-    embed.setTitle('User Changed Nickname');
-
-    embed.addField('Old Nickname', oldMember.nickname, true);
-    embed.addField('New Nickname', newMember.nickname, true);
+    messageString += ' changed nickname from "' + oldMember.displayName + '"';
   }
 
-  userLogsChannel.send('', { embed: embed });
+  messageString += ' at ' + new Date().toLocaleString();
+
+  userLogsChannel.send(messageString);
 }
 
 

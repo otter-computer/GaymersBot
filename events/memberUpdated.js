@@ -17,12 +17,10 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * */
 
-const Discord = require('discord.js');
-
 function usernameUpdate(bot, oldMember, newMember) {
-  const userLogsChannel = bot.channels.find('name', 'user-logs');
+  const userLogsChannel = newMember.guild.channels.find('name', 'user-logs');
 
-  messageString = ':abc: ' + newMember.user.username + ' (' + newMember.toString() + ')';
+  let messageString = ':abcd: ' + newMember.user.toString() + ' (`' + newMember.id + '`)';
 
   // User changed account username
   if (oldMember.user.username !== newMember.user.username) {
@@ -44,7 +42,7 @@ function usernameUpdate(bot, oldMember, newMember) {
     messageString += ' changed nickname from "' + oldMember.displayName + '"';
   }
 
-  messageString += ' at ' + new Date().toLocaleString();
+  messageString += ' at ' + new Date().toUTCString();
 
   userLogsChannel.send(messageString);
 }

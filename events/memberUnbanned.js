@@ -17,14 +17,16 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * */
 
-const Discord = require('discord.js');
-
 module.exports = {
   // Logs a member being unbanned in #user-logs.
-  process: (bot, guild, member) => {
-    let userLogsChannel = bot.channels.find('name', 'user-logs');
+  process: (bot, Guild, User) => {
+    const userLogsChannel = Guild.channels.find('name', 'user-logs');
 
-    userLogsChannel.send(':white_check_mark: ' + member.username +
-      ' (' + member + ') unbanned' + ' at ' + new Date().toLocaleString());
+    userLogsChannel.send(
+      ':recycle: ' + 
+      User.toString() + ' ' +
+      '(`' + User.id + '`) unbanned at ' + 
+      new Date().toUTCString()
+    );
   }
 };

@@ -17,15 +17,17 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * */
 
-const Discord = require('discord.js');
-
 module.exports = {
   // Logs a member leaving in #user-logs.
-  process: (bot, member) => {
+  process: (bot, GuildMember) => {
+    const User = GuildMember.user;
+    const userLogsChannel = GuildMember.guild.channels.find('name', 'user-logs');
 
-    const userLogsChannel = member.guild.channels.find('name', 'user-logs');
-
-    userLogsChannel.send(':outbox_tray: ' + member.displayName +
-      ' (' + member + ') left' + ' at ' + new Date().toLocaleString());
+    userLogsChannel.send(
+      ':runner: ' +
+      User.toString() + ' ' +
+      '(`' + User.id + '`) left at ' + 
+      new Date().toUTCString()
+    );
   }
 };

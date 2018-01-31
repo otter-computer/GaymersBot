@@ -20,7 +20,7 @@
 function usernameUpdate(bot, oldMember, newMember) {
   const userLogsChannel = newMember.guild.channels.find('name', 'user-logs');
 
-  let messageString = ':abcd: ' + newMember.user.toString() + ' (`' + newMember.id + '`)';
+  let messageString = ':abcd: ' + newMember.user.toString() + '(' + newMember.user.username + ') ' + ' `' + newMember.id + '`';
 
   // User changed account username
   if (oldMember.user.username !== newMember.user.username) {

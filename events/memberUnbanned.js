@@ -23,9 +23,10 @@ module.exports = {
     const userLogsChannel = Guild.channels.find('name', 'user-logs');
 
     userLogsChannel.send(
-      ':recycle: ' + 
+      ':recycle: ' +
       User.toString() + ' ' +
-      '(`' + User.id + '`) unbanned at ' + 
+      '(' + User.username + ') ' +
+      '`' + User.id + '` unbanned at ' +
       new Date().toUTCString()
     );
   }

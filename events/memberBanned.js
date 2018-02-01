@@ -23,9 +23,10 @@ module.exports = {
     const userLogsChannel = Guild.channels.find('name', 'user-logs');
 
     userLogsChannel.send(
-      ':no_entry_sign: ' + 
+      ':no_entry_sign: ' +
       User.toString() + ' ' +
-      '(`' + User.id + '`) banned at ' + 
+      '(' + User.username + ') ' +
+      '`' + User.id + '` banned at ' +
       new Date().toUTCString()
     );
   }

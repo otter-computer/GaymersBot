@@ -26,7 +26,8 @@ module.exports = {
     userLogsChannel.send(
       ':runner: ' +
       User.toString() + ' ' +
-      '(`' + User.id + '`) left at ' + 
+      '(' + User.username + ') ' +
+      '`' + User.id + '` left at ' +
       new Date().toUTCString()
     );
   }

@@ -44,6 +44,7 @@ module.exports = {
     'Event Manager',
     'GaymersBot',
     'Invulnerable',
+    'MercyBot',
     'Moderator',
     'NGT',
     'No links/files',

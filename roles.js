@@ -39,20 +39,21 @@ module.exports = {
     'Bot Developer',
     'Bot Restricted',
     'Bots',
-    'Data Visualisation Bot',
+    'D.Va',
     'DiscoBot',
     'Event Manager',
     'GaymersBot',
+    'Goddess of Death',
     'Invulnerable',
-    'MercyBot',
+    'Mercy',
     'Moderator',
-    'NGT',
     'No links/files',
     'Private Avatar',
     'Push-to-talk',
     'Restricted',
     'Trial Moderator',
-    'Under 18'
+    'Under 18',
+    'Winston'
   ],
 
   // A user must have one of these roles to use the bot (unless in a DM)

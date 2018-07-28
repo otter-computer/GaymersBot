@@ -35,6 +35,7 @@ module.exports = {
   RESTRICTED_ROLES: [
     '18+',
     'Admin',
+    'Alliance',
     'Bot Commander',
     'Bot Developer',
     'Bot Restricted',
@@ -44,6 +45,7 @@ module.exports = {
     'Event Manager',
     'GaymersBot',
     'Goddess of Death',
+    'Horde',
     'Invulnerable',
     'Mercy',
     'Moderator',

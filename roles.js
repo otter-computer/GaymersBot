@@ -55,7 +55,8 @@ module.exports = {
     'Restricted',
     'Trial Moderator',
     'Under 18',
-    'Winston'
+    'Winston',
+    'XP Bot'
   ],
 
   // A user must have one of these roles to use the bot (unless in a DM)

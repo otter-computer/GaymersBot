@@ -53,6 +53,7 @@ module.exports = {
     'Private Avatar',
     'Push-to-talk',
     'Restricted',
+    'Sombra',
     'Trial Moderator',
     'Under 18',
     'Winston',

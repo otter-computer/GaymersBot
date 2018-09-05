@@ -42,6 +42,7 @@ module.exports = {
     'Bots',
     'D.Va',
     'DiscoBot',
+    'Discord Me Bot',
     'Event Manager',
     'GaymersBot',
     'Goddess of Death',

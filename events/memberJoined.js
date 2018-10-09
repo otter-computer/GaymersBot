@@ -44,6 +44,6 @@ module.exports = {
     embed.setDescription(description);
     embed.setFooter('Gaymers.GG', GuildMember.guild.iconURL);
 
-    GuildMember.send({ embed: embed });
+    // GuildMember.send({ embed: embed });
   }
 };

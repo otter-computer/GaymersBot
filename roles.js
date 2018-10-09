@@ -55,6 +55,7 @@ module.exports = {
     'Push-to-talk',
     'Restricted',
     'Sombra',
+    'Statbot',
     'Trial Moderator',
     'Under 18',
     'Winston',

@@ -34,6 +34,7 @@ module.exports = {
   // Roles that cannot be managed with !role
   RESTRICTED_ROLES: [
     '18+',
+    '1st Place Pumky',
     'Admin',
     'Alliance',
     'Bot Commander',
@@ -43,9 +44,11 @@ module.exports = {
     'D.Va',
     'DiscoBot',
     'Discord Me Bot',
+    'Discordservers.me',
     'Event Manager',
     'GaymersBot',
     'Goddess of Death',
+    'Halloween Contest Winners',
     'Horde',
     'Invulnerable',
     'Mercy',

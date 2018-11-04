@@ -62,7 +62,25 @@ module.exports = {
     'Trial Moderator',
     'Under 18',
     'Winston',
-    'XP Bot'
+    'XP Bot',
+    'Normal',
+    'Fire',
+    'Fighting',
+    'Water',
+    'Flying',
+    'Grass',
+    'Poison',
+    'Electric',
+    'Ground',
+    'Psychic',
+    'Rock',
+    'Ice',
+    'Bug',
+    'Dragon',
+    'Ghost',
+    'Dark',
+    'Steel',
+    'Fairy'
   ],
 
   // A user must have one of these roles to use the bot (unless in a DM)

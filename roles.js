@@ -63,6 +63,7 @@ module.exports = {
     'Under 18',
     'Winston',
     'XP Bot',
+    'PokeBot',
     'Normal',
     'Fire',
     'Fighting',

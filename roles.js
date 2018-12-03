@@ -54,6 +54,7 @@ module.exports = {
     'Mercy',
     'Moderator',
     'No links/files',
+    'Pokémon Master',
     'Private Avatar',
     'Push-to-talk',
     'Restricted',

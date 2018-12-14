@@ -47,6 +47,7 @@ module.exports = {
     'Discordservers.me',
     'Event Manager',
     'GaymersBot',
+    'Gift Goblin',
     'Goddess of Death',
     'Halloween Contest Winners',
     'Horde',

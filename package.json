@@ -11,10 +11,11 @@
   },
   "license": "GPL-2.0",
   "dependencies": {
-    "discord.js": "^11.3.0",
+    "applicationinsights": "^1.0.8",
+    "discord.js": "^11.4.2",
     "dotenv": "^4.0.0",
-    "moment": "^2.20.1",
-    "moment-timezone": "^0.5.14",
+    "moment": "^2.23.0",
+    "moment-timezone": "^0.5.23",
     "splitargs": "^0.0.7"
   },
   "engines": {

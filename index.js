@@ -19,7 +19,7 @@
 const Appinsights = require('applicationinsights');
 
 if (process.env.APPINSIGHTS_INSTRUMENTATIONKEY) {
-  Appinsights.setup(process.env.APPINSIGHTS_INSTRUMENTATIONKEY).start();
+  Appinsights.setup(process.env.APPINSIGHTS_INSTRUMENTATIONKEY).setAutoCollectConsole(true, true).start();
 }
 
 const Discord = require('discord.js');

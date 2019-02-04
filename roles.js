@@ -61,6 +61,7 @@ module.exports = {
     'Restricted',
     'Smash Queen',
     'Sombra',
+    'Staff',
     'Statbot',
     'Trial Moderator',
     'Under 18',

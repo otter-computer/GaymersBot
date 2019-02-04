@@ -59,6 +59,7 @@ module.exports = {
     'Private Avatar',
     'Push-to-talk',
     'Restricted',
+    'Smash Queen',
     'Sombra',
     'Statbot',
     'Trial Moderator',

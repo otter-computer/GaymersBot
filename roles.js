@@ -49,6 +49,7 @@ module.exports = {
     'GaymersBot',
     'Gift Goblin',
     'Goddess of Death',
+    'Gym Leader',
     'Halloween Contest Winners',
     'Horde',
     'Invulnerable',

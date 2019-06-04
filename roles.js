@@ -55,6 +55,7 @@ module.exports = {
     'Invulnerable',
     'Mercy',
     'Moderator',
+    'Nitro Booster',
     'No links/files',
     'Pokémon Master',
     'Private Avatar',

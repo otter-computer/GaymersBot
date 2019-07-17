@@ -49,6 +49,7 @@ module.exports = {
     'Event Manager',
     'GaymersBot',
     'Gift Goblin',
+    'GiveawayBot',
     'Goddess of Death',
     'Gym Leader',
     'Halloween Contest Winners',

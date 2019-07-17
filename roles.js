@@ -90,7 +90,8 @@ module.exports = {
     'Steel',
     'Fairy',
     'Pink Lemonade',
-    'Deep Lake'
+    'Deep Lake',
+    'Blue Depths'
   ],
 
   // A user must have one of these roles to use the bot (unless in a DM)

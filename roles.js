@@ -35,6 +35,7 @@ module.exports = {
   RESTRICTED_ROLES: [
     '18+',
     '1st Place Pumky',
+    '406',
     'Admin',
     'Alliance',
     'Bot Commander',

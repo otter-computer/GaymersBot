@@ -1,0 +1,36 @@
+name: Deploy to Azure
+
+on:
+  push:
+    branches:
+    - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@master
+      name: Checkout repository
+
+    - uses: actions/setup-node@v1
+      name: Use Node.js 10.x
+      with:
+        version: 10.x
+
+    - name: npm install, build, and test
+      run: |
+        npm install
+        npm run build --if-present
+        npm test
+
+    - uses: azure/actions/login@master
+      name: Login to Azure
+      with:
+        creds: '${{ secrets.AZURE_CREDENTIALS }}'
+
+    - uses: azure/appservice-actions/webapp@master
+      name: Deploy to Azure WebApp
+      with:
+        app-name: GaymersBot
+        publish-profile-xml: '${{ secrets.DEPLOYMENT_SETTINGS }}'

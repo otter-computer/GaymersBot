@@ -23,6 +23,7 @@ if (process.env.APPINSIGHTS_INSTRUMENTATIONKEY) {
 }
 
 const Discord = require('discord.js');
+const express = require('express');
 const utils = require('./utils/discordHelpers');
 require('./utils/javascriptHelpers');
 
@@ -46,6 +47,11 @@ function cleanup() {
 
 process.on('SIGINT', cleanup);
 process.on('SIGTERM', cleanup);
+
+// Start webserver
+const webserver = express();
+webserver.get('/', (req, res => res.send('ping')));
+webserver.listen(80, () => {});
 
 // Import Events
 const events = require('./events/index');

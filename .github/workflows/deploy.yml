@@ -6,8 +6,8 @@ on:
     - master
 
 jobs:
-  build:
-    name: Build
+  build_and_deploy:
+    name: Build & Deploy
     runs-on: ubuntu-latest
 
     steps:
@@ -25,12 +25,6 @@ jobs:
         npm run build --if-present
         npm test
 
-  deploy:
-    name: Deploy
-    runs-on: ubuntu-latest
-    needs: build
-
-    steps:
     - uses: azure/actions/login@master
       name: Login to Azure
       with:

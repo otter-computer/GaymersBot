@@ -50,7 +50,7 @@ process.on('SIGTERM', cleanup);
 
 // Start webserver
 const webserver = express();
-webserver.get('/', (req, res => res.send('ping')));
+webserver.get('/', (req, res) => res.send('ping'));
 webserver.listen(8080, () => {});
 
 // Import Events

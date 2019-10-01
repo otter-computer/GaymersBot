@@ -6,8 +6,8 @@ on:
     - master
 
 jobs:
-  build_and_deploy:
-    name: Build & Deploy
+  deploy:
+    name: Deploy
     runs-on: ubuntu-latest
 
     steps:
@@ -23,15 +23,10 @@ jobs:
       run: |
         npm install
         npm run build --if-present
-        npm test
+        npm run test --if-present
 
-    - uses: azure/actions/login@master
-      name: Login to Azure
-      with:
-        creds: '${{ secrets.AZURE_CREDENTIALS }}'
-
-    - uses: azure/appservice-actions/webapp@master
-      name: Deploy to Azure WebApp
-      with:
+    - name: 'Deploy to Azure'
+      uses: azure/webapps-deploy@v1
+      with: 
         app-name: GaymersBot
-        publish-profile-xml: '${{ secrets.DEPLOYMENT_SETTINGS }}'
+        publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}

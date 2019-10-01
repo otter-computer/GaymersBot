@@ -2,7 +2,7 @@ const REGIONS = require('../roles').REGION_ROLES;
 
 module.exports = {
   usage: '[your region]',
-  description: 'Set your region, get pretty color.',
+  description: 'Set your region!',
   allowDM: false,
   onlyIn: ['bot-room'],
   process: (bot, message) => {

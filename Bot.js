@@ -5,14 +5,14 @@ const ReactionHandler = require('./ReactionHandler');
 
 class Bot extends EventEmitter {
   /**
-   * Initializes all modules, a Discord client, Firebase connection.
+   * Initializes all modules, a Discord client, binds events.
    * @constructor
    */
   constructor() {
     super();
     this.client = new Discord.Client();
-    this.MessageHandler = new MessageHandler();
-    this.ReactionHandler = new ReactionHandler();
+    this.MessageHandler = new MessageHandler(this);
+    this.ReactionHandler = new ReactionHandler(this);
     this.bindEvents();
   }
 
@@ -37,10 +37,12 @@ class Bot extends EventEmitter {
   bindEvents() {
     this.client.on('ready', this.onReady.bind(this));
     this.client.on('message', this.onMessage.bind(this));
+    this.client.on('messageReactionAdd', this.onMessageReactionAdd.bind(this));
+    this.client.on('messageReactionRemove', this.onMessageReactionRemove.bind(this));
   }
 
   /**
-   * Bot is ready
+   * Bot is connected to Discord.
    */
   onReady() {
     console.log(
@@ -51,12 +53,29 @@ class Bot extends EventEmitter {
   }
 
   /**
-   * Message handler.
-   * Filters messages from bots, DMs, and staff.
-   * @param {Message} Message Discord message object that fired the event
+   * Passes message events to the MessageHandler.
+   * @param {Message} Message Discord message object.
    */
   async onMessage(Message) {
     this.MessageHandler.handleMessage(Message);
+  }
+
+  /**
+   * Passes reaction add events to the ReactionHandler.
+   * @param {Reaction} Reaction The Discord reaction object.
+   * @param {User} User The Discord user that added the reaction.
+   */
+  async onMessageReactionAdd(Reaction, User) {
+    this.ReactionHandler.hanndleReactionAdd(Reaction, User);
+  }
+
+  /**
+   * Passes reaction remove events to the ReactionHandler.
+   * @param {Reaction} Reaction The Discord reaction object.
+   * @param {User} User The Discord user that removed the reaction.
+   */
+  async onMessageReactionRemove(Reaction, User) {
+    this.ReactionHandler.hanndleReactionRemove(Reaction, User);
   }
 }
 

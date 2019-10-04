@@ -1,7 +1,9 @@
 const Discord = require('discord.js');
 
 class MessageHandler {
-  constructor() {}
+  constructor(Bot) {
+    this.Bot = Bot;
+  }
 
   /**
    * Handles understanding an incoming message.
@@ -13,14 +15,14 @@ class MessageHandler {
       return;
     }
 
-    // If not in a text channel, reply bot is not available
-    if (!(Message.channel instanceof Discord.TextChannel)) {
-      this.replyToDm(Message);
+    // Ignore if not command
+    if (!(this.startsWithPrefix(Message))) {
       return;
     }
 
-    // Ignore if not command
-    if (!(this.startsWithPrefix(Message))) {
+    // If not in a text channel, reply bot is not available
+    if (!(Message.channel instanceof Discord.TextChannel)) {
+      Message.reply('Sorry, I can\'t be used in DMs. Try your message again in #bot-room in Gaymers');
       return;
     }
 
@@ -37,15 +39,6 @@ class MessageHandler {
     } else {
       return false;
     }
-  }
-
-  /**
-   * Replies to a DM to the bot.
-   * @param {Message} Message The Discord message
-   */
-  replyToDm(Message) {
-    Message.reply('Bot can\'t be used in DMs.');
-    return;
   }
 }
 

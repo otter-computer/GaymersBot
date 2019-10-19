@@ -1,5 +1,6 @@
 const EventEmitter = require('events');
 const Discord = require('discord.js');
+const Storage = require('azure-storage');
 const MessageHandler = require('./MessageHandler');
 const ReactionHandler = require('./ReactionHandler');
 
@@ -11,6 +12,7 @@ class Bot extends EventEmitter {
   constructor() {
     super();
     this.client = new Discord.Client();
+    this.storage = storage.createTableService();
     this.MessageHandler = new MessageHandler(this);
     this.ReactionHandler = new ReactionHandler(this);
     this.bindEvents();
@@ -54,7 +56,7 @@ class Bot extends EventEmitter {
 
   /**
    * Passes message events to the MessageHandler.
-   * @param {Message} Message Discord message object.
+   * @param {Message} Message The Discord message object.
    */
   async onMessage(Message) {
     this.MessageHandler.handleMessage(Message);

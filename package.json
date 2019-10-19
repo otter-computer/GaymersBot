@@ -12,6 +12,7 @@
   "license": "GPL-2.0",
   "dependencies": {
     "applicationinsights": "^1.0.8",
+    "azure-storage": "^2.10.3",
     "discord.js": "^11.4.2",
     "express": "^4.17.1"
   },

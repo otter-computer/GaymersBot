@@ -3,7 +3,7 @@ class ReactionHandler {
     this.Bot = Bot;
   }
 
-  hanndleReactionAdd(Reaction, User) {
+  handleReactionAdd(Reaction, User) {
     // Ignore if not in #roles
     if (!this.isInRolesChannel(Reaction.message.channel.name)) {
       return;

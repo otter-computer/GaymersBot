@@ -66,7 +66,7 @@ class Bot extends EventEmitter {
    * @param {User} User The Discord user that added the reaction.
    */
   async onMessageReactionAdd(Reaction, User) {
-    this.ReactionHandler.hanndleReactionAdd(Reaction, User);
+    this.ReactionHandler.handleReactionAdd(Reaction, User);
   }
 
   /**
@@ -75,7 +75,7 @@ class Bot extends EventEmitter {
    * @param {User} User The Discord user that removed the reaction.
    */
   async onMessageReactionRemove(Reaction, User) {
-    this.ReactionHandler.hanndleReactionRemove(Reaction, User);
+    this.ReactionHandler.handleReactionRemove(Reaction, User);
   }
 }
 

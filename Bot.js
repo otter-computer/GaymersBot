@@ -1,6 +1,7 @@
 const EventEmitter = require('events');
 const Discord = require('discord.js');
 const Storage = require('azure-storage');
+const CommandHandler = require('./CommandHandler')
 const MessageHandler = require('./MessageHandler');
 const ReactionHandler = require('./ReactionHandler');
 
@@ -12,10 +13,21 @@ class Bot extends EventEmitter {
   constructor() {
     super();
     this.client = new Discord.Client();
-    this.storage = storage.createTableService();
+    // this.storage = Storage.createTableService();
+    this.CommandHandler = new CommandHandler(this)
     this.MessageHandler = new MessageHandler(this);
     this.ReactionHandler = new ReactionHandler(this);
     this.bindEvents();
+  }
+
+  /**
+   * Bind event functions.
+   */
+  bindEvents() {
+    this.client.on('ready', this.onReady.bind(this));
+    this.client.on('message', this.onMessage.bind(this));
+    this.client.on('messageReactionAdd', this.onMessageReactionAdd.bind(this));
+    this.client.on('messageReactionRemove', this.onMessageReactionRemove.bind(this));
   }
 
   /**
@@ -31,27 +43,6 @@ class Bot extends EventEmitter {
   destroy() {
     console.log('Shutting down.');
     this.client.destroy();
-  }
-
-  /**
-   * Bind event functions.
-   */
-  bindEvents() {
-    this.client.on('ready', this.onReady.bind(this));
-    this.client.on('message', this.onMessage.bind(this));
-    this.client.on('messageReactionAdd', this.onMessageReactionAdd.bind(this));
-    this.client.on('messageReactionRemove', this.onMessageReactionRemove.bind(this));
-  }
-
-  /**
-   * Bot is connected to Discord.
-   */
-  onReady() {
-    console.log(
-      'Connected to Discord as ' +
-      this.client.user.username + '#' + this.client.user.discriminator + ' ' +
-      '<@' + this.client.user.id + '>'
-    );
   }
 
   /**
@@ -78,6 +69,17 @@ class Bot extends EventEmitter {
    */
   async onMessageReactionRemove(Reaction, User) {
     this.ReactionHandler.handleReactionRemove(Reaction, User);
+  }
+
+  /**
+   * Bot is connected to Discord.
+   */
+  onReady() {
+    console.log(
+      'Connected to Discord as ' +
+      this.client.user.username + '#' + this.client.user.discriminator + ' ' +
+      '<@' + this.client.user.id + '>'
+    );
   }
 }
 

@@ -21,12 +21,9 @@ class MessageHandler {
       return;
     }
 
-    // Ignore if not mentioned
-    if (!(this.botMentioned(Message))) {
-      return;
+    if (this.botMentioned(Message) || this.hasCommandPrefix(Message)) {
+      this.Bot.CommandHandler.handleCommand(Message);
     }
-
-    Message.reply('pong');
   }
 
   /**
@@ -34,7 +31,19 @@ class MessageHandler {
    * @param {Message} Message The Discord message object
    */
   botMentioned(Message) {
-    if (Message.mentions.users.has(this.Bot.user.id)) {
+    if (Message.mentions.users.has(this.Bot.client.user.id)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  /**
+   * Checks if the message starts with the command prefix '!'
+   * @param {Message} Message The Discord message object
+   */
+  hasCommandPrefix(Message) {
+    if (Message.content.startsWith('!')) {
       return true;
     } else {
       return false;

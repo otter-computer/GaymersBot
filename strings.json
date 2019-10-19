@@ -1,5 +1,5 @@
 {
-  "hug": [
+  "HUG_RESPONSES": [
     "*hugs ${user}*",
     "*hugs ${user}*",
     "*hugs ${user}*",
@@ -14,5 +14,7 @@
     "*embraces ${user}*",
     "*holds ${user} close*",
     "*cuddles ${user}*"
-  ]
+  ],
+  "MISSING_COMMAND": "Sorry, I couldn't find that command :frowning:",
+  "UNAVAILABLE_IN_DM": "Sorry, I can't be used in DMs. Try your message again in #bot-room in Gaymers"
 }

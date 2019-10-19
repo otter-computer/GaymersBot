@@ -5,6 +5,20 @@ class CommandHandler {
     this.Bot = Bot;
   }
 
+  /**
+   * Fetches a collection of mentions from a message, excluding the bot itself
+   * @param {Message} Message The Discord message object
+   * @returns {Collection} Users A collection of Users
+   */
+  getMentionsFromMessage(Message) {
+    return Message.mentions.users.filter(user => user.id !== this.Bot.client.user.id)
+  }
+
+  /**
+   * Handles commands in incoming mesages, routing them to the correct function.
+   * Handles cases of invocation via mention, or via the command prefix
+   * @param {Message} Message The Discord message object
+   */
   handleCommand(Message) {
     let command;
 
@@ -20,7 +34,6 @@ class CommandHandler {
       if (messageArgs.length > 1) {
         command = messageArgs[1];
       } else {
-        Message.reply('Hello!');
         return;
       }
     }
@@ -28,9 +41,13 @@ class CommandHandler {
     try {
       this[command](Message);
     } catch (error) {
-      console.error('No command found!', error);
-      Message.reply('Sorry, I couldn\'t find that command :frowning:');
+      console.error('Command not found', error);
+      // Message.reply(strings.MISSING_COMMAND);
     }
+  }
+
+  help (Message) {
+
   }
 
   /**
@@ -47,17 +64,8 @@ class CommandHandler {
       userlist = Message.author;
     }
     
-    const response = strings.hug[Math.floor(Math.random() * strings.hug.length)].replace('${user}', userlist);
+    const response = strings.HUG_RESPONSES[Math.floor(Math.random() * strings.HUG_RESPONSES.length)].replace('${user}', userlist);
     Message.channel.send(response);
-  }
-
-  /**
-   * Fetches a collection of mentions from a message, excluding the bot itself
-   * @param {Message} Message The Discord message object
-   * @returns {Collection} Users A collection of Users
-   */
-  getMentionsFromMessage(Message) {
-    return Message.mentions.users.filter(user => user.id !== this.Bot.client.user.id)
   }
 }
 

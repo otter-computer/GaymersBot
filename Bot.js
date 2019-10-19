@@ -41,7 +41,7 @@ class Bot extends EventEmitter {
    * Destroy Discord client.
    */
   destroy() {
-    console.log('Shutting down.');
+    console.log(`Shutting down.`);
     this.client.destroy();
   }
 
@@ -75,11 +75,7 @@ class Bot extends EventEmitter {
    * Bot is connected to Discord.
    */
   onReady() {
-    console.log(
-      'Connected to Discord as ' +
-      this.client.user.username + '#' + this.client.user.discriminator + ' ' +
-      '<@' + this.client.user.id + '>'
-    );
+    console.log(`Connected to Discord as ${this.client.user.username}#${this.client.user.discriminator} <@${this.client.user.id}>`);
   }
 }
 

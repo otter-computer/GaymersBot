@@ -1,4 +1,5 @@
 const Discord = require('discord.js');
+const strings = require('./strings.json');
 
 class MessageHandler {
   constructor(Bot) {
@@ -17,7 +18,7 @@ class MessageHandler {
 
     // If not in a text channel, reply bot is not available
     if (!(Message.channel instanceof Discord.TextChannel)) {
-      Message.reply('Sorry, I can\'t be used in DMs. Try your message again in #bot-room in Gaymers');
+      Message.reply(strings.UNAVAILABLE_IN_DM);
       return;
     }
 

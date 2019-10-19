@@ -16,6 +16,23 @@ class CommandHandler {
   }
 
   /**
+   * Fetches a mentioned target (or targets), or returns the Message author
+   * @param {Message} Message The Discord message object
+   */
+  getMessageTarget(Message) {
+    const mentions = this.getMentionsFromMessage(Message);
+    let target;
+
+    if (mentions.size > 0) {
+      target = mentions.array().join(', ');
+    } else {
+      target = Message.author;
+    }
+
+    return target;
+  }
+
+  /**
    * Handles commands in incoming mesages, routing them to the correct function.
    * Handles cases of invocation via mention, or via the command prefix
    * @param {Message} Message The Discord message object
@@ -47,7 +64,11 @@ class CommandHandler {
     }
   }
 
-  help (Message) {
+  hasPermission(Message) {
+    // TODO
+  }
+
+  help(Message) {
     // TODO
   }
 
@@ -55,15 +76,8 @@ class CommandHandler {
    * Hug someone, or multiple people!
    * @param {Message} Message The Discord message object.
    */
-  hug (Message) {
-    const mentions = this.getMentionsFromMessage(Message);
-    let target;
-
-    if (mentions.size > 0) {
-      target = mentions.array().join(', ');
-    } else {
-      target = Message.author;
-    }
+  hug(Message) {
+    const target = this.getMessageTarget(Message);
 
     const responses = [
       `*hugs ${target}*`,
@@ -85,7 +99,7 @@ class CommandHandler {
     Message.channel.send(responses[Math.floor(Math.random() * responses.length)]);
   }
 
-  joined (Message) {
+  joined(Message) {
     const mentions = this.getMentionsFromMessage(Message);
     let target;
 
@@ -102,6 +116,40 @@ class CommandHandler {
     embed.setDescription(target.joinedAt);
 
     Message.reply(`Here's ${target.toString()}'s join date`, {embed: embed});
+  }
+
+  /**
+   * Spray someone thirsty, or multiple people!
+   * @param {Message} Message The Discord message object.
+   */
+  spray(Message) {
+    const target = this.getMessageTarget(Message);
+
+    const response = `*sprays ${target} with a fire hose.*`;
+    const specialResponse = `*sprays ${target} with canned cheese.*`;
+
+    if (Math.floor(Math.random() * 50) + 1 === 50) {
+      Message.channel.send(specialResponse);
+    } else {
+      Message.channel.send(response);
+    }
+  }
+
+  /**
+   * Slap someone, or multiple people!
+   * @param {Message} Message The Discord message object.
+   */
+  slap(Message) {
+    const target = this.getMessageTarget(Message);
+
+    const response = `*slaps ${target} around a bit with a large, girthy trout.* :fish:`;
+    const specialResponse = `*slaps ${target} with a meaty sausage.*`;
+
+    if (Math.floor(Math.random() * 50) + 1 === 50) {
+      Message.channel.send(specialResponse);
+    } else {
+      Message.channel.send(response);
+    }
   }
 }
 

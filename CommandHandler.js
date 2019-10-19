@@ -7,6 +7,38 @@ class CommandHandler {
   }
 
   /**
+   * Gets a user's avatar
+   * @param {Message} Message The Discord message object
+   */
+  avatar(Message) {
+    const mentions = this.getMentionsFromMessage(Message);
+    let target;
+
+    if (mentions.size > 0) {
+      target = mentions.first();
+    } else {
+      target = Message.author;
+    }
+
+    if (target.avatarURL) {
+      //Removes size parameter which breaks animated avatars hosting
+      //Keep it in static avatars for higher quality
+      const avatarURLParts = target.avatarURL.split('?');
+      let avatarURL;
+      
+      if (avatarURLParts[0].slice(-3) == 'gif') {
+        avatarURL = avatarURLParts[0];
+      } else {
+        avatarURL = target.avatarURL;
+      }
+
+      Message.reply(`Here's ${target.toString()}'s avatar: ${avatarURL}`);
+    } else {
+      Message.reply(`Sorry, I couldn't find an avatar for ${target} :sob:`);
+    }
+  }
+
+  /**
    * Fetches a collection of mentions from a message, excluding the bot itself
    * @param {Message} Message The Discord message object
    * @returns {Collection} Users A collection of Users
@@ -16,20 +48,17 @@ class CommandHandler {
   }
 
   /**
-   * Fetches a mentioned target (or targets), or returns the Message author
+   * Fetches a mentioned target (or targets) from a message, or returns the Message author
    * @param {Message} Message The Discord message object
    */
   getMessageTarget(Message) {
     const mentions = this.getMentionsFromMessage(Message);
-    let target;
 
     if (mentions.size > 0) {
-      target = mentions.array().join(', ');
+      return mentions.array().join(', ');
     } else {
-      target = Message.author;
+      return Message.author;
     }
-
-    return target;
   }
 
   /**
@@ -99,6 +128,10 @@ class CommandHandler {
     Message.channel.send(responses[Math.floor(Math.random() * responses.length)]);
   }
 
+  /**
+   * Shows a member's join date
+   * @param {Message} Message The Discord message object
+   */
   joined(Message) {
     const mentions = this.getMentionsFromMessage(Message);
     let target;

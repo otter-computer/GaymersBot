@@ -14,7 +14,8 @@
     "applicationinsights": "^1.0.8",
     "azure-storage": "^2.10.3",
     "discord.js": "^11.4.2",
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "moment": "^2.24.0"
   },
   "engines": {
     "node": "^10.0.0"

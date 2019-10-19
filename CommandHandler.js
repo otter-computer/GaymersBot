@@ -1,4 +1,5 @@
-const strings = require('./strings.json');
+const Discord = require('discord.js');
+const moment = require('moment');
 
 class CommandHandler {
   constructor(Bot) {
@@ -42,12 +43,12 @@ class CommandHandler {
       this[command](Message);
     } catch (error) {
       console.error('Command not found', error);
-      // Message.reply(strings.MISSING_COMMAND);
+      // Message.reply(`Sorry, I couldn't find that command :frowning:`);
     }
   }
 
   help (Message) {
-
+    // TODO
   }
 
   /**
@@ -55,17 +56,52 @@ class CommandHandler {
    * @param {Message} Message The Discord message object.
    */
   hug (Message) {
-    let mentions = this.getMentionsFromMessage(Message);
-    let userlist;
+    const mentions = this.getMentionsFromMessage(Message);
+    let target;
 
     if (mentions.size > 0) {
-      userlist = mentions.array().join(', ');
+      target = mentions.array().join(', ');
     } else {
-      userlist = Message.author;
+      target = Message.author;
     }
+
+    const responses = [
+      `*hugs ${target}*`,
+      `*hugs ${target}*`,
+      `*hugs ${target}*`,
+      `*hugs ${target}*`,
+      `*licks ${target}*`,
+      `*pounces ${target}*`,
+      `*jumps on ${target}*`,
+      `*glomps ${target}*`,
+      `*falls on ${target}*`,
+      `*bear hugs ${target}*`,
+      `*tightly squeezes ${target}*`,
+      `*embraces ${target}*`,
+      `*holds ${target} close*`,
+      `*cuddles ${target}*`
+    ]
     
-    const response = strings.HUG_RESPONSES[Math.floor(Math.random() * strings.HUG_RESPONSES.length)].replace('${user}', userlist);
-    Message.channel.send(response);
+    Message.channel.send(responses[Math.floor(Math.random() * responses.length)]);
+  }
+
+  joined (Message) {
+    const mentions = this.getMentionsFromMessage(Message);
+    let target;
+
+    if (mentions.size > 0) {
+      target = Message.guild.member(mentions.first())
+    } else {
+      target = Message.member;
+    }
+
+    const embed = new Discord.RichEmbed();
+    embed.setColor(0x3398DB);
+    embed.setAuthor(target.displayName, target.user.displayAvatarURL, '');
+    embed.setTitle(`${target.displayName} joined ${moment(target.joinedAt).fromNow()}`);
+    embed.setDescription(target.joinedAt);
+
+    Message.reply(`Here's ${target.toString()}'s join date`, {embed: embed});
   }
 }
 

@@ -21,6 +21,7 @@ module.exports = {
     'Bots',
     'D.Va',
     'DiscoBot',
+    'Discord Partner',
     'Discord Server List',
     'DiscordServers.com',
     'Discordservers.me',

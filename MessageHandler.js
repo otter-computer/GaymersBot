@@ -15,14 +15,14 @@ class MessageHandler {
       return;
     }
 
-    // Ignore if not command
-    if (!(this.startsWithPrefix(Message))) {
-      return;
-    }
-
     // If not in a text channel, reply bot is not available
     if (!(Message.channel instanceof Discord.TextChannel)) {
       Message.reply('Sorry, I can\'t be used in DMs. Try your message again in #bot-room in Gaymers');
+      return;
+    }
+
+    // Ignore if not mentioned
+    if (!(this.botMentioned(Message))) {
       return;
     }
 
@@ -30,11 +30,11 @@ class MessageHandler {
   }
 
   /**
-   * Checks if the message starts with the command prefix
-   * @param {Message} Message The Discord message
+   * Checks whether the bot was mentioned
+   * @param {Message} Message The Discord message object
    */
-  startsWithPrefix(Message) {
-    if (Message.content.startsWith('!')) {
+  botMentioned(Message) {
+    if (Message.mentions.users.has(this.Bot.user.id)) {
       return true;
     } else {
       return false;

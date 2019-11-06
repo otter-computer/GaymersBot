@@ -47,8 +47,8 @@ module.exports = {
     'Winston',
     'XP Bot',
     'PokeBot',
-    'Blood Red',
-    'Ghost White'
+    'Icy Blue',
+    'Pine Green'
   ],
 
   // A user must have one of these roles to use the bot (unless in a DM)

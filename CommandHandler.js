@@ -25,7 +25,7 @@ class CommandHandler {
       //Keep it in static avatars for higher quality
       const avatarURLParts = target.avatarURL.split('?');
       let avatarURL;
-      
+
       if (avatarURLParts[0].slice(-3) == 'gif') {
         avatarURL = avatarURLParts[0];
       } else {
@@ -51,13 +51,13 @@ class CommandHandler {
    * Fetches a mentioned target (or targets) from a message, or returns the Message author
    * @param {Message} Message The Discord message object
    */
-  getMessageTarget(Message) {
+  getMessageTargetString(Message) {
     const mentions = this.getMentionsFromMessage(Message);
 
     if (mentions.size > 0) {
-      return mentions.array().join(', ');
+      return Array.from(mentions.values()).join(', ');
     } else {
-      return Message.author;
+      return Message.author.toString();
     }
   }
 
@@ -106,7 +106,7 @@ class CommandHandler {
    * @param {Message} Message The Discord message object.
    */
   hug(Message) {
-    const target = this.getMessageTarget(Message);
+    const target = this.getMessageTargetString(Message);
 
     const responses = [
       `*hugs ${target}*`,
@@ -124,7 +124,7 @@ class CommandHandler {
       `*holds ${target} close*`,
       `*cuddles ${target}*`
     ]
-    
+
     Message.channel.send(responses[Math.floor(Math.random() * responses.length)]);
   }
 
@@ -156,7 +156,7 @@ class CommandHandler {
    * @param {Message} Message The Discord message object.
    */
   spray(Message) {
-    const target = this.getMessageTarget(Message);
+    const target = this.getMessageTargetString(Message);
 
     const response = `*sprays ${target} with a fire hose.*`;
     const specialResponse = `*sprays ${target} with canned cheese.*`;
@@ -173,7 +173,7 @@ class CommandHandler {
    * @param {Message} Message The Discord message object.
    */
   slap(Message) {
-    const target = this.getMessageTarget(Message);
+    const target = this.getMessageTargetString(Message);
 
     const response = `*slaps ${target} around a bit with a large, girthy trout.* :fish:`;
     const specialResponse = `*slaps ${target} with a meaty sausage.*`;

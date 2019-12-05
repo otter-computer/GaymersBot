@@ -1,3 +1,5 @@
+const roles = require('roles.json');
+
 class ReactionHandler {
   constructor(Bot) {
     this.Bot = Bot;

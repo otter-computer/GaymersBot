@@ -35,6 +35,7 @@ module.exports = {
     'Nitro Booster',
     'No links/files',
     'Pokémon Master',
+    'Priority Speaker',
     'Private Avatar',
     'Push-to-talk',
     'Restricted',

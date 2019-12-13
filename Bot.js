@@ -1,6 +1,5 @@
 const EventEmitter = require('events');
 const Discord = require('discord.js');
-const Storage = require('azure-storage');
 const CommandHandler = require('./CommandHandler')
 const MessageHandler = require('./MessageHandler');
 const ReactionHandler = require('./ReactionHandler');
@@ -13,7 +12,6 @@ class Bot extends EventEmitter {
   constructor() {
     super();
     this.client = new Discord.Client();
-    // this.storage = Storage.createTableService();
     this.CommandHandler = new CommandHandler(this)
     this.MessageHandler = new MessageHandler(this);
     this.ReactionHandler = new ReactionHandler(this);
@@ -59,7 +57,7 @@ class Bot extends EventEmitter {
    * @param {User} User The Discord user that added the reaction.
    */
   async onMessageReactionAdd(Reaction, User) {
-    this.ReactionHandler.handleReactionAdd(Reaction, User);
+    this.ReactionHandler.handleReaction('ADD', Reaction, User);
   }
 
   /**
@@ -68,7 +66,7 @@ class Bot extends EventEmitter {
    * @param {User} User The Discord user that removed the reaction.
    */
   async onMessageReactionRemove(Reaction, User) {
-    this.ReactionHandler.handleReactionRemove(Reaction, User);
+    this.ReactionHandler.handleReaction('REMOVE', Reaction, User);
   }
 
   /**

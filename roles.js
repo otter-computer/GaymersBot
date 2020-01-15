@@ -47,7 +47,12 @@ module.exports = {
     'Under 18',
     'Winston',
     'XP Bot',
-    'PokeBot',
+    'PokeBot'
+  ],
+
+  NITRO_ROLE: 'Nitro Booster',
+
+  NITRO_ONLY_ROLES: [
     'Winter Blues',
     'Y\'all Suggested Pink'
   ],

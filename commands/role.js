@@ -40,7 +40,11 @@ function availableRoles(message) {
       return;
     }
 
-    availableRoles.push(role.name);
+    if(roles.NITRO_ONLY_ROLES.includes(role.name)){
+      availableRoles.push(`${role.name} (Only for ${roles.NITRO_ROLE})`);
+    } else {
+      availableRoles.push(role.name);
+    }
   });
 
   return availableRoles.sort();
@@ -139,6 +143,12 @@ module.exports = {
           console.error(e.stack);
         });
     } else {
+      // Check if role is for nitro and nitro status of user
+      if (checkRestricted(roleName, roles.NITRO_ONLY_ROLES) && !message.member.roles.findKey('id', findRole(message.guild, roles.NITRO_ROLE).id)){
+        message.reply(`Naughty naughty... :wink: You can\'t use that role! It\'s only for ${roles.NITRO_ROLE}!`);
+        return;
+      }
+
       // Add the new role
       message.member.addRole(targetRole)
         .then(

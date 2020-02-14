@@ -53,8 +53,8 @@ module.exports = {
   NITRO_ROLE: 'Nitro Booster',
 
   NITRO_ONLY_ROLES: [
-    'Winter Blues',
-    'Y\'all Suggested Pink'
+    'Sporty Yellow',
+    'Seasalt Blue'
   ],
 
   // A user must have one of these roles to use the bot (unless in a DM)

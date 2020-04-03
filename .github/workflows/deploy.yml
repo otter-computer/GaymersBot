@@ -11,13 +11,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v1.0.0
+    - uses: actions/checkout@v2.0.0
       name: Checkout repository
 
-    - uses: actions/setup-node@v1.1.2
-      name: Setup Node.js 10.x
+    - uses: actions/setup-node@v1.4.1
+      name: Setup Node.js 12.x
       with:
-        version: 10.x
+        version: 12.x
 
     - run: npm install
 
@@ -26,7 +26,7 @@ jobs:
     - run: npm run test --if-present
 
     - name: 'Deploy to Azure'
-      uses: azure/webapps-deploy@v1
+      uses: azure/webapps-deploy@v2
       with: 
-        app-name: GaymersBot
+        app-name: GaymersBot 
         publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}

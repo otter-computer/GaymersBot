@@ -1,18 +1,14 @@
-const EventEmitter = require('events');
 const Discord = require('discord.js');
-const CommandHandler = require('./CommandHandler')
 const MessageHandler = require('./MessageHandler');
 const ReactionHandler = require('./ReactionHandler');
 
-class Bot extends EventEmitter {
+class Bot {
   /**
    * Initializes all modules, a Discord client, binds events.
    * @constructor
    */
   constructor() {
-    super();
     this.client = new Discord.Client();
-    this.CommandHandler = new CommandHandler(this)
     this.MessageHandler = new MessageHandler(this);
     this.ReactionHandler = new ReactionHandler(this);
     this.bindEvents();
@@ -47,7 +43,7 @@ class Bot extends EventEmitter {
    * Passes message events to the MessageHandler.
    * @param {Message} Message The Discord message object.
    */
-  async onMessage(Message) {
+  onMessage(Message) {
     this.MessageHandler.handleMessage(Message);
   }
 
@@ -56,7 +52,7 @@ class Bot extends EventEmitter {
    * @param {Reaction} Reaction The Discord reaction object.
    * @param {User} User The Discord user that added the reaction.
    */
-  async onMessageReactionAdd(Reaction, User) {
+  onMessageReactionAdd(Reaction, User) {
     this.ReactionHandler.handleReaction('ADD', Reaction, User);
   }
 
@@ -65,7 +61,7 @@ class Bot extends EventEmitter {
    * @param {Reaction} Reaction The Discord reaction object.
    * @param {User} User The Discord user that removed the reaction.
    */
-  async onMessageReactionRemove(Reaction, User) {
+  onMessageReactionRemove(Reaction, User) {
     this.ReactionHandler.handleReaction('REMOVE', Reaction, User);
   }
 

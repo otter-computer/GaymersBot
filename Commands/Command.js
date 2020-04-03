@@ -7,7 +7,7 @@ class Command {
     this.serverOnly = true
   }
 
-  execute() {
+  execute(Message, ...args) {
     return;
   }
 }

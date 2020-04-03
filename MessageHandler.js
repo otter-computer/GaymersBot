@@ -1,8 +1,23 @@
+const fs = require('fs');
 const Discord = require('discord.js');
 
 class MessageHandler {
   constructor(Bot) {
     this.Bot = Bot;
+    
+    // Dynamically loadoad commands
+    this.commands = new Discord.Collection();
+
+    const commandFiles = fs.readdirSync('./Commands').filter(file => file.endsWith('.js'))
+
+    for (const file of commandFiles) {
+      const command = require(`./Commands/${file}`);
+
+      // Skip the default Command class
+      if (command.name === 'name') return;
+
+      this.commands.set(command.name.toLowerCase(), new command());
+    }
   }
 
   /**
@@ -10,44 +25,26 @@ class MessageHandler {
    * @param {Message} Message The Discord message object
    */
   handleMessage(Message) {
-    // Ignore system, bot messages
-    if (Message.system || Message.author.bot) {
-      return;
-    }
+    // Ignore system and bot messages
+    if (Message.system || Message.author.bot) return;
 
+    // TODO: Convert to dynamic DM detection
     // If not in a text channel, reply bot is not available
     if (!(Message.channel instanceof Discord.TextChannel)) {
       Message.reply(`Sorry, I can't be used in DMs. Try your message again in #bot-room in Gaymers`);
       return;
     }
 
-    if (this.botMentioned(Message) || this.hasCommandPrefix(Message)) {
-      this.Bot.CommandHandler.handleCommand(Message);
-    }
-  }
+    // Ignore if not using command prefix
+    if (!Message.content.startsWith('!')) return;
 
-  /**
-   * Checks whether the bot was mentioned
-   * @param {Message} Message The Discord message object
-   */
-  botMentioned(Message) {
-    if (Message.mentions.users.has(this.Bot.client.user.id)) {
-      return true;
-    } else {
-      return false;
-    }
-  }
+    const args = Message.content.slice(1).split(/ +/);
+    const commandName = args.shift().toLowerCase();
+    const command = this.commands.get(commandName) || this.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
 
-  /**
-   * Checks if the message starts with the command prefix '!'
-   * @param {Message} Message The Discord message object
-   */
-  hasCommandPrefix(Message) {
-    if (Message.content.startsWith('!')) {
-      return true;
-    } else {
-      return false;
-    }
+    if (!command) return;
+
+    command.execute(Message, args);
   }
 }
 

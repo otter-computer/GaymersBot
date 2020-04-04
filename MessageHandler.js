@@ -2,8 +2,7 @@ const fs = require('fs');
 const Discord = require('discord.js');
 
 class MessageHandler {
-  constructor(Bot) {
-    this.Bot = Bot;
+  constructor() {
     
     // Dynamically loadoad commands
     this.commands = new Discord.Collection();

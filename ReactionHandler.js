@@ -1,8 +1,22 @@
-const roles = require('./roles.json');
+const fs = require('fs');
+const Discord = require('discord.js');
 
 class ReactionHandler {
-  constructor(Bot) {
-    this.Bot = Bot;
+  constructor() {
+
+    // Dynamically load reaction actions
+    this.actions = new Discord.Collection();
+
+    const actionFiles = fs.readdirSync('./Actions');
+
+    for (const file of actionFiles) {
+      const action = require(`./Actions/${file}`);
+
+      // Skip default Action class
+      if (action.name === 'name') return;
+
+      this.actions.set(action.name.toLowerCase(), new action());
+    }
   }
 
   addRole(Role, Member) {

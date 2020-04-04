@@ -7,7 +7,8 @@ class Avatar extends Command {
     this.aliases = ['pic', 'pfp', 'icon'],
     this.description = 'See a bigger version of someone\'s avatar',
     this.usage = '@someone',
-    this.serverOnly = true
+    this.serverOnly = true,
+    this.staffOnly = false
   }
 
   execute(Message, ...args) {

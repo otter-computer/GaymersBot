@@ -6,7 +6,8 @@ class Hug extends Command {
     this.name = 'hug'
     this.aliases = ['cuddle', 'snuggle'],
     this.description = 'Give someone a hug!'
-    this.usage = '@someone'
+    this.usage = '@someone',
+    this.staffOnly = false
   }
 
   execute(Message, ...args) {

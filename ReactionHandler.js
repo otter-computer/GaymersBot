@@ -23,33 +23,34 @@ class ReactionHandler {
 
   }
 
-  getRole (Reaction) {
+  async getGuildMemberFromReaction(Reaction) {
+
+  }
+
+  async getRoleFromReaction (Reaction) {
+    const Guild = Reaction.message.guild;
+
 
   }
 
   async handleReaction(Type, Reaction, User) {
+    // Ignore if added by bot
+    if (Reaction.me) return;
+
     // Ignore if not in #roles
     if (Reaction.message.channel.name !== 'roles') return;
 
-    let FullReaction;
+    await Reaction.fetch();
 
-    console.log(Reaction);
-
-    // TODO: Handle partial
-    if (Reaction.partial) {
-      FullReaction = await Reaction.fetch();
-    } else {
-      FullReaction = Reaction;
-    }
-
-    console.log(FullReaction);
+    const Role = await this.getRoleFromReaction(Reaction);
+    const Member = await this.getGuildMemberFromReaction(Reaction);
 
     switch (Type) {
       case 'ADD':
-        // this.addRole(role, FullReaction.member);
+        this.addRole(Role, Member);
         break;
       case 'REMOVE':
-        // this.removeRole(role, FullReaction.member);
+        this.removeRole(Role, Member);
         break;
       default:
         break;

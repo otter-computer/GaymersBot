@@ -10,10 +10,10 @@ class MessageHandler {
     const commandFiles = fs.readdirSync('./Commands').filter(file => file.endsWith('.js'))
 
     for (const file of commandFiles) {
-      const command = require(`./Commands/${file}`);
+      // Skip template class
+      if (file === 'Command.js') continue;
 
-      // Skip the default Command class
-      if (command.name === 'name') return;
+      const command = require(`./Commands/${file}`);
 
       this.commands.set(command.name.toLowerCase(), new command());
     }

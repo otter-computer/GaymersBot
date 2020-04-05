@@ -8,7 +8,7 @@ class Bot {
    * @constructor
    */
   constructor() {
-    this.client = new Discord.Client();
+    this.client = new Discord.Client({ partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
     this.MessageHandler = new MessageHandler();
     this.ReactionHandler = new ReactionHandler();
     this.bindEvents();

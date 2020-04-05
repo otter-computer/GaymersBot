@@ -10,10 +10,10 @@ class ReactionHandler {
     const actionFiles = fs.readdirSync('./Actions');
 
     for (const file of actionFiles) {
-      const action = require(`./Actions/${file}`);
+      // Skip template class
+      if (file === 'Action.js') continue;
 
-      // Skip default Action class
-      if (action.name === 'name') return;
+      const action = require(`./Actions/${file}`);
 
       this.actions.set(action.name.toLowerCase(), new action());
     }
@@ -23,38 +23,36 @@ class ReactionHandler {
 
   }
 
-  getRole(roleName, Guild) {
+  getRole (Reaction) {
 
   }
 
-  handleReaction(Type, Reaction, User) {
+  async handleReaction(Type, Reaction, User) {
     // Ignore if not in #roles
-    if (!this.isInRolesChannel(Reaction.message.channel.name)) return;
+    if (Reaction.message.channel.name !== 'roles') return;
 
-    const roleName = roles[Reaction.emoji.name] ? roles[Reaction.emoji.name] : null;
+    let FullReaction;
 
-    // Ignore if reaction not in role list
-    if (!roleName) return;
+    console.log(Reaction);
 
-    const role = this.getRole(roleName, Reaction.message.guild);
+    // TODO: Handle partial
+    if (Reaction.partial) {
+      FullReaction = await Reaction.fetch();
+    } else {
+      FullReaction = Reaction;
+    }
+
+    console.log(FullReaction);
 
     switch (Type) {
       case 'ADD':
-        this.addRole(role, Reaction.member);
+        // this.addRole(role, FullReaction.member);
         break;
       case 'REMOVE':
-          this.removeRole(role, Reaction.member);
+        // this.removeRole(role, FullReaction.member);
         break;
       default:
         break;
-    }
-  }
-
-  isInRolesChannel(channelName) {
-    if (channelName == 'roles') {
-      return true;
-    } else {
-      return false;
     }
   }
 

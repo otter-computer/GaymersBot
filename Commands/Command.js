@@ -4,8 +4,8 @@ class Command {
     this.aliases = [],
     this.description = ''
     this.usage = '',
-    this.serverOnly = true,
-    this.staffOnly = true
+    this.serverOnly = false,
+    this.staffOnly = false
   }
 
   execute(Message, ...args) {

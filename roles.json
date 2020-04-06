@@ -1,0 +1,109 @@
+{
+  "identity": {
+    "They/Them": {
+      "emoji": ""
+    },
+    "She/Her": {
+      "emoji": ""
+    },
+    "He/Him": {
+      "emoji": ""
+    },
+    "Gay": {
+      "emoji": ""
+    },
+    "Lesbian": {
+      "emoji": ""
+    },
+    "Bisexual": {
+      "emoji": ""
+    },
+    "Pansexual": {
+      "emoji": ""
+    },
+    "Queer": {
+      "emoji": ""
+    },
+    "Ace/Aro": {
+      "emoji": ""
+    },
+    "Demisexual": {
+      "emoji": ""
+    },
+    "Trans Woman": {
+      "emoji": ""
+    },
+    "Trans Man": {
+      "emoji": ""
+    },
+    "Trans": {
+      "emoji": ""
+    },
+    "Non binary": {
+      "emoji": ""
+    },
+    "Ally": {
+      "emoji": ""
+    }
+  },
+
+  "platform": {
+    "PC": {
+      "emoji": ""
+    },
+    "Xbox One": {
+      "emoji": ""
+    },
+    "PS4": {
+      "emoji": ""
+    },
+    "Mobile": {
+      "emoji": ""
+    },
+    "Nintendo Switch": {
+      "emoji": ""
+    },
+    "Virtual Reality": {
+      "emoji": ""
+    }
+  },
+
+  "region": [
+    "Africa",
+    "Asia",
+    "Europe",
+    "Middle East",
+    "North America",
+    "Oceania",
+    "South America"
+  ],
+
+  "restricted": [
+    "18+",
+    "Admin",
+    "Bot Restricted",
+    "Bots",
+    "D.Va",
+    "Event Manager",
+    "GaymersBot",
+    "GiveawayBot",
+    "Invulnerable",
+    "Mercy",
+    "Moderator",
+    "Nitro Booster",
+    "No links/files",
+    "PokeBot",
+    "Priority Speaker",
+    "Private Avatar",
+    "Restricted",
+    "Staff",
+    "Statbot",
+    "Trial Moderator",
+    "Under 18",
+    "PokeBot"
+  ],
+
+  "nitro": "Nitro Booster",
+
+  "ignored": [ "Bot Restricted", "Restricted" ]
+}

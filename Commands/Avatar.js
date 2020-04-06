@@ -3,11 +3,11 @@ const Command = require('./Command.js');
 class Avatar extends Command {
   constructor() {
     super();
-    this.name = 'avatar'
-    this.aliases = ['pic', 'pfp', 'icon'],
-    this.description = 'See a bigger version of someone\'s avatar',
-    this.usage = '@someone',
-    this.serverOnly = true
+    this.name = 'avatar';
+    this.aliases = ['pic', 'pfp', 'icon'];
+    this.description = 'See a bigger version of someone\'s avatar';
+    this.usage = '@someone';
+    this.serverOnly = true;
   }
 
   execute(Message, ...args) {

@@ -39,6 +39,7 @@ module.exports = {
     'Private Avatar',
     'Push-to-talk',
     'Restricted',
+    'Restricted 2',
     'Smash Queen',
     'Sombra',
     'Staff',

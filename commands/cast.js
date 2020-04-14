@@ -11,6 +11,12 @@ module.exports = {
       const time = args[2];
       const rateLimit = time ? time : '10';
       message.channel.setRateLimitPerUser(rateLimit);
+      return;
+    }
+
+    if (spell === 'esunaga') {
+      message.channel.setRateLimitPerUser('0');
+      return;
     }
   }
 };

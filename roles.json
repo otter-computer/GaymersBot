@@ -1,55 +1,46 @@
 {
   "identity": {
     "They/Them": {
-      "emoji": ""
+      "emoji": "🙋"
     },
     "She/Her": {
-      "emoji": ""
+      "emoji": "🙋‍♀️"
     },
     "He/Him": {
-      "emoji": ""
+      "emoji": "🙋‍♂️"
     },
     "Gay": {
-      "emoji": ""
+      "emoji": "🏳‍🌈"
     },
     "Lesbian": {
-      "emoji": ""
+      "emoji_id": "674761170992758785"
     },
     "Bisexual": {
-      "emoji": ""
+      "emoji_id": "674756218505527306"
     },
     "Pansexual": {
-      "emoji": ""
+      "emoji_id": "674755571173556236"
     },
     "Queer": {
       "emoji": ""
     },
     "Ace/Aro": {
-      "emoji": ""
+      "emoji_id": "674756482008350790"
     },
     "Demisexual": {
-      "emoji": ""
-    },
-    "Trans Woman": {
-      "emoji": ""
-    },
-    "Trans Man": {
-      "emoji": ""
+      "emoji_id": "674773032908095488"
     },
     "Trans": {
-      "emoji": ""
+      "emoji_id": "674754753326088207"
     },
     "Non binary": {
-      "emoji": ""
-    },
-    "Ally": {
-      "emoji": ""
+      "emoji_id": "674757533864427572"
     }
   },
 
   "platform": {
     "PC": {
-      "emoji": ""
+      "emoji": "🖥️"
     },
     "Xbox One": {
       "emoji": ""
@@ -58,7 +49,7 @@
       "emoji": ""
     },
     "Mobile": {
-      "emoji": ""
+      "emoji": "📱"
     },
     "Nintendo Switch": {
       "emoji": ""

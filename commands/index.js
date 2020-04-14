@@ -1,5 +1,6 @@
 exports.avatar = require('./avatar');
 exports.boop = require('./boop');
+exports.cast = require('./cast');
 exports.choose = require('./choose');
 exports.help = require('./help');
 exports.hug = require('./hug');

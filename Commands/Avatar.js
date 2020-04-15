@@ -1,16 +1,16 @@
-const Command = require('./Command.js');
+const Command = require(`./Command.js`);
 
 class Avatar extends Command {
   constructor() {
     super();
-    this.name = 'avatar';
-    this.aliases = ['pic', 'pfp', 'icon'];
-    this.description = 'See a bigger version of someone\'s avatar';
-    this.usage = '@someone';
+    this.name = `avatar`;
+    this.aliases = [`pic`, `pfp`, `icon`];
+    this.description = `See a bigger version of someone\`s avatar`;
+    this.usage = `@someone`;
     this.serverOnly = true;
   }
 
-  execute(Message, ...args) {
+  execute(Message) {
     let target;
 
     if (Message.mentions.users.size > 0) {
@@ -19,9 +19,11 @@ class Avatar extends Command {
       target = Message.author;
     }
 
+    // TODO: Check for Private Avatar role
+
     const avatarURL = target.displayAvatarURL({dynamic: true});
 
-    Message.reply(`here's ${target.toString()}'s avatar: ${avatarURL}`)
+    Message.reply(`here's ${target.toString()}'s avatar: ${avatarURL}`);
   }
 }
 

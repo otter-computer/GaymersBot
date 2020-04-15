@@ -1,21 +1,21 @@
-const Command = require('./Command.js');
+const Command = require(`./Command.js`);
 
 class Hug extends Command {
   constructor() {
     super();
-    this.name = 'hug';
-    this.aliases = ['cuddle', 'snuggle'];
-    this.description = 'Give someone a hug!';
-    this.usage = '@someone';
+    this.name = `hug`;
+    this.aliases = [`cuddle`, `snuggle`];
+    this.description = `Give someone a hug!`;
+    this.usage = `@someone`;
   }
 
-  execute(Message, ...args) {
+  execute(Message) {
     let target;
 
     // const mentions = Message.mentions.users;
 
     if (Message.mentions.users.size > 0) {
-      target = Array.from(Message.mentions.users.values()).join(', ');
+      target = Array.from(Message.mentions.users.values()).join(`, `);
     } else {
       target = Message.author.toString();
     }

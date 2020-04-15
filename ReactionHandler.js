@@ -1,5 +1,5 @@
-const fs = require('fs');
-const Discord = require('discord.js');
+const fs = require(`fs`);
+const Discord = require(`discord.js`);
 
 class ReactionHandler {
   constructor() {
@@ -7,11 +7,11 @@ class ReactionHandler {
     // Dynamically load reaction actions
     this.actions = new Discord.Collection();
 
-    const actionFiles = fs.readdirSync('./Actions');
+    const actionFiles = fs.readdirSync(`./Actions`);
 
     for (const file of actionFiles) {
       // Skip template class
-      if (file === 'Action.js') continue;
+      if (file === `Action.js`) continue;
 
       const action = require(`./Actions/${file}`);
 
@@ -38,7 +38,7 @@ class ReactionHandler {
     if (Reaction.me) return;
 
     // Ignore if not in #roles
-    if (Reaction.message.channel.name !== 'roles') return;
+    if (Reaction.message.channel.name !== `roles`) return;
 
     await Reaction.fetch();
 
@@ -46,10 +46,10 @@ class ReactionHandler {
     const Member = await this.getGuildMemberFromReaction(Reaction);
 
     switch (Type) {
-      case 'ADD':
+      case `ADD`:
         this.addRole(Role, Member);
         break;
-      case 'REMOVE':
+      case `REMOVE`:
         this.removeRole(Role, Member);
         break;
       default:

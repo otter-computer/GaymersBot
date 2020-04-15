@@ -1,6 +1,6 @@
-const Discord = require('discord.js');
-const MessageHandler = require('./MessageHandler');
-const ReactionHandler = require('./ReactionHandler');
+const Discord = require(`discord.js`);
+const MessageHandler = require(`./MessageHandler`);
+const ReactionHandler = require(`./ReactionHandler`);
 
 class Bot {
   /**
@@ -8,7 +8,7 @@ class Bot {
    * @constructor
    */
   constructor() {
-    this.client = new Discord.Client({ partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
+    this.client = new Discord.Client({ partials: [`MESSAGE`, `CHANNEL`, `REACTION`] });
     this.MessageHandler = new MessageHandler();
     this.ReactionHandler = new ReactionHandler();
     this.bindEvents();
@@ -18,10 +18,10 @@ class Bot {
    * Bind event functions.
    */
   bindEvents() {
-    this.client.on('ready', this.onReady.bind(this));
-    this.client.on('message', this.onMessage.bind(this));
-    this.client.on('messageReactionAdd', this.onMessageReactionAdd.bind(this));
-    this.client.on('messageReactionRemove', this.onMessageReactionRemove.bind(this));
+    this.client.on(`ready`, this.onReady.bind(this));
+    this.client.on(`message`, this.onMessage.bind(this));
+    this.client.on(`messageReactionAdd`, this.onMessageReactionAdd.bind(this));
+    this.client.on(`messageReactionRemove`, this.onMessageReactionRemove.bind(this));
   }
 
   /**
@@ -53,7 +53,7 @@ class Bot {
    * @param {User} User The Discord user that added the reaction.
    */
   onMessageReactionAdd(Reaction, User) {
-    this.ReactionHandler.handleReaction('ADD', Reaction, User);
+    this.ReactionHandler.handleReaction(`ADD`, Reaction, User);
   }
 
   /**
@@ -62,7 +62,7 @@ class Bot {
    * @param {User} User The Discord user that removed the reaction.
    */
   onMessageReactionRemove(Reaction, User) {
-    this.ReactionHandler.handleReaction('REMOVE', Reaction, User);
+    this.ReactionHandler.handleReaction(`REMOVE`, Reaction, User);
   }
 
   /**

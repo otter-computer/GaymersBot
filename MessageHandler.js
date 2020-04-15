@@ -1,5 +1,5 @@
-const fs = require('fs');
-const Discord = require('discord.js');
+const fs = require(`fs`);
+const Discord = require(`discord.js`);
 
 class MessageHandler {
   constructor() {
@@ -7,11 +7,11 @@ class MessageHandler {
     // Dynamically loadoad commands
     this.commands = new Discord.Collection();
 
-    const commandFiles = fs.readdirSync('./Commands').filter(file => file.endsWith('.js'))
+    const commandFiles = fs.readdirSync(`./Commands`).filter(file => file.endsWith(`.js`));
 
     for (const file of commandFiles) {
       // Skip template class
-      if (file === 'Command.js') continue;
+      if (file === `Command.js`) continue;
 
       const command = require(`./Commands/${file}`);
 
@@ -35,7 +35,7 @@ class MessageHandler {
     }
 
     // Ignore if not using command prefix
-    if (!Message.content.startsWith('!')) return;
+    if (!Message.content.startsWith(`!`)) return;
 
     const args = Message.content.slice(1).split(/ +/);
     const commandName = args.shift().toLowerCase();

@@ -1,21 +1,13 @@
 const fs = require(`fs`);
 const Discord = require(`discord.js`);
+const roles = require(`./roles`);
 
 class ReactionHandler {
   constructor() {
+    this.reactionRoles = new Discord.Collection();
 
-    // Dynamically load reaction actions
-    this.actions = new Discord.Collection();
-
-    const actionFiles = fs.readdirSync(`./Actions`);
-
-    for (const file of actionFiles) {
-      // Skip template class
-      if (file === `Action.js`) continue;
-
-      const action = require(`./Actions/${file}`);
-
-      this.actions.set(action.name.toLowerCase(), new action());
+    for (const role in roles.reactions) {
+      this.reactionRoles.set(role, roles.reactions[role]);
     }
   }
 
@@ -23,17 +15,21 @@ class ReactionHandler {
 
   }
 
-  async getGuildMemberFromReaction(Reaction) {
-
+  async getGuildMemberFromReaction(Reaction, User) {
+    Reaction.message.guild.members.fetch(User.id).then(member => {
+      return member;
+    });
   }
 
   async getRoleFromReaction (Reaction) {
-    const Guild = Reaction.message.guild;
+    const roleName = Reaction.emoji.id ? this.reactionRoles.get(Reaction.emoji.id) : this.reactionRoles.get(Reaction.emoji.name);
 
+    if (!roleName) return false;
 
+    return Reaction.message.guild.roles.cache.find(role => role.name === roleName);
   }
 
-  async handleReaction(Type, Reaction, User) {
+  async handleReaction(type, Reaction, User) {
     // Ignore if added by bot
     if (Reaction.me) return;
 
@@ -43,18 +39,13 @@ class ReactionHandler {
     await Reaction.fetch();
 
     const Role = await this.getRoleFromReaction(Reaction);
-    const Member = await this.getGuildMemberFromReaction(Reaction);
+    const Member = await this.getGuildMemberFromReaction(Reaction, User);
 
-    switch (Type) {
-      case `ADD`:
-        this.addRole(Role, Member);
-        break;
-      case `REMOVE`:
-        this.removeRole(Role, Member);
-        break;
-      default:
-        break;
-    }
+    // TODO: Handle invalid reaction/role/member
+    // if (!Role || !Member) remove reaction
+
+    if (type === `ADD`) this.addRole(Role, Member);
+    if (type === `REMOVE`) this.removeRole(Role, Member);
   }
 
   removeRole(Role, Member) {

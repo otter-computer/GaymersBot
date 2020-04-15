@@ -1,62 +1,24 @@
 {
-  "identity": {
-    "They/Them": {
-      "emoji": "🙋"
-    },
-    "She/Her": {
-      "emoji": "🙋‍♀️"
-    },
-    "He/Him": {
-      "emoji": "🙋‍♂️"
-    },
-    "Gay": {
-      "emoji": "🏳‍🌈"
-    },
-    "Lesbian": {
-      "emoji_id": "674761170992758785"
-    },
-    "Bisexual": {
-      "emoji_id": "674756218505527306"
-    },
-    "Pansexual": {
-      "emoji_id": "674755571173556236"
-    },
-    "Queer": {
-      "emoji": ""
-    },
-    "Ace/Aro": {
-      "emoji_id": "674756482008350790"
-    },
-    "Demisexual": {
-      "emoji_id": "674773032908095488"
-    },
-    "Trans": {
-      "emoji_id": "674754753326088207"
-    },
-    "Non binary": {
-      "emoji_id": "674757533864427572"
-    }
-  },
+  "reactions": {
+    "🙋": "They/Them",
+    "🙋‍♀️": "She/Her",
+    "🙋‍♂️": "He/Him",
+    "🏳‍🌈": "Gay",
+    "674761170992758785": "Lesbian",
+    "674756218505527306": "Bisexual",
+    "674755571173556236": "Pansexual",
+    "🌈": "Queer",
+    "674756482008350790": "Ace/Aro",
+    "674773032908095488": "Demisexual",
+    "674754753326088207": "Trans",
+    "674757533864427572": "Non binary",
 
-  "platform": {
-    "PC": {
-      "emoji": "🖥️"
-    },
-    "Xbox One": {
-      "emoji": ""
-    },
-    "PS4": {
-      "emoji": ""
-    },
-    "Mobile": {
-      "emoji": "📱"
-    },
-    "Nintendo Switch": {
-      "emoji": ""
-    },
-    "Virtual Reality": {
-      "emoji": ""
-    }
+    "🖥️": "PC",
+    "1️⃣": "Xbox One",
+    "4️⃣": "PS4",
+    "📱": "Mobile",
+    "🎚": "Nintendo Switch",
+    "👓": "Virtual Reality"
   },
 
   "region": [

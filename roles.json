@@ -1,35 +1,55 @@
 {
   "reactions": {
-    "🙋": "They/Them",
-    "🙋‍♀️": "She/Her",
-    "🙋‍♂️": "He/Him",
-    "🏳‍🌈": "Gay",
-    "674761170992758785": "Lesbian",
-    "674756218505527306": "Bisexual",
-    "674755571173556236": "Pansexual",
-    "🌈": "Queer",
-    "674756482008350790": "Ace/Aro",
-    "674773032908095488": "Demisexual",
-    "674754753326088207": "Trans",
-    "674757533864427572": "Non binary",
+    "identity" :{
+      "♂️": "Male",
+      "♀️": "Female",
+      "674754753326088207": "Transgender",
+      "674757533864427572": "Non binary",
+      "😀": "Genderqueer",
+      "😁": "Genderfluid"
+    },
 
-    "🖥️": "PC",
-    "1️⃣": "Xbox One",
-    "4️⃣": "PS4",
-    "📱": "Mobile",
-    "🎚": "Nintendo Switch",
-    "👓": "Virtual Reality"
+    "pronouns" :{
+      "🇭": "He/Him",
+      "🇸": "She/Her",
+      "🇹": "They/Them"
+    },
+
+    "orientation": {
+      "🏳‍🌈": "Gay",
+      "674761170992758785": "Lesbian",
+      "674756218505527306": "Bisexual",
+      "🌈": "Queer",
+      "🥰": "Asexual",
+      "🤗": "Aromantic",
+      "674755571173556236": "Pansexual",
+      "674773032908095488": "Demisexual"
+    },
+
+    "region": {
+      "❤": "Africa",
+      "🧡": "Asia",
+      "💛": "Europe",
+      "💚": "Middle East",
+      "💙": "North America",
+      "💜": "Oceania",
+      "🤍": "South America"
+    },
+    
+    "platform": {
+      "🖥️": "PC",
+      "700474951706214430": "Nintendo Switch",
+      "700474933196882051": "Xbox One",
+      "700477359115206666": "PS4",
+      "📱": "Mobile",
+      "👓": "Virtual Reality"
+    },
+
+    "server": {
+      "🐕": "Furry",
+      "🎥": "Movie Night"
+    }
   },
-
-  "region": [
-    "Africa",
-    "Asia",
-    "Europe",
-    "Middle East",
-    "North America",
-    "Oceania",
-    "South America"
-  ],
 
   "restricted": [
     "18+",

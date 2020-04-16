@@ -1,4 +1,3 @@
-const fs = require(`fs`);
 const Discord = require(`discord.js`);
 const roles = require(`./roles`);
 
@@ -6,27 +5,25 @@ class ReactionHandler {
   constructor() {
     this.reactionRoles = new Discord.Collection();
 
-    for (const role in roles.reactions) {
-      this.reactionRoles.set(role, roles.reactions[role]);
+    for (const section in roles.reactions) {
+      for (const roleEmoji in roles.reactions[section]) {
+        this.reactionRoles.set(roleEmoji, roles.reactions[section][roleEmoji]);
+      } 
     }
   }
 
-  addRole(Role, Member) {
-    // TODO: Handle case where role is already added.
-  }
-
   async getGuildMemberFromReaction(Reaction, User) {
-    Reaction.message.guild.members.fetch(User.id).then(member => {
-      return member;
-    });
+    const Member = await Reaction.message.guild.members.fetch(User.id);
+    return Member;
   }
 
   async getRoleFromReaction (Reaction) {
-    const roleName = Reaction.emoji.id ? this.reactionRoles.get(Reaction.emoji.id) : this.reactionRoles.get(Reaction.emoji.name);
+    const roleKey = Reaction.emoji.id ? this.reactionRoles.get(Reaction.emoji.id) : this.reactionRoles.get(Reaction.emoji.name);
 
-    if (!roleName) return false;
+    if (!roleKey) return false;
 
-    return Reaction.message.guild.roles.cache.find(role => role.name === roleName);
+    const Role = await Reaction.message.guild.roles.cache.find(role => role.name === roleKey);
+    return Role;
   }
 
   async handleReaction(type, Reaction, User) {
@@ -40,12 +37,8 @@ class ReactionHandler {
 
     if (type === `ADD` && (!Role || !Member)) Reaction.users.remove(User);
 
-    if (type === `ADD`) this.addRole(Role, Member); 
-    if (type === `REMOVE`) this.removeRole(Role, Member);
-  }
-
-  removeRole(Role, Member) {
-    // TODO: Handle case where role is already removed.
+    if (type === `ADD`) Member.roles.add(Role);
+    if (type === `REMOVE`) Member.roles.remove(Role);
   }
 }
 

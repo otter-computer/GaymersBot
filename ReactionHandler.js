@@ -12,7 +12,7 @@ class ReactionHandler {
   }
 
   addRole(Role, Member) {
-
+    // TODO: Handle case where role is already added.
   }
 
   async getGuildMemberFromReaction(Reaction, User) {
@@ -30,26 +30,22 @@ class ReactionHandler {
   }
 
   async handleReaction(type, Reaction, User) {
-    // Ignore if added by bot
-    if (Reaction.me) return;
-
-    // Ignore if not in #roles
     if (Reaction.message.channel.name !== `roles`) return;
+    if (Reaction.me) return;
 
     await Reaction.fetch();
 
     const Role = await this.getRoleFromReaction(Reaction);
     const Member = await this.getGuildMemberFromReaction(Reaction, User);
 
-    // TODO: Handle invalid reaction/role/member
-    // if (!Role || !Member) remove reaction
+    if (type === `ADD` && (!Role || !Member)) Reaction.users.remove(User);
 
-    if (type === `ADD`) this.addRole(Role, Member);
+    if (type === `ADD`) this.addRole(Role, Member); 
     if (type === `REMOVE`) this.removeRole(Role, Member);
   }
 
   removeRole(Role, Member) {
-
+    // TODO: Handle case where role is already removed.
   }
 }
 

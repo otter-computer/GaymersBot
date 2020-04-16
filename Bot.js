@@ -53,7 +53,7 @@ class Bot {
    * @param {User} User The Discord user that added the reaction.
    */
   onMessageReactionAdd(Reaction, User) {
-    this.ReactionHandler.handleReaction(`ADD`, Reaction, User);
+    this.ReactionHandler.handleReaction(Reaction, User, `ADD`);
   }
 
   /**
@@ -62,7 +62,7 @@ class Bot {
    * @param {User} User The Discord user that removed the reaction.
    */
   onMessageReactionRemove(Reaction, User) {
-    this.ReactionHandler.handleReaction(`REMOVE`, Reaction, User);
+    this.ReactionHandler.handleReaction(Reaction, User, `REMOVE`);
   }
 
   /**

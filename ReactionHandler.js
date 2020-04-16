@@ -26,10 +26,16 @@ class ReactionHandler {
     return Role;
   }
 
-  async handleReaction(type, Reaction, User) {
-    if (Reaction.message.channel.name !== `roles`) return;
+  handleReaction(Reaction, User, ...args) {
     if (Reaction.me) return;
 
+    if (Reaction.message.channel.name === `roles`) {
+      this.handleRoleReaction(Reaction, User, args[0]);
+      return;
+    }
+  }
+
+  async handleRoleReaction(Reaction, User, type) {
     await Reaction.fetch();
 
     const Role = await this.getRoleFromReaction(Reaction);

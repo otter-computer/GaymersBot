@@ -24,6 +24,8 @@ class MessageHandler {
    * @param {Message} Message The Discord message object
    */
   handleMessage(Message) {
+    if(process.env.DEV && Message.guild.id === `123315443208421377`) return;
+
     // Ignore system and bot messages
     if (Message.system || Message.author.bot) return;
 

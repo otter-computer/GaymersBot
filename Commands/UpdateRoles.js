@@ -16,14 +16,14 @@ class UpdateRoles extends Command {
   async execute(Message) {
     const rolesChannel = Message.guild.channels.cache.find(channel => channel.name === `roles`);
 
-
+    // TODO: Build section embeds.
 
     const existingMessages = await rolesChannel.messages.fetch({limit: 6});
     
     if (existingMessages.size > 0) {
       // TODO: Edit existing messages
     } else {
-      // TODO: Send new messages
+      // TODO: Send new messages, possibly react to them
     }
   }
 }

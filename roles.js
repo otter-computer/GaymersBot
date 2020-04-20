@@ -40,6 +40,7 @@ module.exports = {
     'Push-to-talk',
     'Restricted',
     'Restricted 2',
+    'Silenced',
     'Smash Queen',
     'Sombra',
     'Staff',
@@ -65,6 +66,7 @@ module.exports = {
   // (unless in a DM). This ban supersedes the REQUIRED_TO_USE_BOT check.
   BANNED_FROM_BOT: [
     'Bot Restricted',
-    'Restricted'
+    'Restricted',
+    'Silenced'
   ]
 };

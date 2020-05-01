@@ -1,6 +1,6 @@
 const Command = require(`./Command.js`);
 
-class IPlay extends Command {
+class Help extends Command {
   constructor() {
     super();
     this.name = `help`;
@@ -15,4 +15,4 @@ class IPlay extends Command {
   }
 }
 
-module.exports = IPlay;
+module.exports = Help;

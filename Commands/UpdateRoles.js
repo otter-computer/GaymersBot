@@ -14,9 +14,15 @@ class UpdateRoles extends Command {
   }
 
   async execute(Message) {
+    return;
     const rolesChannel = Message.guild.channels.cache.find(channel => channel.name === `roles`);
 
     // TODO: Build section embeds.
+    const testEmbed = this.buildEmbed(
+      `Test embed title`,
+      `Test embed description`,
+      `identity`
+    );
 
     const existingMessages = await rolesChannel.messages.fetch({limit: 6});
     
@@ -25,6 +31,27 @@ class UpdateRoles extends Command {
     } else {
       // TODO: Send new messages, possibly react to them
     }
+
+    rolesChannel.send(testEmbed);
+  }
+
+  buildEmbed(title, description, section) {
+    const embed = new Discord.MessageEmbed();
+
+    embed.setTitle(title);
+    const emojis = []
+
+    for (const roleEmoji in roles.reactions[section]) {
+      const name = roles.reactions[section][roleEmoji];
+
+      emojis.push(`${roleEmoji} ${name}`);
+    }
+
+    const mainContent = `${description}\n\n${emojis.join(`\n`)}`
+
+    embed.setDescription(mainContent);
+
+    return embed;
   }
 }
 

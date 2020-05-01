@@ -43,7 +43,12 @@ class ReactionHandler {
     const Role = await this.getRoleFromReaction(Reaction);
     const Member = await this.getGuildMemberFromReaction(Reaction, User);
 
-    if (type === `ADD` && (!Role || !Member)) Reaction.users.remove(User);
+    if (type === `ADD` && (!Role || !Member)) {
+      Reaction.users.remove(User);
+      return;
+    }
+
+    if (!Role || !Member) return;
 
     if (type === `ADD`) Member.roles.add(Role);
     if (type === `REMOVE`) Member.roles.remove(Role);

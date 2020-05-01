@@ -6,7 +6,8 @@
       "674754753326088207": "Transgender",
       "674757533864427572": "Non binary",
       "700500680275787777": "Genderqueer",
-      "700501074729107547": "Genderfluid"
+      "700501074729107547": "Genderfluid",
+      "674756833709129729": "Agender"
     },
 
     "pronouns" :{
@@ -48,8 +49,26 @@
     },
 
     "server": {
+      "🎙": "VC",
+      "🍑": "18+",
+      "🔞": "Under 18",
       "🐕": "Furry",
-      "🎥": "Movie Night"
+      "🎥": "Movie Night",
+      "699247600976527361": "Turnips",
+      "698871692264603698": "Recipe"
+    },
+
+    "colors": {
+      "705887425611694150": "Blue Cosmo",
+      "705887438702379150": "Dark Stormy Purple",
+      "705887453965189230": "Mart's Dirty Banana",
+      "705887470109065217": "Neon Mermaid Lemonade",
+      "705887485896556545": "Orange Sunset",
+      "705887501922861136": "Paloma Pink",
+      "705887516011528273": "Sapphire Martini",
+      "705887531077599272": "Sour Margarita",
+      "705887546080755814": "Strawberry Daiquiri",
+      "705887559334494289": "Teal Squeal"
     }
   },
 

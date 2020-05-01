@@ -24,6 +24,7 @@ class MessageHandler {
    * @param {Message} Message The Discord message object
    */
   handleMessage(Message) {
+    // TODO: remove this for prod.
     if(process.env.DEV && Message.guild.id === `123315443208421377`) return;
 
     // Ignore system and bot messages
@@ -49,6 +50,8 @@ class MessageHandler {
       Message.reply(`Sorry, this command can only be used inside the Gaymers server. Try again in #bot-room!`)
       return;
     }
+
+    // TODO: Staff only roles.
 
     command.execute(Message, args);
   }

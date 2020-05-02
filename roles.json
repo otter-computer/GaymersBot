@@ -74,7 +74,6 @@
   },
 
   "restricted": [
-    "18+",
     "Admin",
     "Bot Restricted",
     "Bots",
@@ -89,12 +88,10 @@
     "No links/files",
     "PokeBot",
     "Priority Speaker",
-    "Private Avatar",
     "Restricted",
     "Staff",
     "Statbot",
     "Trial Moderator",
-    "Under 18",
     "PokeBot"
   ],
 

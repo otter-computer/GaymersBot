@@ -1,4 +1,6 @@
 const Command = require(`./Command.js`);
+const Discord = require('discord.js');
+const moment = require('moment');
 
 class Joined extends Command {
   constructor() {
@@ -11,7 +13,17 @@ class Joined extends Command {
   }
 
   execute(Message) {
-    // TODO: this
+    const target = Message.mentions.users.first() ? Message.mentions.users.first() : Message.member;
+    const date = target.id === `120897878347481088` ? new Date(`2016-03-07`) : target.joinedAt;
+
+    const embed = new Discord.MessageEmbed();
+    embed.setColor(0x3398DB);
+
+    embed.setTitle(`${target.tag} joined ${moment(date).fromNow()}`);
+    embed.addField(`Date:`, date, true);
+    embed.setTimestamp(date);
+
+    Message.reply(`here's ${target}'s joined date.`, {embed: embed});
   }
 }
 

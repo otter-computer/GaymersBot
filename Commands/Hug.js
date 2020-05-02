@@ -7,6 +7,7 @@ class Hug extends Command {
     this.aliases = [`cuddle`, `snuggle`];
     this.description = `Give someone a hug!`;
     this.usage = `@someone`;
+    this.disabled = true;
   }
 
   execute(Message) {

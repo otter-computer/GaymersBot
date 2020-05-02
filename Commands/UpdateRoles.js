@@ -11,10 +11,10 @@ class UpdateRoles extends Command {
     this.usage = ``;
     this.serverOnly = true;
     this.staffOnly = true;
+    this.disabled = true;
   }
 
   async execute(Message) {
-    return;
     const rolesChannel = Message.guild.channels.cache.find(channel => channel.name === `roles`);
 
     // TODO: Build section embeds.
@@ -43,14 +43,11 @@ class UpdateRoles extends Command {
 
     for (const roleEmoji in roles.reactions[section]) {
       const name = roles.reactions[section][roleEmoji];
-
       emojis.push(`${roleEmoji} ${name}`);
     }
 
     const mainContent = `${description}\n\n${emojis.join(`\n`)}`
-
     embed.setDescription(mainContent);
-
     return embed;
   }
 }

@@ -10,20 +10,21 @@ class Help extends Command {
     this.description = `How to use the bot!`;
     this.usage = ``;
     this.serverOnly = true;
+    this.disabled = true;
 
-    // Dynamically loadoad commands
-    this.commands = new Discord.Collection();
+    // Dynamically load commands
+    // this.commands = new Discord.Collection();
 
-    const commandFiles = fs.readdirSync(`./`).filter(file => file.endsWith(`.js`));
+    // const commandFiles = fs.readdirSync(`./`).filter(file => file.endsWith(`.js`));
 
-    for (const file of commandFiles) {
-      // Skip template class
-      if (file === `Command.js`) continue;
+    // for (const file of commandFiles) {
+    //   // Skip template class
+    //   if (file === `Command.js`) continue;
 
-      const command = require(`./${file}`);
+    //   const command = require(`./${file}`);
 
-      this.commands.set(command.name.toLowerCase(), new command());
-    }
+    //   this.commands.set(command.name.toLowerCase(), new command());
+    // }
   }
 
   execute(Message) {

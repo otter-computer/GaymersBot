@@ -46,6 +46,8 @@ class MessageHandler {
 
     if (!command) return;
 
+    if (command.disabled) return;
+
     if (command.serverOnly && Message.channel.type !== `text`) {
       Message.reply(`Sorry, this command can only be used inside the Gaymers server. Try again in #bot-room!`)
       return;

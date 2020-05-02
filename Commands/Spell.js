@@ -22,7 +22,7 @@ class Spell extends Command {
       return;
     }
 
-    if (spell = `esunaga`) {
+    if (spell === `esunaga`) {
       Message.channel.setRateLimitPerUser(`0`);
       return;
     }

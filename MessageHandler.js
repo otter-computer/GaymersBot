@@ -51,7 +51,11 @@ class MessageHandler {
       return;
     }
 
-    // TODO: Staff only roles.
+    const isStaff = (Message.member.roles.cache.findKey(role => role.name === `Admin`) || Message.member.roles.cache.findKey(role => role.name === `Moderator`)) ? true : false;
+
+    if (command.staffOnly && !isStaff) {
+      return;
+    }
 
     command.execute(Message, args);
   }

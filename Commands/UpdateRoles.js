@@ -17,35 +17,41 @@ class UpdateRoles extends Command {
   async execute(Message) {
     const rolesChannel = Message.guild.channels.cache.find(channel => channel.name === `roles`);
 
-    // TODO: Build section embeds.
-    const testEmbed = this.buildEmbed(
-      `Test embed title`,
-      `Test embed description`,
-      `identity`
-    );
+    const identityEmbed = this.buildEmbed(Message, `Identity`, `React to add some roles that tell everyone about your identity.`, ``, `identity`);
+    const pronounEmbed = this.buildEmbed(Message, `Pronouns`, `React to add some roles to tell everyone your pronouns.`, ``, `pronouns`);
+    const orientationEmbed = this.buildEmbed(Message, `Orientation`, `React to add some roles to show your orientation.`, ``, `orientation`);
+    const regionEmbed = this.buildEmbed(Message, `Region`, `React to add a role to tell everyone where in the world you're from.`, ``, `region`);
+    const platformEmbed = this.buildEmbed(Message, `Platform`, `React to add some roles to tell us what gaming platforms you play on.`, ``, `platform`);
+    const serverEmbed = this.buildEmbed(Message, `Server`, `React to add some roles that give you access to voice chat, certain channels, or ping you for special events.`, ``, `server`);
+    const colorsEmbed = this.buildEmbed(Message, `Colors`, `React to give your name a color!`, ``, `colors`);
 
-    const existingMessages = await rolesChannel.messages.fetch({limit: 6});
+    const existingMessages = await rolesChannel.messages.fetch({limit: 7});
     
     if (existingMessages.size > 0) {
       // TODO: Edit existing messages
     } else {
-      // TODO: Send new messages, possibly react to them
+      await rolesChannel.send(identityEmbed);
+      await rolesChannel.send(pronounEmbed);
+      await rolesChannel.send(orientationEmbed);
+      await rolesChannel.send(regionEmbed);
+      await rolesChannel.send(platformEmbed);
+      await rolesChannel.send(serverEmbed);
+      await rolesChannel.send(colorsEmbed);
     }
-
-    rolesChannel.send(testEmbed);
   }
 
-  buildEmbed(title, description, section) {
+  buildEmbed(Message, title, description, color, section) {
     const embed = new Discord.MessageEmbed();
-
     embed.setTitle(title);
     const emojis = []
-
     for (const roleEmoji in roles.reactions[section]) {
       const name = roles.reactions[section][roleEmoji];
-      emojis.push(`${roleEmoji} ${name}`);
-    }
 
+      const idRegEx = /\d+/;
+
+      const emoji = idRegEx.test(roleEmoji) ? Message.client.emojis.resolve(roleEmoji) : roleEmoji;
+      emojis.push(`${emoji} ${name}`);
+    }
     const mainContent = `${description}\n\n${emojis.join(`\n`)}`
     embed.setDescription(mainContent);
     return embed;

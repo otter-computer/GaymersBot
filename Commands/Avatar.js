@@ -10,20 +10,16 @@ class Avatar extends Command {
     this.serverOnly = true;
   }
 
-  execute(Message) {
-    let target;
+  async execute(Message) {
+    const targetUser = Message.mentions.users.size > 0 ? Message.mentions.users.first() : Message.author;
+    const targetMember = await Message.guild.members.cache.get(targetUser.id);
 
-    if (Message.mentions.users.size > 0) {
-      target = Message.mentions.users.first();
-    } else {
-      target = Message.author;
+    if (targetMember.roles.cache.findKey(role => role.name === `Private Avatar`)) {
+      Message.reply(`${targetUser.toString()} has made their avatar private.`);
+      return;
     }
 
-    // TODO: Check for Private Avatar role
-
-    const avatarURL = target.displayAvatarURL({dynamic: true});
-
-    Message.reply(`here's ${target.toString()}'s avatar: ${avatarURL}`);
+    Message.reply(`here's ${targetUser.toString()}'s avatar: ${targetUser.displayAvatarURL({dynamic: true})}`);
   }
 }
 

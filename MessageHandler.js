@@ -61,6 +61,8 @@ class MessageHandler {
 
     command.execute(Message, args);
   }
+
+  // TODO: Handle automatic age detection in #introductions
 }
 
 module.exports = MessageHandler;

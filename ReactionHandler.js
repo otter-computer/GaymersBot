@@ -50,6 +50,8 @@ class ReactionHandler {
 
     if (!Role || !Member) return;
 
+    // TODO: Under 18 check!
+
     if (type === `ADD`) Member.roles.add(Role);
     if (type === `REMOVE`) Member.roles.remove(Role);
   }

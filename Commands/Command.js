@@ -6,6 +6,7 @@ class Command {
     this.usage = ``;
     this.serverOnly = false;
     this.staffOnly = false;
+    this.disabled = false;
   }
 
   execute() {

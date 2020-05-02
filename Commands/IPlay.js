@@ -10,11 +10,30 @@ class IPlay extends Command {
     this.description = `Tell us which games you play!  This will add a pingable role so you can find other people to play with.`;
     this.usage = ``;
     this.serverOnly = true;
+    this.gameRoles = [];
   }
 
   execute(Message) {
-    // TODO: List game roles
-    // TODO: Apply game roles
+    if (this.gameRoles.length === 0) this.updateRoles(Message);
+
+    // TODO: add refresh command
+    // TODO: Add/remove chosen role
+  }
+
+  updateRoles(Message) {
+    const nonGameRoles = roles.nonGameRoles;
+    const guildRoles = Message.guild.roles.cache.array();
+    const gameRoles = [];
+
+    for (const role of guildRoles) {
+      if (nonGameRoles.includes(role.name)) continue;
+      if (role.name === `@everyone`) continue;
+      gameRoles.push(role.name);
+    }
+
+    gameRoles.sort();
+
+    this.gameRoles = gameRoles;
   }
 }
 

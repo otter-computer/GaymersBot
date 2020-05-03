@@ -24,20 +24,17 @@ class MessageHandler {
    * @param {Message} Message The Discord message object
    */
   handleMessage(Message) {
-    // TODO: remove this for prod.
+    // TODO: REMOVE THIS FOR PROD.
     if(process.env.DEV && Message.guild.id === `123315443208421377`) return;
 
-    // Ignore system and bot messages
     if (Message.system || Message.author.bot) return;
 
-    // Ignore Restricted/Bot Restricted roles
     if (roles.ignored.length > 0 && Message.member) {
       for (const ignoredRoleName of roles.ignored) {
         if (Message.member.roles.cache.findKey(role => role.name === ignoredRoleName)) return;
       }
     }
 
-    // Ignore if not using command prefix
     if (!Message.content.startsWith(`!`)) return;
 
     const args = Message.content.slice(1).split(/ +/);

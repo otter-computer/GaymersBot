@@ -24,9 +24,6 @@ class MessageHandler {
    * @param {Message} Message The Discord message object
    */
   handleMessage(Message) {
-    // TODO: REMOVE THIS FOR PROD.
-    if(process.env.DEV && Message.guild.id === `123315443208421377`) return;
-
     if (Message.system || Message.author.bot) return;
 
     if (roles.ignored.length > 0 && Message.member) {
@@ -34,6 +31,8 @@ class MessageHandler {
         if (Message.member.roles.cache.findKey(role => role.name === ignoredRoleName)) return;
       }
     }
+
+    // TODO: Handle automatic age detection in #introductions
 
     if (!Message.content.startsWith(`!`)) return;
 
@@ -46,7 +45,7 @@ class MessageHandler {
     if (command.disabled) return;
 
     if (command.serverOnly && Message.channel.type !== `text`) {
-      Message.reply(`Sorry, this command can only be used inside the Gaymers server. Try again in #bot-room!`)
+      Message.reply(`Sorry, this command can only be used inside the Gaymers server. Try again in #bot-room!`);
       return;
     }
 
@@ -58,8 +57,6 @@ class MessageHandler {
 
     command.execute(Message, args);
   }
-
-  // TODO: Handle automatic age detection in #introductions
 }
 
 module.exports = MessageHandler;

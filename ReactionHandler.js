@@ -50,8 +50,7 @@ class ReactionHandler {
       return;
     }
 
-    const memberUnder18Role = Member.roles.cache.filter(role => role.name === `Under 18`);
-    if (memberUnder18Role.size > 0 && Role.name === `18+`) {
+    if (Member.roles.cache.findKey(role => role.name === `Under 18`) && Role.name === `18+`) {
       if (type === `ADD`) {
         Reaction.users.remove(User);
       }

@@ -154,5 +154,7 @@
     "Teal Squeal"
   ],
 
+  "nitroOnly" : ["Blue Cosmo", "Mart's Dirty Banana"],
+
   "ignored": [ "Bot Restricted", "Restricted" ]
 }

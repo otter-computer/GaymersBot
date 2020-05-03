@@ -1,0 +1,158 @@
+{
+  "reactions": {
+    "identity" :{
+      "♂️": "Man",
+      "♀️": "Woman",
+      "674754753326088207": "Transgender",
+      "674757533864427572": "Non binary",
+      "700500680275787777": "Genderqueer",
+      "700501074729107547": "Genderfluid",
+      "674756833709129729": "Agender"
+    },
+
+    "pronouns" :{
+      "🇭": "He/Him",
+      "🇸": "She/Her",
+      "🇹": "They/Them"
+    },
+
+    "orientation": {
+      "🏳‍🌈": "Gay",
+      "674761170992758785": "Lesbian",
+      "674756218505527306": "Bisexual",
+      "700505995151147149": "Queer",
+      "674756482008350790": "Asexual",
+      "700506014117527573": "Aromantic",
+      "674755571173556236": "Pansexual",
+      "674773032908095488": "Demisexual",
+      "700506031729672202": "Polysexual",
+      "700675619456811019": "Ally"
+    },
+
+    "region": {
+      "❤": "Africa",
+      "🧡": "Asia",
+      "💛": "Europe",
+      "💚": "Middle East",
+      "💙": "North America",
+      "💜": "Oceania",
+      "🤍": "South America"
+    },
+    
+    "platform": {
+      "🖥️": "PC",
+      "700474951706214430": "Nintendo Switch",
+      "700474933196882051": "Xbox One",
+      "700477359115206666": "PS4",
+      "📱": "Mobile",
+      "👓": "Virtual Reality"
+    },
+
+    "server": {
+      "🎙": "VC",
+      "705892246960209961": "18+",
+      "705892247018930269": "Under 18",
+      "🐕": "Furry",
+      "🎥": "Movie Night",
+      "🕵️‍♂️": "Private Avatar",
+      "699247600976527361": "Turnips",
+      "698871692264603698": "Recipe"
+    },
+
+    "colors": {
+      "705887425611694150": "Blue Cosmo",
+      "705887438702379150": "Dark Stormy Purple",
+      "705887453965189230": "Mart's Dirty Banana",
+      "705887470109065217": "Neon Mermaid Lemonade",
+      "705887485896556545": "Orange Sunset",
+      "705887501922861136": "Paloma Pink",
+      "705887516011528273": "Sapphire Martini",
+      "705887531077599272": "Sour Margarita",
+      "705887546080755814": "Strawberry Daiquiri",
+      "705887559334494289": "Teal Squeal"
+    }
+  },
+
+  "nonGameRoles": [
+    "Admin",
+    "Moderator",
+    "Trial Moderator",
+    "Staff",
+    "Event Manager",
+
+    "Restricted",
+    "Bot Restricted",
+    "Silenced",
+    "No links/files",
+
+    "Bots",
+    "Invulnerable",
+    "GaymersBot",
+    "Mercy",
+    "D.Va",
+    "GiveawayBot",
+    "Statbot",
+    
+    "Nitro Booster",
+
+    "Man",
+    "Woman",
+    "Transgender",
+    "Non binary",
+    "Genderqueer",
+    "Genderfluid",
+    "Agender",
+
+    "He/Him",
+    "She/Her",
+    "They/Them",
+
+    "Gay",
+    "Lesbian",
+    "Bisexual",
+    "Queer",
+    "Asexual",
+    "Aromantic",
+    "Pansexual",
+    "Demisexual",
+    "Polysexual",
+    "Ally",
+
+    "Africa",
+    "Asia",
+    "Europe",
+    "Middle East",
+    "North America",
+    "Oceania",
+    "South America",
+    
+    "PC",
+    "Nintendo Switch",
+    "Xbox One",
+    "PS4",
+    "Mobile",
+    "Virtual Reality",
+
+    "VC",
+    "18+",
+    "Under 18",
+    "Furry",
+    "Movie Night",
+    "Private Avatar",
+    "Turnips",
+    "Recipe",
+
+    "Blue Cosmo",
+    "Dark Stormy Purple",
+    "Mart's Dirty Banana",
+    "Neon Mermaid Lemonade",
+    "Orange Sunset",
+    "Paloma Pink",
+    "Sapphire Martini",
+    "Sour Margarita",
+    "Strawberry Daiquiri",
+    "Teal Squeal"
+  ],
+
+  "ignored": [ "Bot Restricted", "Restricted" ]
+}

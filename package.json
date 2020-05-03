@@ -1,23 +1,20 @@
 {
-  "name": "DiscoBot",
+  "name": "gaymersbot",
   "version": "2.0.0",
-  "description": "DiscoBot MK 2",
+  "description": "GaymersBot",
   "readme": "README.md",
   "maintainers": [],
-  "author": "",
+  "author": "Thomas Baillie <thomasbaillie@outlook.com>",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gaymers-discord/DiscoBot.js"
+    "url": "git+https://github.com/ThomasShaped/GaymersBot"
   },
   "license": "GPL-2.0",
   "dependencies": {
     "applicationinsights": "^1.7.4",
-    "discord.js": "^11.6.4",
-    "dotenv": "^4.0.0",
+    "discord.js": "^12.0.0",
     "express": "^4.17.1",
-    "moment": "^2.24.0",
-    "moment-timezone": "^0.5.28",
-    "splitargs": "^0.0.7"
+    "moment": "^2.25.1"
   },
   "engines": {
     "node": "^10.0.0"

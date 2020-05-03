@@ -15,6 +15,7 @@ class UpdateRoles extends Command {
   }
 
   async execute(Message) {
+    return;
     const rolesChannel = Message.guild.channels.cache.find(channel => channel.name === `roles`);
 
     const identityEmbed = this.buildEmbed(Message, `Identity`, `React to add some roles that tell everyone about your identity.`, ``, `identity`);

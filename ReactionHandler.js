@@ -50,7 +50,7 @@ class ReactionHandler {
       return;
     }
 
-    if (!Member.role.cache.findKey(role => role.name === `Nitro Booster`) && roles.nitroOnly.includes(Role.name)){
+    if (!(Member.roles.cache.findKey(role => role.name === `Nitro Booster`)) && roles.nitroOnly.includes(Role.name)){
       if (type === `ADD`) {
         Reaction.users.remove(User);
       }

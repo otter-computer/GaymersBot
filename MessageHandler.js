@@ -15,6 +15,8 @@ class MessageHandler {
 
       const command = require(`./Commands/${file}`);
 
+      if (!command.name) continue;
+
       this.commands.set(command.name.toLowerCase(), new command());
     }
   }

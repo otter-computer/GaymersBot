@@ -30,13 +30,13 @@
     },
 
     "region": {
-      "❤": "Africa",
-      "🧡": "Asia",
-      "💛": "Europe",
-      "💚": "Middle East",
-      "💙": "North America",
-      "💜": "Oceania",
-      "🤍": "South America"
+      "🔴": "Africa",
+      "🟠": "Asia",
+      "🟡": "Europe",
+      "🟢": "Middle East",
+      "🔵": "North America",
+      "🟣": "Oceania",
+      "⚪": "South America"
     },
     
     "platform": {
@@ -49,7 +49,7 @@
     },
 
     "server": {
-      "🎙": "VC",
+      "🎙️": "VC",
       "705892246960209961": "18+",
       "705892247018930269": "Under 18",
       "🐕": "Furry",

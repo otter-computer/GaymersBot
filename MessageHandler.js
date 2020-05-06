@@ -34,7 +34,10 @@ class MessageHandler {
       }
     }
 
-    // TODO: Handle automatic age detection in #introductions
+    if(Message.channel.name === `introductions`) {
+      this.introAgeDetection(Message);
+      return;
+    }
 
     if (!Message.content.startsWith(`!`)) return;
 
@@ -58,6 +61,22 @@ class MessageHandler {
     }
 
     command.execute(Message, args);
+  }
+
+  async introAgeDetection(Message) {
+    // Looking for 2 digit ages
+    const ageRegEx = /[\d][\d]/;
+    const memberAge = Message.content.match(ageRegEx);
+
+    // If no age listed, do nothing
+    if (!memberAge) return;
+
+    // Presume first numberical hit is the age
+    if (memberAge[0] < 18) {
+      const Role = await Message.guild.roles.cache.find(role => role.name === `Under 18`);
+      const Member = await Message.guild.members.fetch(Message.author.id);
+      Member.roles.add(Role);
+    }
   }
 }
 

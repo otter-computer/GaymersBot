@@ -38,7 +38,7 @@ class IPlay extends Command {
 
     if (this.gameRolesLowerCase.includes(gameRoleName.toLowerCase())) {
       const Member = await Message.guild.members.fetch(Message.author.id);
-      const Role = await Message.guild.roles.cache.find(role => role.name.toLowerCase() === gameRoleName);
+      const Role = await Message.guild.roles.cache.find(role => role.name.toLowerCase() === gameRoleName.toLowerCase());
 
       if (!Role || !Member) return;
 

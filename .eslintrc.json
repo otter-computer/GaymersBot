@@ -5,7 +5,8 @@
   },
   "extends": "eslint:recommended",
   "parserOptions": {
-    "sourceType": "module"
+    "sourceType": "module",
+    "ecmaVersion": 10
   },
   "rules": {
     "indent": [
@@ -14,7 +15,7 @@
     ],
     "quotes": [
       "error",
-      "single"
+      "backtick"
     ],
     "semi": [
       "error",

@@ -34,7 +34,7 @@ class MessageHandler {
       }
     }
 
-    if(Message.channel.name === `introductions`) {
+    if (Message.channel.name === `introductions`) {
       this.introAgeDetection(Message);
       return;
     }
@@ -74,8 +74,10 @@ class MessageHandler {
     // Presume first numberical hit is the age
     if (memberAge[0] < 18) {
       const Role = await Message.guild.roles.cache.find(role => role.name === `Under 18`);
+      const AntiRole = await Message.guild.roles.cache.find(role => role.name === `18+`); // Remove the 18+ role if they already have it.
       const Member = await Message.guild.members.fetch(Message.author.id);
       Member.roles.add(Role);
+      Member.roles.remove(AntiRole);
     }
   }
 }

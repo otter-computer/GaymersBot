@@ -71,13 +71,22 @@ class MessageHandler {
     // If no age listed, do nothing
     if (!memberAge) return;
 
-    // Presume first numberical hit is the age
+    // Fetch the member and necessary roles.
+    const Member = await Message.guild.members.fetch(Message.author.id);
+    const under18Role = await Message.guild.roles.cache.find(role => role.name === `Under 18`);
+    const over18Role = await Message.guild.roles.cache.find(role => role.name === `18+`);
+
+    // Presume first double-digit numerical hit is the age ([0])
+    // If member is under 18, add the `Under 18` role. Remove the `18+` Role if they have it somehow. 
     if (memberAge[0] < 18) {
-      const under18Role = await Message.guild.roles.cache.find(role => role.name === `Under 18`);
-      const over18Role = await Message.guild.roles.cache.find(role => role.name === `18+`);
-      const Member = await Message.guild.members.fetch(Message.author.id);
       Member.roles.add(under18Role);
       Member.roles.remove(over18Role);
+    }
+
+    // If member is 18 or older, add `18+` role. Remove the `Under 18` role if they have it somehow. 
+    if (memberAge[0] >= 18) {
+      Member.roles.add(over18Role);
+      Member.roles.remove(under18Role);
     }
   }
 }

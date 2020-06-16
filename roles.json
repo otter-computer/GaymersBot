@@ -7,7 +7,8 @@
       "674757533864427572": "Non binary",
       "700500680275787777": "Genderqueer",
       "700501074729107547": "Genderfluid",
-      "674756833709129729": "Agender"
+      "674756833709129729": "Agender",
+      "718647021430505472": "Demigender"
     },
 
     "pronouns" :{
@@ -24,9 +25,9 @@
       "674756482008350790": "Asexual",
       "700506014117527573": "Aromantic",
       "674755571173556236": "Pansexual",
-      "674773032908095488": "Demisexual",
       "700506031729672202": "Polysexual",
-      "700675619456811019": "Ally"
+      "700675619456811019": "Ally",
+      "718110795279630386": "Demisexual"
     },
 
     "region": {
@@ -50,8 +51,6 @@
 
     "server": {
       "🎙️": "VC",
-      "705892246960209961": "18+",
-      "705892247018930269": "Under 18",
       "🐕": "Furry",
       "🎥": "Movie Night",
       "🕵️‍♂️": "Private Avatar",
@@ -70,6 +69,15 @@
       "705887531077599272": "Sour Margarita",
       "705887546080755814": "Strawberry Daiquiri",
       "705887559334494289": "Teal Squeal"
+    },
+    
+    "pride": {
+      "717320808577499147": "Pride Blue",
+      "717320824083972130": "Pride Green",
+      "717320840873640008": "Pride Orange",
+      "717320858103971852": "Pride Pink",
+      "717320873337684038": "Pride Purple",
+      "717320888760139846": "Pride Yellow"
     }
   },
 
@@ -105,6 +113,7 @@
     "Genderqueer",
     "Genderfluid",
     "Agender",
+    "Demigender",
 
     "He/Him",
     "She/Her",
@@ -154,7 +163,14 @@
     "Sapphire Martini",
     "Sour Margarita",
     "Strawberry Daiquiri",
-    "Teal Squeal"
+    "Teal Squeal",
+    
+    "Pride Orange",
+    "Pride Green",
+    "Pride Blue",
+    "Pride Purple",
+    "Pride Pink",
+    "Pride Yellow"
   ],
 
   "nitroOnly" : ["Blue Cosmo", "Mart's Dirty Banana"],

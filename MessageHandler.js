@@ -64,9 +64,13 @@ class MessageHandler {
   }
 
   async introAgeDetection(Message) {
-    // Looking for 2 digit ages
+    // Looking for 2 digit ages, presume first numberical hit is the age
     const ageRegEx = /[\d][\d]/;
     const memberAge = Message.content.match(ageRegEx);
+    
+    // Alternatively, look for the phrase 'Under 18'
+    const under18RegEx = /under 18/i;
+    const under18 = Message.content.toLowerCase().match(under18RegEx);
 
     // If no age listed, do nothing
     if (!memberAge) return;
@@ -75,18 +79,21 @@ class MessageHandler {
     const Member = await Message.guild.members.fetch(Message.author.id);
     const under18Role = await Message.guild.roles.cache.find(role => role.name === `Under 18`);
     const over18Role = await Message.guild.roles.cache.find(role => role.name === `18+`);
-
+    
     // Presume first double-digit numerical hit is the age ([0])
+    // Or detect if they've explicitly said 'Under 18'
     // If member is under 18, add the `Under 18` role. Remove the `18+` Role if they have it somehow. 
-    if (memberAge[0] < 18) {
+    if (memberAge[0] < 18 || under18[0]) {
       Member.roles.add(under18Role);
       Member.roles.remove(over18Role);
+      return;
     }
 
     // If member is 18 or older, add `18+` role. Remove the `Under 18` role if they have it somehow. 
     if (memberAge[0] >= 18) {
       Member.roles.add(over18Role);
       Member.roles.remove(under18Role);
+      return;
     }
   }
 }

@@ -69,7 +69,7 @@ class MessageHandler {
     const memberAge = Message.content.match(ageRegEx);
     
     // Alternatively, look for the phrase 'Under 18'
-    const under18RegEx = /under 18/i;
+    const under18RegEx = /under 18/;
     const under18 = Message.content.toLowerCase().match(under18RegEx);
 
     // If no age listed, do nothing
@@ -83,7 +83,7 @@ class MessageHandler {
     // Presume first double-digit numerical hit is the age ([0])
     // Or detect if they've explicitly said 'Under 18'
     // If member is under 18, add the `Under 18` role. Remove the `18+` Role if they have it somehow. 
-    if (memberAge[0] < 18 || under18[0]) {
+    if (memberAge[0] < 18 || under18) {
       Member.roles.add(under18Role);
       Member.roles.remove(over18Role);
       return;

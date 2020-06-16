@@ -64,17 +64,19 @@ class MessageHandler {
   }
 
   async introAgeDetection(Message) {
-    // Looking for 2 digit ages
+    // Looking for 2 digit ages, presume first numberical hit is the age
     const ageRegEx = /[\d][\d]/;
     const memberAge = Message.content.match(ageRegEx);
+    const under18RegEx = /under 18/i;
+    const under18 = Message.content.toLowerCase().match(under18RegEx);
 
     // If no age listed, do nothing
     if (!memberAge) return;
 
-    // Presume first numberical hit is the age
-    if (memberAge[0] < 18) {
-      const Role = await Message.guild.roles.cache.find(role => role.name === `Under 18`);
-      const Member = await Message.guild.members.fetch(Message.author.id);
+    const Role = await Message.guild.roles.cache.find(role => role.name === `Under 18`);
+    const Member = await Message.guild.members.fetch(Message.author.id);
+
+    if (memberAge[0] < 18 || under18[0]) {
       Member.roles.add(Role);
     }
   }

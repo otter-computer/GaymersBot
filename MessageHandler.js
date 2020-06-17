@@ -68,22 +68,19 @@ class MessageHandler {
     const ageRegEx = /[\d][\d]/;
     const memberAge = Message.content.match(ageRegEx);
     
-    // Alternatively, look for the phrase 'Under 18'
-    const under18RegEx = /under 18/;
-    const under18 = Message.content.toLowerCase().match(under18RegEx);
-
-    // If no age listed, do nothing
-    if (!memberAge) return;
+    // Alternatively, look certain phrases
+    const under18RegEx = /(under\s?18)?(minor)?/i;
+    const under18 = Message.content.match(under18RegEx);
 
     // Fetch the member and necessary roles.
     const Member = await Message.guild.members.fetch(Message.author.id);
     const under18Role = await Message.guild.roles.cache.find(role => role.name === `Under 18`);
     const over18Role = await Message.guild.roles.cache.find(role => role.name === `18+`);
     
-    // Presume first double-digit numerical hit is the age ([0])
-    // Or detect if they've explicitly said 'Under 18'
+    // Check if memberAge exists and presume first double-digit numerical hit is the age ([0])
+    // Or detect if they've explicitly said one of the phrases
     // If member is under 18, add the `Under 18` role. Remove the `18+` Role if they have it somehow. 
-    if (memberAge[0] < 18 || under18) {
+    if ((memberAge && memberAge[0] < 18) || under18) {
       Member.roles.add(under18Role);
       Member.roles.remove(over18Role);
       return;

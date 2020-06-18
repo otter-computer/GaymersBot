@@ -13,7 +13,7 @@ class MessageHandler {
       .filter(file => file !== 'Command.js')
       .map(file => require(`./Commands/${file}`))
       .filter(cmd => cmd.name)
-      .forEach(cmd => this.commands.set(cmd.name.toLowerCase(), new command()), this)
+      .forEach(cmd => this.commands.set(cmd.name.toLowerCase(), new cmd()), this)
   }
 
   /**

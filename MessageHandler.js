@@ -6,19 +6,14 @@ class MessageHandler {
   constructor() {
     // Dynamically loadoad commands
     this.commands = new Discord.Collection();
-
-    const commandFiles = fs.readdirSync(`./Commands`).filter(file => file.endsWith(`.js`));
-
-    for (const file of commandFiles) {
-      // Skip template class
-      if (file === `Command.js`) continue;
-
-      const command = require(`./Commands/${file}`);
-
-      if (!command.name) continue;
-
-      this.commands.set(command.name.toLowerCase(), new command());
-    }
+  
+    // this probably works.
+    const commandFiles = fs.readdirSync(`./Commands`)
+      .filter(file => file.endsWith(`.js`))
+      .filter(file => file !== 'Command.js')
+      .map(file => require(`./Commands/${file}`))
+      .filter(cmd => cmd.name)
+      .forEach(cmd => this.commands.set(cmd.name.toLowerCase(), new command()), this)
   }
 
   /**

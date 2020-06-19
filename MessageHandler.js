@@ -64,7 +64,7 @@ class MessageHandler {
     const memberAge = Message.content.match(ageRegEx);
     
     // Alternatively, look certain phrases
-    const under18RegEx = /(under ?18)/i;
+    const under18RegEx = /under ?18|minor/i;
     const under18 = Message.content.match(under18RegEx);
 
     // Fetch the member and necessary roles.

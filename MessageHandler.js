@@ -82,7 +82,7 @@ class MessageHandler {
     }
 
     // If member is 18 or older, add `18+` role. Remove the `Under 18` role if they have it somehow. 
-    if (memberAge[0] >= 18) {
+    if (memberAge && memberAge[0] >= 18) {
       Member.roles.add(over18Role);
       Member.roles.remove(under18Role);
       return;

@@ -61,23 +61,6 @@ class ReactionHandler {
       return;
     }
 
-    if (Member.roles.cache.findKey((role) => role.name === `Under 18`) && Role.name === `18+`) {
-      if (type === `ADD`) {
-        Reaction.users.remove(User);
-      }
-      return;
-    }
-
-    // Disallow Users to have the 18+ role and the Under 18 role.
-    if (Member.roles.cache.findKey((role) => role.name === `18+`) && Role.name === `Under 18`) {
-      if (type === `ADD`) {
-        Reaction.users.remove(User);
-      }
-      return;
-    }
-
-    if (type === `REMOVE` && Role.name === `Under 18`) return;
-
     if (type === `ADD`) Member.roles.add(Role);
     if (type === `REMOVE`) Member.roles.remove(Role);
   }

@@ -87,7 +87,7 @@
     "Trial Moderator",
     "Staff",
     "Event Manager",
-    "Karen to the Manager",
+    "Community Helper",
 
     "Restricted",
     "Bot Restricted",
@@ -172,9 +172,7 @@
     "Pride Blue",
     "Pride Purple",
     "Pride Pink",
-    "Pride Yellow",
-    
-    "Test"
+    "Pride Yellow"
   ],
 
   "nitroOnly" : ["Blue Cosmo", "Mart's Dirty Banana"],

@@ -61,7 +61,7 @@ class MessageHandler {
   async introAgeDetection(Message) {
     // Looking for 2 digit ages following `Age: ` (or variants)
     // or look for the phrases `Under 18` or `Minor`
-    const ageRegEx = /(?:(?<=age)(?::|-)? ?(?<age>[\d][\d]))|(?<text>under ?18|minor)/gi;
+    const ageRegEx = /(?:(?<=age)(?::|-)? ?(?<age>[\d][\d]))|(?<text>under ?18|minor)/i;
     const matches = ageRegEx.exec(Message.content);
 
     // Fetch the member and necessary roles.

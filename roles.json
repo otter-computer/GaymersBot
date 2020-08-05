@@ -59,14 +59,14 @@
     },
 
     "colors": {
-      "": "Paopu Fruit Yellow",
-      "": "Auspicious Eggplant Purple",
-      "": "Quandong Teal",
-      "": "Juicy Peach Pink",
-      "": "Latona's Lettuce Green",
-      "": "Kiwi Green",
-      "": "Mango Orange-Yellow",
-      "": "Sassy Raspberry Red"
+      "740535572048773170": "Paopu Fruit Yellow",
+      "740535832682692690": "Auspicious Eggplant Purple",
+      "740535779448586342": "Quandong Teal",
+      "740535952140926996": "Juicy Peach Pink",
+      "740535698645319720": "Latona's Lettuce Green",
+      "740535643670577172": "Kiwi Green",
+      "740535444143472680": "Mango Orange",
+      "740535887565422592": "Sassy Raspberry Red"
     }
   },
 
@@ -154,7 +154,7 @@
     "Juicy Peach Pink",
     "Latona's Lettuce Green",
     "Kiwi Green",
-    "Mango Orange-Yellow",
+    "Mango Orange",
     "Sassy Raspberry Red"
   ],
 

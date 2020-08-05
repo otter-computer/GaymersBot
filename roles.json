@@ -158,7 +158,7 @@
     "Sassy Raspberry Red"
   ],
 
-  "nitroOnly" : ["Blue Cosmo", "Mart's Dirty Banana", "Latona's Lettuce Green", "Sassy Raspberry Red"],
+  "nitroOnly" : ["Latona's Lettuce Green", "Sassy Raspberry Red"],
 
   "ignored": [ "Bot Restricted", "Restricted" ]
 }

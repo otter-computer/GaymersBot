@@ -59,25 +59,14 @@
     },
 
     "colors": {
-      "705887425611694150": "Blue Cosmo",
-      "705887438702379150": "Dark & Stormy Purple",
-      "705887453965189230": "Mart's Dirty Banana",
-      "705887470109065217": "Neon Mermaid Lemonade",
-      "705887485896556545": "Orange Sunset",
-      "705887501922861136": "Paloma Pink",
-      "705887516011528273": "Sapphire Martini",
-      "705887531077599272": "Sour Margarita",
-      "705887546080755814": "Strawberry Daiquiri",
-      "705887559334494289": "Teal Squeal"
-    },
-    
-    "pride": {
-      "717320808577499147": "Pride Blue",
-      "717320824083972130": "Pride Green",
-      "717320840873640008": "Pride Orange",
-      "717320858103971852": "Pride Pink",
-      "717320873337684038": "Pride Purple",
-      "717320888760139846": "Pride Yellow"
+      "": "Paopu Fruit Yellow",
+      "": "Auspicious Eggplant Purple",
+      "": "Quandong Teal",
+      "": "Juicy Peach Pink",
+      "": "Latona's Lettuce Green",
+      "": "Kiwi Green",
+      "": "Mango Orange-Yellow",
+      "": "Sassy Raspberry Red"
     }
   },
 
@@ -159,26 +148,17 @@
     "Turnips",
     "Recipe",
 
-    "Blue Cosmo",
-    "Dark & Stormy Purple",
-    "Mart's Dirty Banana",
-    "Neon Mermaid Lemonade",
-    "Orange Sunset",
-    "Paloma Pink",
-    "Sapphire Martini",
-    "Sour Margarita",
-    "Strawberry Daiquiri",
-    "Teal Squeal",
-    
-    "Pride Orange",
-    "Pride Green",
-    "Pride Blue",
-    "Pride Purple",
-    "Pride Pink",
-    "Pride Yellow"
+    "Paopu Fruit Yellow",
+    "Auspicious Eggplant Purple",
+    "Quandong Teal",
+    "Juicy Peach Pink",
+    "Latona's Lettuce Green",
+    "Kiwi Green",
+    "Mango Orange-Yellow",
+    "Sassy Raspberry Red"
   ],
 
-  "nitroOnly" : ["Blue Cosmo", "Mart's Dirty Banana"],
+  "nitroOnly" : ["Blue Cosmo", "Mart's Dirty Banana", "Latona's Lettuce Green", "Sassy Raspberry Red"],
 
   "ignored": [ "Bot Restricted", "Restricted" ]
 }

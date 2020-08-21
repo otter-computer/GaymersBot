@@ -63,7 +63,7 @@
       "740535832682692690": "Auspicious Eggplant Purple",
       "740535779448586342": "Quandong Teal",
       "740535952140926996": "Juicy Peach Pink",
-      "740535698645319720": "Latona's Lettuce Green",
+      "740535698645319720": "Apple Green",
       "740535643670577172": "Kiwi Green",
       "740535444143472680": "Mango Orange",
       "740535887565422592": "Sassy Raspberry Red"
@@ -152,13 +152,13 @@
     "Auspicious Eggplant Purple",
     "Quandong Teal",
     "Juicy Peach Pink",
-    "Latona's Lettuce Green",
+    "Apple Green",
     "Kiwi Green",
     "Mango Orange",
     "Sassy Raspberry Red"
   ],
 
-  "nitroOnly" : ["Latona's Lettuce Green", "Sassy Raspberry Red"],
+  "nitroOnly" : ["Apple Green", "Sassy Raspberry Red"],
 
   "ignored": [ "Bot Restricted", "Restricted" ]
 }

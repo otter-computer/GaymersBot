@@ -59,14 +59,14 @@
     },
 
     "colors": {
-      "740535572048773170": "Paopu Fruit Yellow",
-      "740535832682692690": "Auspicious Eggplant Purple",
-      "740535779448586342": "Quandong Teal",
-      "740535952140926996": "Juicy Peach Pink",
-      "740535698645319720": "Apple Green",
-      "740535643670577172": "Kiwi Green",
-      "740535444143472680": "Mango Orange",
-      "740535887565422592": "Sassy Raspberry Red"
+      "761361236189118506": "Witch Green",
+      "761361236424130561": "Vampire Red",
+      "761361236540784710": "Merfolk Teal",
+      "761361236595834920": "Pixie Pink",
+      "761361236608286741": "Ghost Blue",
+      "761361236625063976": "Werewolf Purple",
+      "761361236650491937": "Pumpkin Orange",
+      "761364876832538624": "Mummy Yellow"
     }
   },
 
@@ -148,14 +148,14 @@
     "Turnips",
     "Recipe",
 
-    "Paopu Fruit Yellow",
-    "Auspicious Eggplant Purple",
-    "Quandong Teal",
-    "Juicy Peach Pink",
-    "Apple Green",
-    "Kiwi Green",
-    "Mango Orange",
-    "Sassy Raspberry Red"
+    "Witch Green",
+    "Vampire Red",
+    "Merfolk Teal",
+    "Pixie Pink",
+    "Ghost Blue",
+    "Werewolf Purple",
+    "Pumpkin Orange",
+    "Mummy Yellow"
   ],
 
   "nitroOnly" : ["Apple Green", "Sassy Raspberry Red"],

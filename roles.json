@@ -82,6 +82,7 @@
     "Restricted",
     "Bot Restricted",
     "Staff Chat",
+    "Silenced",
     "No links/files",
 
     "Bots",
@@ -160,5 +161,5 @@
 
   "nitroOnly" : ["Apple Green", "Sassy Raspberry Red"],
 
-  "ignored": [ "Bot Restricted", "Restricted" ]
+  "ignored": [ "Bot Restricted", "Restricted", "Silenced" ]
 }

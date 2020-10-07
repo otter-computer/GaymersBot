@@ -11,10 +11,11 @@
       "718647021430505472": "Demigender"
     },
 
-    "pronouns" :{
+    "pronouns": {
       "🇭": "He/Him",
       "🇸": "She/Her",
-      "🇹": "They/Them"
+      "🇹": "They/Them",
+      "🇦": "Ask my pronouns"
     },
 
     "orientation": {
@@ -113,6 +114,7 @@
     "He/Him",
     "She/Her",
     "They/Them",
+    "Ask my pronouns",
 
     "Gay",
     "Lesbian",

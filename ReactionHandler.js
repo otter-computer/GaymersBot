@@ -1,6 +1,6 @@
 const Discord = require(`discord.js`);
 const roles = require(`./roles`);
-const START_TRESHOLD = 2;
+const STAR_TRESHOLD = 2; // TODO: Update to desired value before deploy
 const STARBOARD_ID = '770059932635889695'; // TODO: Swap with real ID before deploy
 const STARBOARD18_ID = '770059902311727116'; // TODO: Swap with real ID before deploy
 

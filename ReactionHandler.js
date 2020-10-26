@@ -79,7 +79,7 @@ class ReactionHandler {
              Could key off of using channels categorized, though this includes "bot-room" */
     
     if (Reaction.message.channel.name !== 'starboard' && Reaction.message.channel.name !== 'starboard-over-18'
-        && Reaction.count >= START_TRESHOLD) {
+        && Reaction.count >= STAR_TRESHOLD) {
       // TODO: Do we want to use permissions to prevent emoji on starboard channels instead?
       
       var starMessage = Reaction.message.author.toString() + ' [Everyone liked that]\nHere\'s the message: \n\n' + Reaction.message.content;

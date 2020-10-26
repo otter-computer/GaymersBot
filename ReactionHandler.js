@@ -1,8 +1,8 @@
 const Discord = require(`discord.js`);
 const roles = require(`./roles`);
 const START_TRESHOLD = 2;
-const STARBOARD_ID = '770059932635889695';
-const STARBOARD18_ID = '770059902311727116';
+const STARBOARD_ID = '770059932635889695'; // TODO: Swap with real ID before deploy
+const STARBOARD18_ID = '770059902311727116'; // TODO: Swap with real ID before deploy
 
 class ReactionHandler {
   constructor() {
@@ -43,7 +43,7 @@ class ReactionHandler {
       return;
     }
     else if (Reaction._emoji.name === '⭐' && Reaction.message.type === 'DEFAULT' && Reaction.message.author.bot === false) {
-      // Is it the star emoji on a non-system, non-bot message, let's handle it
+      // Is it the star emoji on a non-system, non-bot message? Let's handle it.
       this.handleStarReaction(Reaction, args[0]);
     }
   }
@@ -75,16 +75,17 @@ class ReactionHandler {
   async handleStarReaction(Reaction) {
     await Reaction.fetch();
     
-    // TODO: Any channels we don't want to count star reactions on (like Announcements, etc.)?
-    // TODO: Do we want to use permissions to prevent emoji on starboard channels?
+    /* TODO: Any channels we don't want to count star reactions on (like Announcements, etc.)?
+             Could key off of using channels categorized, though this includes "bot-room" */
     
     if (Reaction.message.channel.name !== 'starboard' && Reaction.message.channel.name !== 'starboard-over-18'
         && Reaction.count >= START_TRESHOLD) {
+      // TODO: Do we want to use permissions to prevent emoji on starboard channels instead?
       
       var starMessage = Reaction.message.author.toString() + ' [Everyone liked that]\nHere\'s the message: \n\n' + Reaction.message.content;
       
       if (Reaction.message.channel.parent != null && Reaction.message.channel.parent.name === 'Over 18') {
-        // Is it probably a naughty message?
+        // Is it probably a naughty message? (18+ eyes only)
         Reaction.client.channels.fetch(STARBOARD18_ID)
         .then(channel => channel.send(starMessage))
         .catch(console.error);
@@ -98,8 +99,8 @@ class ReactionHandler {
     }
 
     // TODO: Avoid posting the message a million times... perhaps ignore when over threshold?
-    // TODO: ...and handle someone meeting threshold and quickly removing star (maybe)
-    // TODO: A few magic strings here, const-ify probs
+    // TODO: Handle case of someone meeting threshold and quickly removing star (maybe?)
+    // TODO: A few magic strings here, const-ify probs...
 
     return;
   }

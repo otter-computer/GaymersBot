@@ -83,7 +83,8 @@ class ReactionHandler {
       // TODO: Do we want to use permissions to prevent emoji on starboard channels instead?
       
       var starMessage = Reaction.message.author.toString() + ' [Everyone liked that]\nHere\'s the message: \n\n' + Reaction.message.content;
-      
+      // TODO: Determine what we want the message to ultimately look like
+
       if (Reaction.message.channel.parent != null && Reaction.message.channel.parent.name === 'Over 18') {
         // Is it probably a naughty message? (18+ eyes only)
         Reaction.client.channels.fetch(STARBOARD18_ID)

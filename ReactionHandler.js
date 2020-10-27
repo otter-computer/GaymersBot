@@ -1,8 +1,6 @@
 const Discord = require(`discord.js`);
 const roles = require(`./roles`);
-const STAR_TRESHOLD = 2; // TODO: Update to desired value before deploy
-const STARBOARD_ID = '770059932635889695'; // TODO: Swap with real ID before deploy
-const STARBOARD18_ID = '770059902311727116'; // TODO: Swap with real ID before deploy
+const starConfig = require(`./star-config`);
 
 class ReactionHandler {
   constructor() {
@@ -42,9 +40,10 @@ class ReactionHandler {
       this.handleRoleReaction(Reaction, User, args[0]);
       return;
     }
-    else if (Reaction._emoji.name === '⭐' && Reaction.message.type === 'DEFAULT' && Reaction.message.author.bot === false) {
-      // Is it the star emoji on a non-system, non-bot message? Let's handle it.
-      this.handleStarReaction(Reaction, args[0]);
+    else if (args[0] === 'ADD' && Reaction._emoji.name === '⭐' 
+              && Reaction.message.type === 'DEFAULT' && Reaction.message.author.bot === false) {
+      // Is it and added star emoji on a non-system, non-bot message? Let's handle it.
+      this.handleStarReaction(Reaction);
     }
   }
 
@@ -74,29 +73,30 @@ class ReactionHandler {
 
   async handleStarReaction(Reaction) {
     await Reaction.fetch();
-    
-    /* TODO: Any channels we don't want to count star reactions on (like Announcements, etc.)?
-             Could key off of using channels categorized, though this includes "bot-room" */
-    
-    if (Reaction.message.channel.name !== 'starboard' && Reaction.message.channel.name !== 'starboard-over-18'
-        && Reaction.count >= STAR_TRESHOLD) {
-      // TODO: Do we want to use permissions to prevent emoji on starboard channels instead?
+    let starboardChannelId;
+
+    if (!starConfig.ignoreChannels.includes(Reaction.message.channel.name)
+        && Reaction.count === starConfig.starThreshold) {      
+      // Message not in a black-listed channel and meets star threshold
       
-      var starMessage = Reaction.message.author.toString() + ' [Everyone liked that]\nHere\'s the message: \n\n' + Reaction.message.content;
+      // Construct message to forward
+      let starMessage = `${Reaction.message.author.toString()} [Everyone liked that]` 
+                        + '\n' + `>>> ${Reaction.message.content}`;
+      
       // TODO: Determine what we want the message to ultimately look like
 
-      if (Reaction.message.channel.parent != null && Reaction.message.channel.parent.name === 'Over 18') {
-        // Is it probably a naughty message? (18+ eyes only)
-        Reaction.client.channels.fetch(STARBOARD18_ID)
-        .then(channel => channel.send(starMessage))
-        .catch(console.error);
+      // Check if it should be posted on an over 18 starboard
+      if (Reaction.message.channel.parent != null 
+          && Reaction.message.channel.parent.name === starConfig.over18SectionName) {
+        starboardChannelId = starConfig.starboardOver18Id;
       }
       else {
-        // It's a message anyone should be able to see
-        Reaction.client.channels.fetch(STARBOARD_ID)
+        starboardChannelId = starConfig.starboardId;
+      }
+
+      Reaction.client.channels.fetch(starboardChannelId)
         .then(channel => channel.send(starMessage))
         .catch(console.error);
-      }
     }
 
     // TODO: Avoid posting the message a million times... perhaps ignore when over threshold?

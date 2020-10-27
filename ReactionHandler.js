@@ -74,34 +74,54 @@ class ReactionHandler {
   async handleStarReaction(Reaction) {
     await Reaction.fetch();
     let starboardChannelId;
+    let isDuplicate = false;
 
     if (!starConfig.ignoreChannels.includes(Reaction.message.channel.name)
-        && Reaction.count === starConfig.starThreshold) {      
+          && Reaction.count === starConfig.starThreshold) {      
       // Message not in a black-listed channel and meets star threshold
       
       // Construct message to forward
-      let starMessage = `${Reaction.message.author.toString()} [Everyone liked that]` 
-                        + '\n' + `>>> ${Reaction.message.content}`;
-      
+      const starMessage = `${Reaction.message.author.toString()} [Everyone liked that]` 
+                              + '\n' + `>>> ${Reaction.message.content}`;
       // TODO: Determine what we want the message to ultimately look like
 
       // Check if it should be posted on an over 18 starboard
       if (Reaction.message.channel.parent != null 
-          && Reaction.message.channel.parent.name === starConfig.over18SectionName) {
+            && Reaction.message.channel.parent.name === starConfig.over18SectionName) {
         starboardChannelId = starConfig.starboardOver18Id;
       }
       else {
         starboardChannelId = starConfig.starboardId;
       }
 
-      Reaction.client.channels.fetch(starboardChannelId)
+      // Check if this message is already on starboard 
+      // (handle cases when star removed and re-added, i.e., trolling)
+      await Reaction.client.channels.fetch(starboardChannelId)
+        .then(channel => channel.messages.fetch({limit: 20}))
+        .then( messages => {
+          isDuplicate = messages.some(m => m.content === starMessage);
+        })
+        .catch(console.error);
+      
+      if(isDuplicate) {
+        // Discard, warn of abuse
+        Reaction.client.channels.fetch(Reaction.message.channel.id)
+        .then(channel => channel.send('Stop it trolls!'))
+        .catch(console.error);
+      }
+      else {
+        Reaction.client.channels.fetch(starboardChannelId)
         .then(channel => channel.send(starMessage))
         .catch(console.error);
+      }
     }
 
-    // TODO: Avoid posting the message a million times... perhaps ignore when over threshold?
-    // TODO: Handle case of someone meeting threshold and quickly removing star (maybe?)
-    // TODO: A few magic strings here, const-ify probs...
+    /*
+    *   TODO: 
+    *   A way to more robustly handle duplicates, currently limited by fetching last 20 of channel
+    *   and this perhaps is more costly than it should be? Can we at least only fetch if cache is empty?
+    *   Not exactly sure how the chache works just yet.
+    */
 
     return;
   }

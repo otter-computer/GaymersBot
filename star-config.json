@@ -2,6 +2,6 @@
     "ignoreChannels": [ "starboard", "starboard-over-18", "bot-room", "code-of-conduct", "roles", "help", "announcements", "suggestions" ],
     "starboardId": "770059932635889695",
     "starboardOver18Id": "770059902311727116",
-    "starThreshold": 2,
+    "starThreshold": 10,
     "over18SectionName": "Over 18"
 }

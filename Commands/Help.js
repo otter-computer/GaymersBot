@@ -32,7 +32,7 @@ class Help extends Command {
                 value: `See when someone joined the server`
               },
               {
-                name: "!avatar [@someone]",
+                name: `!avatar [@someone]`,
                 value: `See a bigger version of someone's avatar`
               }
             ]

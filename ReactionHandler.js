@@ -74,16 +74,22 @@ class ReactionHandler {
   async handleStarReaction(Reaction) {
     await Reaction.fetch();
     let starboardChannelId;
-    let isDuplicate = false;
+    let isAlreadyOnStarboard = false;
 
     if (!starConfig.ignoreChannels.includes(Reaction.message.channel.name)
           && Reaction.count === starConfig.starThreshold) {      
       // Message not in a black-listed channel and meets star threshold
       
-      // Construct message to forward
-      const starMessage = `${Reaction.message.author.toString()} [Everyone liked that]` 
-                              + '\n' + `>>> ${Reaction.message.content}`;
-      // TODO: Determine what we want the message to ultimately look like
+      // Construct the starboard message
+      const starMessage = new Discord.MessageEmbed()
+          .setColor(`#d74894`)
+          .setAuthor(`${Reaction.message.author.username}, your message belongs on the starboard!`, 
+                     Reaction.message.author.displayAvatarURL())
+          .setDescription(`${Reaction.message.content}`)
+          .addField(`You're a ⭐ !`, `[Original message](https://discord.com/channels/${Reaction.message.guild.id}/${Reaction.message.channel.id}/${Reaction.message.id})`)
+          .setImage(Reaction.message.attachments.size === 0 ? `` : Reaction.message.attachments.values().next().value.url)
+          .setTimestamp()
+          .setFooter(Reaction.message.id, Reaction.client.user.displayAvatarURL())
 
       // Check if it should be posted on an over 18 starboard
       if (Reaction.message.channel.parent != null 
@@ -96,17 +102,15 @@ class ReactionHandler {
 
       // Check if this message is already on starboard 
       // (handle cases when star removed and re-added, i.e., trolling)
-      await Reaction.client.channels.fetch(starboardChannelId)
+      isAlreadyOnStarboard = await Reaction.client.channels.fetch(starboardChannelId)
         .then(channel => channel.messages.fetch({limit: 20}))
-        .then( messages => {
-          isDuplicate = messages.some(m => m.content === starMessage);
-        })
+        .then(messages => messages.some(m => m.embeds.length > 0 && m.embeds[0].footer.text === Reaction.message.id))
         .catch(console.error);
       
-      if(isDuplicate) {
+      if(isAlreadyOnStarboard) {
         // Discard, warn of abuse
         Reaction.client.channels.fetch(Reaction.message.channel.id)
-        .then(channel => channel.send('Stop it trolls!'))
+        .then(channel => channel.send(`Knock it off or you won't be a ⭐ !`))
         .catch(console.error);
       }
       else {

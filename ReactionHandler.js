@@ -115,6 +115,7 @@ class ReactionHandler {
       else {
         Reaction.client.channels.fetch(starboardChannelId)
         .then(channel => channel.send(starMessage))
+        .then(Reaction.message.reply(`one of your messages made it on ${Reaction.message.guild.channels.cache.get(starboardChannelId).toString()}!`))
         .catch(console.error);
       }
     }

@@ -35,7 +35,7 @@ class ReactionHandler {
     if (process.env.DEV && Reaction.message.guild.id === `123315443208421377`) return;
 
     if (Reaction.me) return;
-    
+
     if (Reaction.message.channel.name === `roles`) {
       this.handleRoleReaction(Reaction, User, args[0]);
       return;

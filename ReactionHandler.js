@@ -35,15 +35,13 @@ class ReactionHandler {
     if (process.env.DEV && Reaction.message.guild.id === `123315443208421377`) return;
 
     if (Reaction.me) return;
-
+    
     if (Reaction.message.channel.name === `roles`) {
       this.handleRoleReaction(Reaction, User, args[0]);
       return;
     }
-    else if (args[0] === 'ADD' && Reaction._emoji.name === '⭐' 
-              && Reaction.message.type === 'DEFAULT' && Reaction.message.author.bot === false) {
-      // Is it and added star emoji on a non-system, non-bot message? Let's handle it.
-      this.handleStarReaction(Reaction);
+    else if (args[0] === 'ADD' && Reaction._emoji.name === '⭐') {
+      this.handleStarReaction(Reaction, User);
     }
   }
 
@@ -71,25 +69,27 @@ class ReactionHandler {
     if (type === `REMOVE`) Member.roles.remove(Role);
   }
 
-  async handleStarReaction(Reaction) {
+  async handleStarReaction(Reaction, User) {
     await Reaction.fetch();
     let starboardChannelId;
     let isAlreadyOnStarboard = false;
 
-    if (!starConfig.ignoreChannels.includes(Reaction.message.channel.name)
-          && Reaction.count === starConfig.starThreshold) {      
-      // Message not in a black-listed channel and meets star threshold
+    if (Reaction.count === starConfig.starThreshold
+          && Reaction.message.author.bot === false
+          && Reaction.message.type === `DEFAULT`
+          && !starConfig.ignoreChannels.includes(Reaction.message.channel.name)) {
+      // Message meets the star threshold, is a non-bot, non-system message, and not in a black-listed channel
       
       // Construct the starboard message
       const starMessage = new Discord.MessageEmbed()
           .setColor(`#d74894`)
-          .setAuthor(`${Reaction.message.author.username}, your message belongs on the starboard!`, 
-                     Reaction.message.author.displayAvatarURL())
-          .setDescription(`${Reaction.message.content}`)
+          .setAuthor(`${Reaction.message.author.username}, your message belongs on the starboard:`, 
+                     Reaction.message.author.displayAvatarURL({format:`png`})) // Utilizing png, iPhone App seems to not handle webp
+          .setDescription(Reaction.message.content !== `` ? `${Reaction.message.content}` : `The message did not contain text, I've tried to attach it below.`)
           .addField(`You're a ⭐ !`, `[Original message](https://discord.com/channels/${Reaction.message.guild.id}/${Reaction.message.channel.id}/${Reaction.message.id})`)
           .setImage(Reaction.message.attachments.size === 0 ? `` : Reaction.message.attachments.values().next().value.url)
-          .setTimestamp()
-          .setFooter(Reaction.message.id, Reaction.client.user.displayAvatarURL())
+          .setTimestamp(Reaction.message.createdTimestamp)
+          .setFooter(Reaction.message.id, Reaction.client.user.displayAvatarURL({format:`png`})) // Utilizing png, iPhone App seems to not handle webp
 
       // Check if it should be posted on an over 18 starboard
       if (Reaction.message.channel.parent != null 
@@ -105,13 +105,12 @@ class ReactionHandler {
       isAlreadyOnStarboard = await Reaction.client.channels.fetch(starboardChannelId)
         .then(channel => channel.messages.fetch({limit: 20}))
         .then(messages => messages.some(m => m.embeds.length > 0 && m.embeds[0].footer.text === Reaction.message.id))
+        // Only run the check against messages that have embeds, i.e., posted by the bot
         .catch(console.error);
       
       if(isAlreadyOnStarboard) {
-        // Discard, warn of abuse
-        Reaction.client.channels.fetch(Reaction.message.channel.id)
-        .then(channel => channel.send(`Knock it off or you won't be a ⭐ !`))
-        .catch(console.error);
+        // Discard, log potential abuse
+        console.log(`${User.username} re-met the threshold, perhaps stars were removed once at the threshold`);
       }
       else {
         Reaction.client.channels.fetch(starboardChannelId)
@@ -119,13 +118,6 @@ class ReactionHandler {
         .catch(console.error);
       }
     }
-
-    /*
-    *   TODO: 
-    *   A way to more robustly handle duplicates, currently limited by fetching last 20 of channel
-    *   and this perhaps is more costly than it should be? Can we at least only fetch if cache is empty?
-    *   Not exactly sure how the chache works just yet.
-    */
 
     return;
   }

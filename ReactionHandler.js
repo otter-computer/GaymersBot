@@ -103,7 +103,7 @@ class ReactionHandler {
       // Check if this message is already on starboard 
       // (handle cases when star removed and re-added, i.e., trolling)
       isAlreadyOnStarboard = await Reaction.client.channels.fetch(starboardChannelId)
-        .then(channel => channel.messages.fetch({limit: 20}))
+        .then(channel => channel.messages.fetch())
         .then(messages => messages.some(m => m.embeds.length > 0 && m.embeds[0].footer.text === Reaction.message.id))
         // Only run the check against messages that have embeds, i.e., posted by the bot
         .catch(console.error);

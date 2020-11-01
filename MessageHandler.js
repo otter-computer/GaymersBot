@@ -4,16 +4,15 @@ const roles = require(`./roles`);
 
 class MessageHandler {
   constructor() {
-    // Dynamically loadoad commands
+    // Dynamically load commands
     this.commands = new Discord.Collection();
-  
-    // this probably works.
+
     const commandFiles = fs.readdirSync(`./Commands`)
       .filter(file => file.endsWith(`.js`))
       .filter(file => file !== 'Command.js')
       .map(file => require(`./Commands/${file}`))
       .filter(cmd => cmd.name)
-      .forEach(cmd => this.commands.set(cmd.name.toLowerCase(), new cmd()), this)
+      .forEach(cmd => this.commands.set(cmd.name.toLowerCase(), new cmd()), this);
   }
 
   /**

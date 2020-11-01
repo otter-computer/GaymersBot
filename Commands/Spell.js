@@ -5,8 +5,8 @@ class Spell extends Command {
     super();
     this.name = `spell`;
     this.aliases = [`cast`];
-    this.description = `Cast some magic spells`;
-    this.usage = ``;
+    this.description = `Cast some magic spells.`;
+    this.usage = `[spell]`;
     this.serverOnly = true;
     this.staffOnly = true;
   }

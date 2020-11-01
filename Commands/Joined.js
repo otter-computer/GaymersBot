@@ -7,8 +7,8 @@ class Joined extends Command {
     super();
     this.name = `joined`;
     this.aliases = [`joindate`];
-    this.description = `See when someone joined the server`;
-    this.usage = `@someone`;
+    this.description = `See when someone joined the server.`;
+    this.usage = `[@someone]`;
     this.serverOnly = true;
   }
 

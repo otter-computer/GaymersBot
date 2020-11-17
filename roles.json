@@ -60,14 +60,11 @@
     },
 
     "colors": {
-      "761361236189118506": "Witch Green",
-      "761361236424130561": "Vampire Red",
-      "761361236540784710": "Merfolk Teal",
-      "761361236595834920": "Pixie Pink",
-      "761361236608286741": "Ghost Blue",
-      "761361236625063976": "Werewolf Purple",
-      "761361236650491937": "Pumpkin Orange",
-      "761364876832538624": "Mummy Yellow"
+      "778299908519362621": "Harmony Blue",
+      "778299908313710612": "Fluid Grey",
+      "778299908347789352": "Spirit Purple",
+      "778299908519755807": "Peace Pink",
+      "778299908347789312": "Proud Pink"
     }
   },
 
@@ -151,17 +148,14 @@
     "Turnips",
     "Recipe",
 
-    "Witch Green",
-    "Vampire Red",
-    "Merfolk Teal",
-    "Pixie Pink",
-    "Ghost Blue",
-    "Werewolf Purple",
-    "Pumpkin Orange",
-    "Mummy Yellow"
+    "Harmony Blue",
+    "Fluid Grey",
+    "Spirit Purple",
+    "Peace Pink",
+    "Proud Pink"
   ],
 
-  "nitroOnly" : ["Apple Green", "Sassy Raspberry Red"],
+  "nitroOnly" : [],
 
   "ignored": [ "Bot Restricted", "Restricted", "Silenced" ]
 }

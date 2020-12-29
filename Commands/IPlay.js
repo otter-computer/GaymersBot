@@ -7,8 +7,8 @@ class IPlay extends Command {
     super();
     this.name = `iplay`;
     this.aliases = [`role`, `roles`, `game`, `games`, `play`];
-    this.description = `Tell us which games you play!  This will add a pingable role so you can find other people to play with.`;
-    this.usage = ``;
+    this.description = `Tell us which games you play! Use the command on its own to see a list of available games. Use with a game to add a pingable role to yourself to be notified when others want to play.`;
+    this.usage = `[game]`;
     this.serverOnly = true;
     this.gameRoles = [];
     this.gameRolesLowerCase = [];

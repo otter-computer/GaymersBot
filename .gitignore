@@ -9,3 +9,4 @@ node_modules
 
 # Editor
 .vscode/settings.json
+.vscode/*.code-workspace

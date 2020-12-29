@@ -7,7 +7,7 @@ class UpdateRoles extends Command {
     super();
     this.name = `updateroles`;
     this.aliases = [`update-roles`];
-    this.description = `Update the role list in the #roles channel`;
+    this.description = `Update the role list in the #roles channel.`;
     this.usage = ``;
     this.serverOnly = true;
     this.staffOnly = true;

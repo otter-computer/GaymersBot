@@ -10,9 +10,14 @@ class MessageHandler {
     const commandFiles = fs.readdirSync(`./Commands`)
       .filter(file => file.endsWith(`.js`))
       .filter(file => file !== 'Command.js')
+      .filter(file => file !== 'Help.js')
       .map(file => require(`./Commands/${file}`))
       .filter(cmd => cmd.name)
       .forEach(cmd => this.commands.set(cmd.name.toLowerCase(), new cmd()), this);
+
+    const helpCommand = require(`./Commands/Help.js`);
+
+    this.commands.set(helpCommand.name.toLowerCase(), new helpCommand(this.commands), this);
   }
 
   /**

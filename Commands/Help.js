@@ -3,7 +3,7 @@ const fs = require(`fs`);
 const Discord = require('discord.js');
 
 class Help extends Command {
-  constructor() {
+  constructor(commands) {
     super();
     this.name = `help`;
     this.aliases = [`h`, `commands`, `halp`];
@@ -11,18 +11,7 @@ class Help extends Command {
     this.usage = ``;
     this.serverOnly = true;
 
-    // Dynamically load commands
-    // I know this means commands are loaded twice
-    // TODO: inherit these from the MessageHandler when Help is instantiated
-    this.commands = new Discord.Collection();
-
-    const commandFiles = fs.readdirSync(`./Commands`)
-      .filter(file => file.endsWith(`.js`))
-      .filter(file => file !== `Command.js`)
-      .filter(file => file !== `Help.js`)
-      .map(file => require(`../Commands/${file}`))
-      .filter(cmd => cmd.name)
-      .forEach(cmd => this.commands.set(cmd.name.toLowerCase(), new cmd()), this);
+    this.commands = commands;
   }
 
   async execute(Message) {

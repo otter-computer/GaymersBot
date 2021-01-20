@@ -31,17 +31,17 @@ class ReactionHandler {
     return Role;
   }
 
-  handleReaction(Reaction, User, ...args) {
-    if (process.env.DEV && Reaction.message.guild.id === `123315443208421377`) return;
-
+  handleReaction(Reaction, User, type) {
     if (Reaction.me) return;
 
     if (Reaction.message.channel.name === `roles`) {
-      this.handleRoleReaction(Reaction, User, args[0]);
+      this.handleRoleReaction(Reaction, User, type);
       return;
     }
-    else if (args[0] === 'ADD' && Reaction._emoji.name === '⭐') {
+
+    if (type === `ADD` && Reaction._emoji.name === '⭐') {
       this.handleStarReaction(Reaction, User);
+      return;
     }
   }
 
@@ -71,56 +71,45 @@ class ReactionHandler {
 
   async handleStarReaction(Reaction, User) {
     await Reaction.fetch();
-    let starboardChannelId;
-    let isAlreadyOnStarboard = false;
 
-    if (Reaction.count === starConfig.starThreshold
-          && Reaction.message.author.bot === false
-          && Reaction.message.type === `DEFAULT`
-          && !starConfig.ignoreChannels.includes(Reaction.message.channel.name)) {
-      // Message meets the star threshold, is a non-bot, non-system message, and not in a black-listed channel
-      
-      // Construct the starboard message
-      const starMessage = new Discord.MessageEmbed()
-          .setColor(`#d74894`)
-          .setAuthor(`${Reaction.message.author.username}, your message belongs on the starboard:`, 
-                     Reaction.message.author.displayAvatarURL({format:`png`})) // Utilizing png, iPhone App seems to not handle webp
-          .setDescription(Reaction.message.content !== `` ? `${Reaction.message.content}` : `The message did not contain text, I've tried to attach it below.`)
-          .addField(`You're a ⭐ !`, `[Original message](https://discord.com/channels/${Reaction.message.guild.id}/${Reaction.message.channel.id}/${Reaction.message.id})`)
-          .setImage(Reaction.message.attachments.size === 0 ? `` : Reaction.message.attachments.values().next().value.url)
-          .setTimestamp(Reaction.message.createdTimestamp)
-          .setFooter(Reaction.message.id, Reaction.client.user.displayAvatarURL({format:`png`})) // Utilizing png, iPhone App seems to not handle webp
+    // Only continue if reaction count matches the star threshold
+    if (Reaction.count !== starConfig.starAmount) return;
 
-      // Check if it should be posted on an over 18 starboard
-      if (Reaction.message.channel.parent != null 
-            && Reaction.message.channel.parent.name === starConfig.over18SectionName) {
-        starboardChannelId = starConfig.starboardOver18Id;
-      }
-      else {
-        starboardChannelId = starConfig.starboardId;
-      }
+    // Ignore messages from bots
+    if (Reaction.message.author.bot) return;
 
-      // Check if this message is already on starboard 
-      // (handle cases when star removed and re-added, i.e., trolling)
-      isAlreadyOnStarboard = await Reaction.client.channels.fetch(starboardChannelId)
-        .then(channel => channel.messages.fetch())
-        .then(messages => messages.some(m => m.embeds.length > 0 && m.embeds[0].footer.text === Reaction.message.id))
-        // Only run the check against messages that have embeds, i.e., posted by the bot
-        .catch(console.error);
-      
-      if(isAlreadyOnStarboard) {
-        // Discard, log potential abuse
-        console.log(`${User.username} re-met the threshold, perhaps stars were removed once at the threshold`);
-      }
-      else {
-        Reaction.client.channels.fetch(starboardChannelId)
-        .then(channel => channel.send(starMessage))
-        .then(Reaction.message.reply(`one of your messages made it on ${Reaction.message.guild.channels.cache.get(starboardChannelId).toString()}!`))
-        .catch(console.error);
-      }
+    // Ignore channels in config
+    if (starConfig.ignoreChannels.includes(Reaction.message.channel.name.toLowerCase())) return;
+
+    // Ignore sections in config
+    if (starConfig.ignoreSections.includes(Reaction.message.channel.parent.name.toLowerCase())) return;
+
+    // Build the embed
+    const embed = new Discord.MessageEmbed();
+
+    embed.setColor(`#d74894`);
+    embed.setAuthor(Reaction.message.author.username, Reaction.message.author.displayAvatarURL({format:`png`}));
+    embed.addField(`Original message`, `[Link](${Reaction.message.url})`);
+    if (Reaction.message.content) embed.setDescription(Reaction.message.content);
+    if (Reaction.message.attachments.size) embed.setImage(Reaction.message.attachments.first().url);
+    embed.setTimestamp(Reaction.message.createdTimestamp);
+
+    // Dynamically get starboard
+    const starboardChannel = await this.getStarboardChannel(Reaction.message);
+
+    starboardChannel.send({embed: embed});
+  }
+
+  async getStarboardChannel(Message) {
+    if (Message.channel.parent.name.toLowerCase() === "over 18") {
+      return await Message.guild.channels.cache
+      .filter(channel => channel.name.toLowerCase() === "starboard")
+      .find(channel => channel.parent.name.toLowerCase() === "over 18");
+    } else {
+      return await Message.guild.channels.cache
+      .filter(channel => channel.name.toLowerCase() === "starboard")
+      .find(channel => channel.parent.name.toLowerCase() !== "over 18");
     }
-
-    return;
   }
 }
 

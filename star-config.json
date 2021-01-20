@@ -1,19 +1,29 @@
 {
-    "ignoreChannels": [ 
-        "starboard", 
-        "starboard-over-18", 
-        "bot-room", 
-        "code-of-conduct", 
-        "roles", 
-        "help", 
-        "announcements", 
-        "suggestions", 
-        "selfies", 
-        "pumpkin-carving-contest", 
-        "introductions",
-        "looking-for-group" ],
-    "starboardId": "770059932635889695",
-    "starboardOver18Id": "770059902311727116",
-    "starThreshold": 10,
-    "over18SectionName": "Over 18"
+  "starAmount": 10,
+
+  "ignoreChannels": [
+    "code-of-conduct",
+    "roles",
+    "help",
+    "announcements",
+
+    "starboard",
+
+    "introductions",
+    "fuzzyland",
+    
+    "selfies",
+    "under-18-general",
+    
+    "looking-for-group",
+
+    "stream-promo",
+    "memes"
+  ],
+
+  "ignoreSections": [
+    "staff",
+    "support",
+    "misc"
+  ]
 }

@@ -1,5 +1,6 @@
 {
   "starAmount": 10,
+  "over18StarAmount": 5,
 
   "ignoreChannels": [
     "code-of-conduct",

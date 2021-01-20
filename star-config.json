@@ -1,0 +1,29 @@
+{
+  "starAmount": 10,
+
+  "ignoreChannels": [
+    "code-of-conduct",
+    "roles",
+    "help",
+    "announcements",
+
+    "starboard",
+
+    "introductions",
+    "fuzzyland",
+    
+    "selfies",
+    "under-18-general",
+    
+    "looking-for-group",
+
+    "stream-promo",
+    "memes"
+  ],
+
+  "ignoreSections": [
+    "staff",
+    "support",
+    "misc"
+  ]
+}

@@ -95,13 +95,16 @@ class ReactionHandler {
     embed.setAuthor(Reaction.message.author.username, Reaction.message.author.displayAvatarURL({format:`png`}));
     embed.addField(`Original message`, `[Link](${Reaction.message.url})`);
     if (Reaction.message.content) embed.setDescription(Reaction.message.content);
-    if (Reaction.message.attachments.size) embed.setImage(Reaction.message.attachments.first().url);
     embed.setTimestamp(Reaction.message.createdTimestamp);
 
     // Dynamically get starboard
     const starboardChannel = await this.getStarboardChannel(Reaction.message);
 
-    starboardChannel.send({embed: embed});
+    if (Reaction.message.attachments.size) {
+      starboardChannel.send({embed: embed, files: [Reaction.message.attachments.first().url]});
+    } else {
+      starboardChannel.send({embed: embed});
+    }
   }
 
   async getStarboardChannel(Message) {

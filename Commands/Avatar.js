@@ -18,8 +18,13 @@ class Avatar extends Command {
       Message.reply(`${targetUser.toString()} has made their avatar private.`);
       return;
     }
+    
+    const embed = new Discord.MessageEmbed();
+    
+    embed.setTitle(`${targetUser.toString()}'s avatar:`);
+    embed.setImage(targetUser.displayAvatarURL({dynamic: true, size: 1024}));
 
-    Message.reply(`here's ${targetUser.toString()}'s avatar: ${targetUser.displayAvatarURL({dynamic: true})}`);
+    Message.reply({embed: embed});
   }
 }
 

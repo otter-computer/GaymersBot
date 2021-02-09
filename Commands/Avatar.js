@@ -1,4 +1,5 @@
 const Command = require(`./Command.js`);
+const Discord = require('discord.js');
 
 class Avatar extends Command {
   constructor() {
@@ -21,10 +22,9 @@ class Avatar extends Command {
     
     const embed = new Discord.MessageEmbed();
     
-    embed.setTitle(`${targetUser.toString()}'s avatar:`);
     embed.setImage(targetUser.displayAvatarURL({dynamic: true, size: 1024}));
 
-    Message.reply({embed: embed});
+    Message.reply(`here's ${targetUser.toString()}'s avatar:`, {embed: embed});
   }
 }
 

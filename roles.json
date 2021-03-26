@@ -60,16 +60,13 @@
     },
 
     "colors": {
-      "799797194663395399": "Bloody Valentine",
-      "799797194948870174": "Calendula Orange",
-      "799797194193502220": "Golden Sunrise",
-      "799797194987143231": "Peaches & Cream",
-      "799797196891488276": "Daffodil Yellow",
-      "799797194882285568": "Touch of Spring",
-      "799797194621190144": "Frost On Your Windows",
-      "799797194944675850": "Ge Rain On Me um",
-      "799797194739548171": "Kiss on the Cheek",
-      "799797194818584576": "Cherry Blossom Pink"
+      "825052203344592957": "Purple",
+      "825052218490355792": "Russian Violet",
+      "825052186714308649": "Maximum Blue Green",
+      "825052170189668363": "Denim",
+      "825052154426818561": "Midnight Blue",
+      "825052138363027476": "Laser Lemon",
+      "825052121841270835": "Congo Pink"
     }
   },
 
@@ -154,16 +151,13 @@
     "Turnips",
     "Recipe",
 
-    "Bloody Valentine",
-    "Calendula Orange",
-    "Golden Sunrise",
-    "Peaches & Cream",
-    "Daffodil Yellow",
-    "Touch of Spring",
-    "Frost On Your Windows",
-    "Ge Rain On Me um",
-    "Kiss on the Cheek",
-    "Cherry Blossom Pink"
+    "Purple",
+    "Russian Violet",
+    "Maximum Blue Green",
+    "Denim",
+    "Midnight Blue",
+    "Laser Lemon",
+    "Congo Pink"
   ],
 
   "nitroOnly" : [],

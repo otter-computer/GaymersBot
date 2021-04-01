@@ -71,6 +71,7 @@
   },
 
   "nonGameRoles": [
+    "Owner",
     "Admin",
     "Moderator",
     "Trial Moderator",

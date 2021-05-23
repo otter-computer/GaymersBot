@@ -35,7 +35,7 @@ class ReactionHandler {
     if (Reaction.me) return;
 
     if (Reaction.message.channel.name === `roles`) {
-      this.handleRoleReaction(Reaction, User, type);
+      // this.handleRoleReaction(Reaction, User, type);
       return;
     }
 

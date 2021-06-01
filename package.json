@@ -4,20 +4,19 @@
   "description": "GaymersBot",
   "readme": "README.md",
   "maintainers": [],
-  "author": "Thomas Baillie <thomasbaillie@outlook.com>",
+  "author": "Thomas Baillie <thomas@otter.computer>",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ThomasShaped/GaymersBot"
   },
   "license": "GPL-2.0",
   "dependencies": {
-    "applicationinsights": "^1.7.4",
-    "discord.js": "^12.0.0",
+    "discord.js": "^12.5.3",
     "express": "^4.17.1",
     "moment": "^2.25.1"
   },
   "engines": {
-    "node": "^12.0.0"
+    "node": "^14.17.0"
   },
   "main": "index.js",
   "scripts": {

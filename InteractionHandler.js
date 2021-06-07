@@ -20,13 +20,18 @@ class InteractionHandler {
    * Load slash commands
    */
   async loadCommands() {
-    // TODO: Loop over guilds
+    // TODO: Loop over guilds?
+    const data = [];
+
     this.commands.forEach(async cmd => {
-      await this.client.guilds.cache.get(`213292759878991872`)?.commands.create({
+      data.push({
         name: cmd.name,
-        description: cmd.description
+        description: cmd.description,
+        options: cmd.options
       });
     });
+
+    await this.client.guilds.cache.get(`213292759878991872`)?.commands.set(data);
   }
 
   /**
@@ -34,18 +39,12 @@ class InteractionHandler {
    * @param {Interaction} Interaction The Discord interaction object
    */
   handleInteraction(Interaction) {
-    // if (Interaction.system || Interaction.author.bot) return;
+    // Ignore non-command interactions
+    if (!Interaction.isCommand()) return;
 
-    // const commandName = args.shift().toLowerCase();
-    // const command = this.commands.get(commandName) || this.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
+    const command = this.commands.get(Interaction.commandName);
 
-    // const isStaff = (Interaction.member.roles.cache.findKey(role => role.name === `Admin`) || Interaction.member.roles.cache.findKey(role => role.name === `Moderator`)) ? true : false;
-
-    // if (command.staffOnly && !isStaff) {
-    //   return;
-    // }
-
-    // command.execute(Interaction, args);
+    command.execute(Interaction);
   }
 }
 

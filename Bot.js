@@ -1,4 +1,5 @@
 const Discord = require(`discord.js`);
+const InteractionHandler = require(`./InteractionHandler`);
 const MessageHandler = require(`./MessageHandler`);
 const ReactionHandler = require(`./ReactionHandler`);
 
@@ -8,7 +9,11 @@ class Bot {
    * @constructor
    */
   constructor() {
-    this.client = new Discord.Client({ partials: [`MESSAGE`, `CHANNEL`, `REACTION`, `USER`] });
+    this.client = new Discord.Client({ 
+      partials: [`CHANNEL`, `MESSAGE`, `REACTION`, `USER`],
+      intents: Discord.Intents.NON_PRIVILEGED
+    });
+    this.InteractionHandler = new InteractionHandler(this.client);
     this.MessageHandler = new MessageHandler();
     this.ReactionHandler = new ReactionHandler();
     this.bindEvents();
@@ -19,6 +24,7 @@ class Bot {
    */
   bindEvents() {
     this.client.on(`ready`, this.onReady.bind(this));
+    this.client.on(`interaction`, this.onInteraction.bind(this));
     this.client.on(`message`, this.onMessage.bind(this));
     this.client.on(`messageReactionAdd`, this.onMessageReactionAdd.bind(this));
     this.client.on(`messageReactionRemove`, this.onMessageReactionRemove.bind(this));
@@ -38,6 +44,15 @@ class Bot {
     console.log(`Shutting down.`);
     this.client.destroy();
   }
+
+  /**
+   * Passes interaction events to the InteractionHandler.
+   * @param {Interaction} Interaction The Discord interaction object.
+   */
+   onInteraction(Interaction) {
+    this.InteractionHandler.handleInteraction(Interaction);
+  }
+
 
   /**
    * Passes message events to the MessageHandler.
@@ -69,6 +84,7 @@ class Bot {
    * Bot is connected to Discord.
    */
   onReady() {
+    this.InteractionHandler.loadCommands();
     console.log(`Connected to Discord as ${this.client.user.username}#${this.client.user.discriminator} <@${this.client.user.id}>`);
   }
 }

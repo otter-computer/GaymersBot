@@ -6,7 +6,7 @@ class Avatar extends Command {
     super();
     this.name = `avatar`;
     this.aliases = [`pic`, `pfp`, `icon`];
-    this.description = `See a bigger version of someone's avatar—or your own! Add the \`private avatar\` role in #roles to stop this command being used on you.`;
+    this.description = `See a bigger version of someone's avatar—or your own!`;
     this.usage = `[@someone]`;
     this.serverOnly = true;
   }

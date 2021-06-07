@@ -17,9 +17,27 @@ class InteractionHandler {
   }
 
   /**
-   * Load slash commands
+   * Create slash commands
    */
-  async loadCommands() {
+   async createCommands() {
+    // TODO: Loop over guilds?
+    const data = [];
+
+    this.commands.forEach(async cmd => {
+      data.push({
+        name: cmd.name,
+        description: cmd.description,
+        options: cmd.options
+      });
+    });
+
+    await this.client.guilds.cache.first()?.commands.set(data);
+  }
+
+  /**
+   * Update slash commands
+   */
+  async updateCommands() {
     // TODO: Loop over guilds?
     const data = [];
 

@@ -59,6 +59,14 @@ class Bot {
    * @param {Message} Message The Discord message object.
    */
   onMessage(Message) {
+    if (
+      Message.content.toLowerCase() === '!deploy' && 
+      Message.author.id === `120897878347481088`
+      ) {
+        this.InteractionHandler.createCommands();
+        return;
+      }
+
     this.MessageHandler.handleMessage(Message);
   }
 
@@ -84,7 +92,7 @@ class Bot {
    * Bot is connected to Discord.
    */
   onReady() {
-    this.InteractionHandler.loadCommands();
+    this.InteractionHandler.updateCommands();
     console.log(`Connected to Discord as ${this.client.user.username}#${this.client.user.discriminator} <@${this.client.user.id}>`);
   }
 }

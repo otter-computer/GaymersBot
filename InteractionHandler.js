@@ -31,7 +31,7 @@ class InteractionHandler {
       });
     });
 
-    await this.client.guilds.cache.get(`213292759878991872`)?.commands.set(data);
+    await this.client.guilds.cache.first()?.commands.set(data);
   }
 
   /**

@@ -1,6 +1,6 @@
 {
   "name": "gaymersbot",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "GaymersBot",
   "readme": "README.md",
   "maintainers": [],
@@ -11,8 +11,7 @@
   },
   "license": "GPL-2.0",
   "dependencies": {
-    "discord.js": "^12.5.3",
-    "express": "^4.17.1",
+    "discord.js": "^13.0.0-dev.dec191aa1e4f22690285ca06c6eee7e6086b2930",
     "moment": "^2.25.1"
   },
   "engines": {

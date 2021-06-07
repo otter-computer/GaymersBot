@@ -1,5 +1,4 @@
 const Bot = require('./Bot');
-const express = require('express');
 
 const GaymersBot = new Bot();
 

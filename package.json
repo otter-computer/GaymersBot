@@ -12,7 +12,6 @@
   "license": "GPL-2.0",
   "dependencies": {
     "discord.js": "^13.0.0-dev.dec191aa1e4f22690285ca06c6eee7e6086b2930",
-    "express": "^4.17.1",
     "moment": "^2.25.1"
   },
   "engines": {

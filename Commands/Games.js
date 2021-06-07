@@ -1,5 +1,4 @@
 const Command = require(`./Command.js`);
-const Discord = require(`discord.js`);
 const roles = require(`../roles.json`);
 
 class Games extends Command {

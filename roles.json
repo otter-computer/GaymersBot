@@ -68,6 +68,7 @@
     "Nintendo Switch",
     "Xbox One",
     "PS4",
+    "PS5"
     "Mobile",
     "Virtual Reality",
 
@@ -79,14 +80,16 @@
     "Private Avatar",
     "Turnips",
     "Recipe",
+    "Fitness Buddies",
 
-    "Purple",
-    "Russian Violet",
-    "Maximum Blue Green",
-    "Denim",
-    "Midnight Blue",
-    "Laser Lemon",
-    "Congo Pink"
+    "Cady Heron's Army Pants",
+    "Drag Queen's Lip Gloss",
+    "Paris is Burning Orange",
+    "Tangerine",
+    "The Devil Wears Purple",
+    "The Warmest Color",
+
+    "Random Color: Antari Red"
   ],
 
   "nitroOnly" : [],

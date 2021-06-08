@@ -1,5 +1,4 @@
 const Command = require(`./Command.js`);
-const Discord = require('discord.js');
 const moment = require('moment');
 
 class Joined extends Command {

@@ -63,14 +63,6 @@ class Bot {
    * @param {Message} Message The Discord message object.
    */
   onMessageCreate(Message) {
-    if (
-      Message.content.toLowerCase() === '!deploy' && 
-      Message.author.id === `120897878347481088`
-      ) {
-        this.InteractionHandler.createCommands();
-        return;
-      }
-
     this.MessageHandler.handleMessage(Message);
   }
 

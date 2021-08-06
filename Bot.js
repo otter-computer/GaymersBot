@@ -11,7 +11,11 @@ class Bot {
   constructor() {
     this.client = new Discord.Client({ 
       partials: [`CHANNEL`, `MESSAGE`, `REACTION`, `USER`],
-      intents: Discord.Intents.ALL
+      intents: [
+        Discord.Intents.FLAGS.GUILDS,
+        Discord.Intents.FLAGS.GUILD_MESSAGES, 
+        Discord.Intents.FLAGS.GUILD_MEMBERS
+      ]
     });
     this.InteractionHandler = new InteractionHandler(this.client);
     this.MessageHandler = new MessageHandler();
@@ -24,8 +28,8 @@ class Bot {
    */
   bindEvents() {
     this.client.on(`ready`, this.onReady.bind(this));
-    this.client.on(`interaction`, this.onInteraction.bind(this));
-    this.client.on(`message`, this.onMessage.bind(this));
+    this.client.on(`interactionCreate`, this.onInteractionCreate.bind(this));
+    this.client.on(`messageCreate`, this.onMessageCreate.bind(this));
     this.client.on(`messageReactionAdd`, this.onMessageReactionAdd.bind(this));
     this.client.on(`messageReactionRemove`, this.onMessageReactionRemove.bind(this));
   }
@@ -49,7 +53,7 @@ class Bot {
    * Passes interaction events to the InteractionHandler.
    * @param {Interaction} Interaction The Discord interaction object.
    */
-   onInteraction(Interaction) {
+   onInteractionCreate(Interaction) {
     this.InteractionHandler.handleInteraction(Interaction);
   }
 
@@ -58,7 +62,7 @@ class Bot {
    * Passes message events to the MessageHandler.
    * @param {Message} Message The Discord message object.
    */
-  onMessage(Message) {
+  onMessageCreate(Message) {
     if (
       Message.content.toLowerCase() === '!deploy' && 
       Message.author.id === `120897878347481088`
@@ -93,7 +97,7 @@ class Bot {
    */
   onReady() {
     this.InteractionHandler.updateCommands();
-    console.log(`Connected to Discord as ${this.client.user.username}#${this.client.user.discriminator} <@${this.client.user.id}>`);
+    console.log(`Connected to Discord as ${this.client.user.username}#${this.client.user.discriminator} <@${this.client.user.id}>. Running in ${process.env.NODE_ENV}.`);
   }
 }
 

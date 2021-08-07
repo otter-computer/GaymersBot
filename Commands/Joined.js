@@ -1,4 +1,5 @@
 const Command = require(`./Command.js`);
+const Discord = require(`discord.js`);
 const moment = require('moment');
 
 class Joined extends Command {
@@ -19,7 +20,12 @@ class Joined extends Command {
 
     const member = await Interaction.guild.members.fetch(target.id);
 
-    Interaction.reply(`${member.toString()} joined ${moment(member.joinedAt).fromNow()}\n> ${member.joinedAt}`);
+    const embed = new Discord.MessageEmbed();
+    embed.setTitle(`${member.displayName} joined ${moment(member.joinedAt).fromNow()}`);
+    embed.addField(`Date:`, member.joinedAt.toString(), true);
+    embed.setTimestamp(member.joinedAt);
+
+    Interaction.reply({embeds:[embed]});
   }
 }
 

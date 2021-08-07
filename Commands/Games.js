@@ -25,12 +25,12 @@ class Games extends Command {
 
     if (!game) {
       const content = `Here's a list of game roles you can add. These roles are pingable by anyone on the server.${this.gameRoleList}`;
-      Interaction.reply(content, { ephemeral: true });
+      Interaction.reply({ content: content, ephemeral: true });
       return;
     }
 
     if (game.value === `refresh`) {
-      Interaction.reply(`Updating internal role list. :robot:`, { ephemeral: true });
+      Interaction.reply({ content: `Updating internal role list. :robot:`, ephemeral: true });
       this.updateRoles(Interaction);
       return;
     }
@@ -43,21 +43,21 @@ class Games extends Command {
 
       if (Member.roles.cache.find(role => role.name.toLowerCase() === game.value.toLowerCase())) {
         Member.roles.remove(Role);
-        Interaction.reply(`I've removed the ${game.value} role from you :ok_hand:`, { ephemeral: true });
+        Interaction.reply({ content: `I've removed the ${game.value} role from you :ok_hand:`, ephemeral: true });
       } else {
         Member.roles.add(Role);
-        Interaction.reply(`I've added the ${game.value} role to you :ok_hand: Remember, this role is pingable by anyone on the server. To remove it, run this command again.`, { ephemeral: true });
+        Interaction.reply({ content: `I've added the ${game.value} role to you :ok_hand: Remember, this role is pingable by anyone on the server. To remove it, run this command again.`, ephemeral: true });
       }
     } else {
       const content = `Sorry, there isn't a game role that matches that. Here's a list of game roles you can add. These roles are pingable by anyone on the server.${this.gameRoleList}`;
-      Interaction.reply(content, { ephemeral: true });
+      Interaction.reply({ content: content, ephemeral: true });
       return;
     }
   }
 
   updateRoles(Interaction) {
     const nonGameRoles = roles.nonGameRoles;
-    const guildRoles = Interaction.guild.roles.cache.array();
+    const guildRoles = Array.from(Interaction.guild.roles.cache.values());
     const gameRoles = [];
     const gameRolesLowerCase = [];
 

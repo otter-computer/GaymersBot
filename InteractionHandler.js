@@ -30,7 +30,11 @@ class InteractionHandler {
       });
     });
 
-    await this.client.guilds.cache.first()?.commands.set(data);
+    if (process.env.NODE_ENV === `production`) {
+      await this.client.application?.commands.set(data);
+    } else {
+      await this.client.guilds.cache.first()?.commands.set(data);
+    }
   }
 
   /**

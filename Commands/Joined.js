@@ -7,6 +7,7 @@ class Joined extends Command {
     super();
     this.name = `joined`;
     this.description = `See when someone joined the server.`;
+    this.types = [`CHAT_INPUT`, `USER`];
     this.options = [{
       name: `user`,
       type: `USER`,
@@ -16,7 +17,13 @@ class Joined extends Command {
   }
 
   async execute(Interaction) {
-    const target = Interaction.options.get(`user`) ? Interaction.options.get(`user`).user : Interaction.user;
+    let target;
+
+    if (Interaction.isCommand()) {
+      target = Interaction.options.get(`user`) ? Interaction.options.get(`user`).user : Interaction.user;
+    }
+
+    if (Interaction.isContextMenu()) target = await Interaction.options.getUser(`user`);
 
     const member = await Interaction.guild.members.fetch(target.id);
 

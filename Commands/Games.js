@@ -6,6 +6,7 @@ class Games extends Command {
     super();
     this.name = `games`;
     this.description = `Add a pingable game role to yourself to be notified when others want to play`;
+    this.types = [`CHAT_INPUT`];
     this.options = [{
       name: `game`,
       type: `STRING`,

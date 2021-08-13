@@ -16,40 +16,39 @@ class InteractionHandler {
   }
 
   /**
-   * Create slash commands
+   * Update commands
    */
-   async createCommands() {
-    // TODO: Loop over guilds?
+   async updateCommands() {
     const data = [];
 
     this.commands.forEach(async cmd => {
-      data.push({
-        name: cmd.name,
-        description: cmd.description,
-        options: cmd.options
-      });
+      if (cmd.types.includes(`CHAT_INPUT`)) {
+        data.push({
+          name: cmd.name,
+          description: cmd.description,
+          options: cmd.options
+        });
+      }
+
+      if (cmd.types.includes(`USER`)) {
+        data.push({
+          name: cmd.name.toLowerCase().split(' ').map(function(word) {
+            return word.replace(word[0], word[0].toUpperCase());
+          }).join(' '), // Title Case*
+          type: `USER`
+        });
+      }
+
+      if (cmd.types.includes(`MESSAGE`)) {
+        data.push({
+          name: cmd.name.toLowerCase().split(' ').map(function(word) {
+            return word.replace(word[0], word[0].toUpperCase());
+          }).join(' '), // Title Case*
+          type: `MESSAGE`
+        });
+      }
     });
-
-    if (process.env.NODE_ENV === `production`) {
-      await this.client.application?.commands.set(data);
-    } else {
-      await this.client.guilds.cache.first()?.commands.set(data);
-    }
-  }
-
-  /**
-   * Update slash commands
-   */
-  async updateCommands() {
-    const data = [];
-
-    this.commands.forEach(async cmd => {
-      data.push({
-        name: cmd.name,
-        description: cmd.description,
-        options: cmd.options
-      });
-    });
+    // *This is a known bug for now that you can't set slash and context commands with the same name, so convert to title case for context.
 
     if (process.env.NODE_ENV === `production`) {
       await this.client.application?.commands.set(data);
@@ -63,12 +62,11 @@ class InteractionHandler {
    * @param {Interaction} Interaction The Discord interaction object
    */
   handleInteraction(Interaction) {
-    // Ignore non-command interactions
-    if (!Interaction.isCommand()) return;
+    if (Interaction.isCommand() || Interaction.isContextMenu()) {
+      const command = this.commands.get(Interaction.commandName.toLowerCase());
+      command.execute(Interaction);
+    }
 
-    const command = this.commands.get(Interaction.commandName);
-
-    command.execute(Interaction);
   }
 }
 

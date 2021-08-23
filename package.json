@@ -11,8 +11,7 @@
   },
   "license": "GPL-2.0",
   "dependencies": {
-    "discord.js": "^13.1.0",
-    "moment": "^2.25.1"
+    "discord.js": "^13.1.0"
   },
   "engines": {
     "node": "^16.6.1"

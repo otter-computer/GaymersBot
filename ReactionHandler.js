@@ -2,17 +2,32 @@ const Discord = require(`discord.js`);
 const starConfig = require(`./star-config`);
 
 class ReactionHandler {
-  handleReaction(Reaction, User, type) {
+  constructor() {
+    this.lastStar = {
+      user: null,
+      message: null
+    }
+  }
+
+  async handleReaction(Reaction, User, type) {
+    if (Reaction.partial) await Reaction.fetch();
+
     if (Reaction.me) return;
 
-    if (type === `ADD` && Reaction._emoji.name === '⭐') {
+    if (type === `ADD` && Reaction.emoji.name === '⭐') {
       this.handleStarReaction(Reaction, User);
       return;
     }
   }
 
   async handleStarReaction(Reaction, User) {
-    await Reaction.fetch();
+    // Save the last reactor, prevent some starboard abuse.
+    if (User.id === this.lastStar.user && Reaction.message.id == Reaction.message.id) return;
+
+    this.lastStar = {
+      user: User.id,
+      message: Reaction.message.id
+    };
 
     // Only continue if reaction count matches the star threshold
     if (Reaction.message.channel.parent.name.toLowerCase() === `over 18`) {
@@ -43,9 +58,9 @@ class ReactionHandler {
     const starboardChannel = await this.getStarboardChannel(Reaction.message);
 
     if (Reaction.message.attachments.size) {
-      starboardChannel.send({embed: embed, files: [Reaction.message.attachments.first().url]});
+      starboardChannel.send({embeds: [embed], files: [Reaction.message.attachments.first().url]});
     } else {
-      starboardChannel.send({embed: embed});
+      starboardChannel.send({embeds: [embed]});
     }
   }
 

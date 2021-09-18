@@ -9,12 +9,13 @@ class Bot {
    * @constructor
    */
   constructor() {
-    this.client = new Discord.Client({ 
+    this.client = new Discord.Client({
       partials: [`CHANNEL`, `MESSAGE`, `REACTION`, `USER`],
       intents: [
         Discord.Intents.FLAGS.GUILDS,
-        Discord.Intents.FLAGS.GUILD_MESSAGES, 
-        Discord.Intents.FLAGS.GUILD_MEMBERS
+        Discord.Intents.FLAGS.GUILD_MESSAGES,
+        Discord.Intents.FLAGS.GUILD_MEMBERS,
+        Discord.Intents.FLAGS.GUILD_MESSAGE_REACTIONS
       ]
     });
     this.InteractionHandler = new InteractionHandler(this.client);

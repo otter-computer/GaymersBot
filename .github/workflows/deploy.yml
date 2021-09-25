@@ -11,10 +11,8 @@ jobs:
     steps:
     - name: Setup ssh
       run: |
-        eval $(ssh-agent -s)
-        ssh-add <(echo "${{ secrets.SSH_KEY }}")
-    - name: Check ssh key availability
-      run: ssh-add -l
+        echo "${{ secrets.SSH_KEY }}" >> ~/.ssh/id_rsa
+        chmod 0600 ~/.ssh/id_rsa
     - name: Checkout repository
       uses: actions/checkout@v2
     - name: Setup Node.js 16

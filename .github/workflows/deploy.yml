@@ -12,8 +12,9 @@ jobs:
     - name: Setup ssh
       run: |
         eval $(ssh-agent -s)
-        ssh-add - <<< "${{ secrets.SSH_KEY }}"
-        chmod 600 ~/.ssh/id_rsa
+        ssh-add <(echo "${{ secrets.SSH_KEY }}")
+    - name: Check ssh key availability
+      run: ssh-add -l
     - name: Checkout repository
       uses: actions/checkout@v2
     - name: Setup Node.js 16

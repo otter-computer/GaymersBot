@@ -1,32 +1,37 @@
-name: Deploy to Azure
-
+name: Deploy
 on:
   push:
     branches:
     - master
-
+  workflow_dispatch:
 jobs:
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v2
-      name: Checkout repository
-
-    - uses: actions/setup-node@v1
-      name: Setup Node.js 12
+    - name: Setup ssh
+      run: |
+        eval $(ssh-agent -s)
+        ssh-add - <<< "${{ secrets.SSH_KEY }}"
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Setup Node.js 16
+      uses: actions/setup-node@v2
       with:
-        node-version: '12'
-
-    - run: npm install
-
-    - run: npm run build --if-present
-
-    - run: npm run test --if-present
-
-    # - name: 'Deploy to Azure'
-    #   uses: azure/webapps-deploy@v2
-    #   with: 
-    #     app-name: GaymersBot 
-    #     publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
+        node-version: '16'
+        cache: 'npm'
+    - name: Install dependencies
+      run: npm install
+    - name: Cleanup directory for deploy
+      run: rm -rf .git/
+    - name: Set environment variables
+      run: |
+        touch .env
+        echo "AUTH_TOKEN=${{ secrets.AUTH_TOKEN }}" >> .env
+        echo "NODE_ENV=production" >> .env
+    # - name: Stop application
+    #   run: ssh root@${{ secrets.SERVER }} pm2 stop GaymersBot
+    # - name: Deploy application
+    #   run: scp
+    # - name: Start application
+    #   run: ssh root@${{ secrets.SERVER }} pm2 start GaymersBot

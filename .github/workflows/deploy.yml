@@ -29,9 +29,11 @@ jobs:
         touch .env
         echo "AUTH_TOKEN=${{ secrets.AUTH_TOKEN }}" >> .env
         echo "NODE_ENV=production" >> .env
+    - name: Check ssh connection
+      run: ssh -o "StrictHostKeyChecking=no" root@${{ secrets.SERVER }} ls -hal
     # - name: Stop application
-    #   run: ssh root@${{ secrets.SERVER }} pm2 stop GaymersBot
+    #   run: ssh -o "StrictHostKeyChecking=no" root@${{ secrets.SERVER }} pm2 stop GaymersBot
     # - name: Deploy application
     #   run: scp
     # - name: Start application
-    #   run: ssh root@${{ secrets.SERVER }} pm2 start GaymersBot
+    #   run: ssh -o "StrictHostKeyChecking=no" root@${{ secrets.SERVER }} pm2 start GaymersBot

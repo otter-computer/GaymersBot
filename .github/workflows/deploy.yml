@@ -13,6 +13,7 @@ jobs:
       run: |
         mkdir ~/.ssh
         echo "${{ secrets.SSH_KEY }}" >> ~/.ssh/id_rsa
+        echo "${{ secrets.HOST_KEY }} >> ~/.ssh/known_hosts
         chmod 0600 ~/.ssh/id_rsa
     - name: Checkout repository
       uses: actions/checkout@v2
@@ -31,6 +32,6 @@ jobs:
         echo "AUTH_TOKEN=${{ secrets.AUTH_TOKEN }}" >> .env
         echo "NODE_ENV=production" >> .env
     - name: Deploy application
-      run: scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r $GITHUB_WORKSPACE root@${{ secrets.SERVER }}:~/GaymersBot/
+      run: scp -r $GITHUB_WORKSPACE root@${{ secrets.SERVER }}:~/GaymersBot/
     - name: Restart application
-      run: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${{ secrets.SERVER }} "pm2 restart GaymersBot"
+      run: ssh root@${{ secrets.SERVER }} "pm2 restart GaymersBot"

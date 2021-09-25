@@ -12,9 +12,15 @@ jobs:
     - name: Setup ssh
       run: |
         mkdir ~/.ssh
-        echo "${{ secrets.SSH_KEY }}" >> ~/.ssh/id_rsa
+        echo "${{ secrets.SSH_KEY }}" >> ~/.ssh/deploy.key
         echo "${{ secrets.HOST_KEY }} >> ~/.ssh/known_hosts
-        chmod 0600 ~/.ssh/id_rsa
+        chmod 0600 ~/.ssh/deploy.key
+        cat >>~/.ssh/config <<END
+          Host production
+            HostName ${{ secrets.SERVER }}
+            User ${{ secrets.SSH_USER }}
+            IdentityFile ~/.ssh/deploy.key
+          END
     - name: Checkout repository
       uses: actions/checkout@v2
     - name: Setup Node.js 16
@@ -32,6 +38,6 @@ jobs:
         echo "AUTH_TOKEN=${{ secrets.AUTH_TOKEN }}" >> .env
         echo "NODE_ENV=production" >> .env
     - name: Deploy application
-      run: scp -r $GITHUB_WORKSPACE root@${{ secrets.SERVER }}:~/GaymersBot/
+      run: scp -r $GITHUB_WORKSPACE production:~/GaymersBot/
     - name: Restart application
-      run: ssh root@${{ secrets.SERVER }} "pm2 restart GaymersBot"
+      run: ssh production 'pm2 restart GaymersBot'

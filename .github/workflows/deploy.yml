@@ -15,12 +15,6 @@ jobs:
         echo "${{ secrets.SSH_KEY }}" >> ~/.ssh/deploy.key
         echo "${{ secrets.HOST_KEY }}" >> ~/.ssh/known_hosts
         chmod 0600 ~/.ssh/deploy.key
-        cat >>~/.ssh/config <<END
-          Host production
-            HostName ${{ secrets.SERVER }}
-            User ${{ secrets.SSH_USER }}
-            IdentityFile ~/.ssh/deploy.key
-          END
     - name: Checkout repository
       uses: actions/checkout@v2
     - name: Setup Node.js 16
@@ -38,6 +32,6 @@ jobs:
         echo "AUTH_TOKEN=${{ secrets.AUTH_TOKEN }}" >> .env
         echo "NODE_ENV=production" >> .env
     - name: Deploy application
-      run: rsync -azP $GITHUB_WORKSPACE production:~/GaymersBot/
+      run: rsync -azP $GITHUB_WORKSPACE ${{ secrets.SSH_USER }}@${{ secrets.SERVER }}:~/GaymersBot/
     - name: Restart application
-      run: ssh production 'pm2 restart GaymersBot'
+      run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SERVER }} 'pm2 restart GaymersBot'

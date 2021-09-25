@@ -31,6 +31,6 @@ jobs:
         echo "AUTH_TOKEN=${{ secrets.AUTH_TOKEN }}" >> .env
         echo "NODE_ENV=production" >> .env
     - name: Deploy application
-      run: scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r . root@${{ secrets.SERVER }}:~/GaymersBot/
+      run: scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r $GITHUB_WORKSPACE root@${{ secrets.SERVER }}:~/GaymersBot/
     - name: Restart application
       run: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${{ secrets.SERVER }} "pm2 restart GaymersBot"

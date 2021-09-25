@@ -31,8 +31,8 @@ jobs:
         echo "AUTH_TOKEN=${{ secrets.AUTH_TOKEN }}" >> .env
         echo "NODE_ENV=production" >> .env
     - name: Stop application
-      run: ssh -o "StrictHostKeyChecking=no" root@${{ secrets.SERVER }} pm2 stop GaymersBot
+      run: ssh -o "StrictHostKeyChecking=no" root@${{ secrets.SERVER }} "pm2 stop GaymersBot"
     - name: Deploy application
       run: scp -r . root@${{ secrets.SERVER }}:~/GaymersBot/
     - name: Start application
-      run: ssh -o "StrictHostKeyChecking=no" root@${{ secrets.SERVER }} pm2 start GaymersBot
+      run: ssh -o "StrictHostKeyChecking=no" root@${{ secrets.SERVER }} "pm2 start GaymersBot"

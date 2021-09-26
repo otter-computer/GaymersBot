@@ -1,3 +1,4 @@
+require('dotenv').config();
 const Bot = require('./Bot');
 
 const GaymersBot = new Bot();

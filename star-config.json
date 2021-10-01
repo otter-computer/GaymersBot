@@ -1,6 +1,5 @@
 {
-  "starAmount": 10,
-  "over18StarAmount": 5,
+  "starAmount": 5,
 
   "ignoreChannels": [
     "code-of-conduct",
@@ -12,10 +11,10 @@
 
     "introductions",
     "fuzzyland",
-    
+
     "selfies",
     "under-18-general",
-    
+
     "looking-for-group",
 
     "stream-promo",

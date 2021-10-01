@@ -30,11 +30,7 @@ class ReactionHandler {
     };
 
     // Only continue if reaction count matches the star threshold
-    if (Reaction.message.channel.parent.name.toLowerCase() === `over 18`) {
-      if (Reaction.count !== starConfig.over18StarAmount) return;
-    } else {
-      if (Reaction.count !== starConfig.starAmount) return;
-    }
+    if (Reaction.count !== starConfig.starAmount) return;
 
     // Ignore messages from bots
     if (Reaction.message.author.bot) return;

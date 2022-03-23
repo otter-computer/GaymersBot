@@ -1,11 +1,10 @@
-require('dotenv').config();
-const Bot = require('./Bot');
+const Bot = require(`./Bot`);
 
 const GaymersBot = new Bot();
 
 // Handle graceful shutdowns
-process.on('SIGINT', cleanup);
-process.on('SIGTERM', cleanup);
+process.on(`SIGINT`, cleanup);
+process.on(`SIGTERM`, cleanup);
 
 function cleanup() {
   GaymersBot.destroy();

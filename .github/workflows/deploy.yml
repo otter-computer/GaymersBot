@@ -34,8 +34,13 @@ jobs:
       env:
         DOCKER_HOST: "ssh://${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}"
       run: docker compose down
+      
+    - name: Build bot
+      env:
+        DOCKER_HOST: "ssh://${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}"
+      run: docker compose build
 
-    - name: Build and start bot
+    - name: Start bot
       env:
         DOCKER_HOST: "ssh://${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}"
       run: docker compose up --detach

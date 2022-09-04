@@ -14,17 +14,14 @@
     "Silenced",
     "No links/files",
 
-    "Message me to contact staff!",
     "Bots",
     "Invulnerable",
+    "AutoModerator",
+    "Beemo",
     "GaymersBot",
-    "Superintendent",
-    "Mercy",
-    "AnaBot",
     "GaymersModMail",
     "GiveawayBot",
-    "carl-bot",
-    "ModMail",
+    "Reaction"
 
     "Nitro Booster",
 
@@ -38,6 +35,7 @@
     "Genderfluid",
     "Agender",
     "Demigender",
+    "Intersex",
 
     "He/Him",
     "She/Her",
@@ -65,9 +63,8 @@
 
     "PC",
     "Nintendo Switch",
-    "Xbox One",
-    "PS4",
-    "PS5",
+    "Xbox",
+    "Playstation",
     "Mobile",
     "Virtual Reality",
 
@@ -81,17 +78,18 @@
     "Recipe",
     "Fitness Buddies",
     "Serious Discussion",
+    "Queer Art Contest Winner!",
 
-    "Anniversary Green",
-    "Anniversary Teal",
-    "Anniversary Yellow",
-    "Anniversary Rose",
-    "Anniversary Purple",
-    "Anniversary Pink",
-    "Anniversary Blue",
-    "Anniversary Orange",
-
-    "Color of the Week: I'm a Mouse"
+    "And I Oop",
+    "Boots The House Down",
+    "Daddy Work",
+    "During Pride Drink Water",
+    "Hunty Mama",
+    "Skinny Legend",
+    "Slay Queen",
+    "Snatch My Wig",
+    "Um Yaaas Queen",
+    "Versace"
   ],
 
   "nitroOnly" : [],

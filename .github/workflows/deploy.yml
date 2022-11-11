@@ -6,6 +6,10 @@ on:
     - main
   workflow_dispatch:
 
+env:
+  AZURE_WEBAPP_NAME: gaymersbot
+  AZURE_WEBAPP_PACKAGE_PATH: '.'
+
 jobs:
   build:
     name: Build
@@ -14,31 +18,20 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Create .env file
-        run: |
-          touch .env
-          echo "AUTH_TOKEN=${{ secrets.AUTH_TOKEN }}" >> .env
-          echo "NODE_ENV=production" >> .env
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-
-      - name: Log in to GitHub container registry
-        uses: docker/login-action@v1.10.0
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
         with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          node-version: '16.x'
+          cache: 'npm'
 
-      - name: Lowercase the repo name
-        run: echo "REPO=${GITHUB_REPOSITORY,,}" >>${GITHUB_ENV}
+      - name: npm install
+        run: npm install
 
-      - name: Build and push container image to registry
-        uses: docker/build-push-action@v2
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v3
         with:
-          push: true
-          tags: ghcr.io/${{ env.REPO }}:${{ github.sha }}
-          file: ./Dockerfile
+          name: node-app
+          path: .
 
   deploy:
     name: Deploy
@@ -46,13 +39,15 @@ jobs:
     needs: build
 
     steps:
-      - name: Lowercase the repo name
-        run: echo "REPO=${GITHUB_REPOSITORY,,}" >>${GITHUB_ENV}
-
-      - name: Deploy to Azure Web App
-        id: deploy-to-webapp
-        uses: azure/webapps-deploy@0b651ed7546ecfc75024011f76944cb9b381ef1e
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v3
         with:
-          app-name: gaymersbot
+          name: node-app
+
+      - name: 'Deploy to Azure WebApp'
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          images: 'ghcr.io/${{ env.REPO }}:${{ github.sha }}'
+          package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}

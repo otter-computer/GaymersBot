@@ -17,7 +17,7 @@ if (process.env.NODE_ENV === `production`) {
   http.createServer((req, res) => {
     res.writeHead(200, { 'Content-Type': 'text/plain' });
     res.end('GaymersBot is alive!');
-  }).listen(80);
+  }).listen(8080);
 }
 
 GaymersBot.connect();

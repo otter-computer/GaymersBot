@@ -22,6 +22,7 @@
   ],
 
   "ignoreSections": [
+    "spicy",
     "staff",
     "support",
     "misc"

@@ -15,7 +15,7 @@ class ReactionHandler {
     if (Reaction.me) return;
 
     if (type === `ADD` && Reaction.emoji.name === '⭐') {
-      this.handleStarReaction(Reaction, User);
+      // this.handleStarReaction(Reaction, User);
       return;
     }
   }

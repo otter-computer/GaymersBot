@@ -90,7 +90,7 @@ class Bot {
    */
   onReady() {
     this.InteractionHandler.updateCommands();
-    console.log(`Connected to Discord as ${this.client.user.username}#${this.client.user.discriminator} <@${this.client.user.id}>. Running in ${process.env.NODE_ENV}.`);
+    console.log(`Connected to Discord as ${this.client.user.username} <@${this.client.user.id}>. Running in ${process.env.NODE_ENV}.`);
   }
 }
 

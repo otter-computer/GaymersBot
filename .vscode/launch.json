@@ -2,14 +2,11 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "type": "node",
+      "name": "Docker Node.js Launch",
+      "type": "docker",
       "request": "launch",
-      "name": "Launch Bot",
-      "skipFiles": [
-        "<node_internals>/**"
-      ],
-      "program": "${workspaceFolder}/index.js",
-      "envFile": "${workspaceFolder}/.env"
+      "preLaunchTask": "docker-run: debug",
+      "platform": "node"
     }
   ]
 }
